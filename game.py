@@ -157,11 +157,10 @@ while run:
     p1.update_bullets() 
     generate_enemies(2)
 
-    # Check for shooting input
     if keys[pygame.K_SPACE]:
         p1.shoot()
 
-    # Check for collisions between bullets and enemies
+
     enemies_to_remove = []
     bullets_to_remove = []
 
