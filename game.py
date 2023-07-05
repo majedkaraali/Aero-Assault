@@ -88,23 +88,32 @@ class Enemy:
             if self.x<WIDTH-60:
                 self.x+=self.vel
             else:
-                enemy_lsit.remove(enemy)
+                enemy_list.remove(enemy)
 
         elif self.move_dir=="left":
             if self.x>60:
                 self.x+=self.vel
             else:
-                enemy_lsit.remove(enemy)
+                enemy_list.remove(enemy)
 
 
     def update_enemy(self):
         en = pygame.draw.rect(win, (29, 84, 158), (self.x, self.y, self.width, self.height))
 
+    def check_collision(self, bullet_list):
+        for bullet in bullet_list:
+            if (self.x < bullet.x + bullet.width and
+                self.x + self.width > bullet.x and
+                self.y < bullet.y + bullet.height and
+                self.y + self.height > bullet.y):
+                return True
+        return False
+
 
 
 p1=Player()
 
-enemy_lsit=[]
+enemy_list=[]
 clock = pygame.time.Clock()
 pygame.font.init()
 pygame.mixer.init()
@@ -113,7 +122,7 @@ pygame.mixer.init()
 
 
 def generate_enemies(num_of_enemies):
-    if len(enemy_lsit)<num_of_enemies:
+    if len(enemy_list)<num_of_enemies:
         move_dircton=random.randint(0,1)
         if move_dircton==1:
             vel=2
@@ -125,14 +134,14 @@ def generate_enemies(num_of_enemies):
             mdir='left'
         
         enemy=Enemy(x,10,50,50,vel,mdir)
-        enemy_lsit.append(enemy)
+        enemy_list.append(enemy)
 
 
    
 
 
 
-run=True
+run = True
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -148,16 +157,36 @@ while run:
     p1.update_bullets() 
     generate_enemies(2)
 
-
+    # Check for shooting input
     if keys[pygame.K_SPACE]:
         p1.shoot()
-    for enemy in enemy_lsit:
+
+    # Check for collisions between bullets and enemies
+    enemies_to_remove = []
+    bullets_to_remove = []
+
+    for enemy in enemy_list:
+        if enemy.check_collision(p1.bullets):
+            enemies_to_remove.append(enemy)
+
+    for bullet in p1.bullets:
+        if bullet.y < 0:
+            bullets_to_remove.append(bullet)
+
+   
+    for enemy in enemies_to_remove:
+        enemy_list.remove(enemy)
+
+    for bullet in bullets_to_remove:
+        p1.bullets.remove(bullet)
+
+   
+    for enemy in enemy_list:
         enemy.move_enemy()
         enemy.update_enemy()
-        
+
+    p1.update_bullets()
 
     pygame.display.update()
-
-    
 
 pygame.quit()
