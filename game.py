@@ -112,8 +112,8 @@ pygame.mixer.init()
 
 
 
-def generate_enemies():
-    if len(enemy_lsit)<2:
+def generate_enemies(num_of_enemies):
+    if len(enemy_lsit)<num_of_enemies:
         move_dircton=random.randint(0,1)
         if move_dircton==1:
             vel=2
@@ -126,8 +126,7 @@ def generate_enemies():
         
         enemy=Enemy(x,10,50,50,vel,mdir)
         enemy_lsit.append(enemy)
-    else:
-        print("A")
+
 
    
 
@@ -147,7 +146,7 @@ while run:
     p1.update_player()
     p1.move_bullets() 
     p1.update_bullets() 
-    generate_enemies()
+    generate_enemies(2)
 
 
     if keys[pygame.K_SPACE]:
