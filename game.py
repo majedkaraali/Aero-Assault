@@ -5,7 +5,7 @@ WIDTH=1280
 HEIGHT=677
 score=0
 win=pygame.display.set_mode((WIDTH,HEIGHT))
-pygame.display.set_caption("Hunt")
+pygame.display.set_caption("SPAA")
 
 class Bullet:
     width = 3
