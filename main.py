@@ -6,7 +6,8 @@ pygame.init()
 
 width=1100
 height=640
-
+rect = pygame.Rect(100, 20, 100, 20)
+rect_color = (255, 0, 0)  # Red color
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 
@@ -183,13 +184,13 @@ class GameState:
     def update(self):
         pass
 
-    def draw(self, screen):
+    def draw(self):
         pass
 
 class MenuState(GameState):
-    def __init__(self, screen):
+    def __init__(self):
         super().__init__()
-        self.screen = screen
+
         self.running=True
 
 
@@ -216,7 +217,7 @@ class MenuState(GameState):
 
 
 
-    def draw(self, screen):
+    def draw(self):
         pass
        
        
@@ -225,26 +226,46 @@ class MenuState(GameState):
 class FreePlayState(GameState):
     p1=Player()
     paues=False
+    pause_frame_color = ('silver')
+    pause_surface_width=250
+    pause_surface_height=150
+    frame_position = ((width//2)-(pause_surface_width//2),(height//2)-(pause_surface_height//2))
+    frame_surface = pygame.Surface((pause_surface_width,pause_surface_height))
+    frame_surface.fill(pause_frame_color)
+    border_width = 1
+    border_color = (0, 0, 0)
+
+
+    resume_button_rect=pygame.Rect(75, 20, 100, 20)
+    main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
+    exit_button_rect=pygame.Rect(75, 100, 100, 20)
+
     def __init__(self):
         super().__init__()
         self.running=True
+        
 
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                adjusted_mouse_pos = (
+                    mouse_pos[0] - self.frame_position[0],
+                    mouse_pos[1] - self.frame_position[1]
+                )
+                if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
+                    print("Resume button clicked!")
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    print("ESC key pressed")
-                    if (self.paues):
-                        self.paues=False
-                    elif (not self.paues):
-                        self.paues=True
-                    print(self.paues)
-                
-            # Handle other events specific to the free play mode
+                    if self.paues:
+                        self.paues = False
+                    else:
+                        self.paues = True
 
-    def draw(self, screen):
+
+    def draw(self):
         if not (self.paues):
             clock.tick(60)
             screen.fill('aqua')
@@ -285,7 +306,40 @@ class FreePlayState(GameState):
                 enemy.update_enemy()
 
             self.p1.update_bullets()
+
+        elif (self.paues):
+
+            pygame.draw.rect(self.frame_surface,self.border_color, self.frame_surface.get_rect(), self.border_width)
+            screen.blit(self.frame_surface, self.frame_position)
+
+
+            resume_button = pygame.draw.rect(self.frame_surface, (0, 0, 255),self.resume_button_rect)
+            resume_button_text = font.render("Resume", True, (255, 255, 255))
+            resume_button_text_rect = resume_button_text.get_rect(center=resume_button.center)
+           
+
+            mainmenu_button=pygame.draw.rect(self.frame_surface,(0, 0, 255),self.main_menu_button_rect)
+            mainmenu_button_text=font.render("Main menu", True, (255, 255, 255))
+            mainmenu_button_text_rect=mainmenu_button_text.get_rect(center=mainmenu_button.center)
+
+            exit_button=pygame.draw.rect(self.frame_surface,(0, 0, 255),self.exit_button_rect)
+            exit_button_text=font.render("Exit", True, (255, 255, 255))
+            exit_button_text_rect=exit_button_text.get_rect(center=exit_button.center)
+
+
+            self.frame_surface.blit(resume_button_text,resume_button_text_rect)
+            self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
+            self.frame_surface.blit(exit_button_text,exit_button_text_rect)
             
+           
+            
+            
+          
+
+
+          
+
+
         
     
 
@@ -294,7 +348,7 @@ class FreePlayState(GameState):
 
 
 
-menu_state = MenuState(screen)
+menu_state = MenuState()
 free_play_state = FreePlayState()
 current_state = menu_state
 
@@ -312,7 +366,7 @@ while current_state.running:
     
     next_state = current_state.handle_events(events)
     current_state.update()
-    current_state.draw(screen)
+    current_state.draw()
 
     if next_state == "free_play":
         current_state = free_play_state
