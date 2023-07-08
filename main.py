@@ -188,10 +188,12 @@ class GameState:
         pass
 
 class MenuState(GameState):
+    print('if current state is menu state this line must print')
     def __init__(self):
         super().__init__()
 
         self.running=True
+
 
 
         
@@ -244,8 +246,8 @@ class FreePlayState(GameState):
         super().__init__()
         self.running=True
         
-
     def handle_events(self, events):
+        global current_state
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
@@ -257,6 +259,17 @@ class FreePlayState(GameState):
                 )
                 if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Resume button clicked!")
+                    self.paues = False
+
+                elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
+                    print("Back to menu")
+                    current_state = menu_state  # Update the current state
+                    return  # Exit the handle_events method
+
+                elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
+                    print("Exit")
+                    self.running = False
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     if self.paues:
@@ -368,8 +381,12 @@ while current_state.running:
     current_state.update()
     current_state.draw()
 
+    print(next_state)
     if next_state == "free_play":
         current_state = free_play_state
+    elif next_state=="menu":
+        print("Yes next state is menu")
+        current_state=menu_state
 
 
     pygame.display.flip()
