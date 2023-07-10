@@ -360,18 +360,6 @@ class FreePlayState(GameState):
             
           
 
-
-          
-
-
-        
-    
-
-
-
-
-
-
 menu_state = MenuState()
 free_play_state = FreePlayState()
 current_state = menu_state
