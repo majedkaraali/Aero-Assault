@@ -21,26 +21,6 @@ pygame.mixer.init()
 
 
 
-free_play_button = pygame.draw.rect(screen, (0, 0, 255), (20, 20, 200, 50))
-free_play_text = font.render("Free Play", True, (255, 255, 255))
-free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
-screen.blit(free_play_text, free_play_text_rect)
-
-
-missions_button = pygame.draw.rect(screen, (0, 255, 0), (20, 90, 200, 50))
-missions_text = font.render("Missions", True, (255, 255, 255))
-missions_text_rect = missions_text.get_rect(center=missions_button.center)
-screen.blit(missions_text, missions_text_rect)
-
-shop_button = pygame.draw.rect(screen, (255, 0, 0), (20, 160, 200, 50))
-shop_text = font.render("Shop", True, (255, 255, 255))
-shop_text_rect = shop_text.get_rect(center=shop_button.center)
-screen.blit(shop_text, shop_text_rect)
-
-exit_button = pygame.draw.rect(screen, (255, 0, 0), (20, 230, 200, 50))
-exit_text = font.render("Exit", True, (255, 255, 255))
-exit_text_rect = exit_text.get_rect(center=exit_button.center)
-screen.blit(exit_text, exit_text_rect)
 # Set the initial game state
 
 
@@ -60,9 +40,11 @@ class Bullet:
         pygame.draw.rect(screen, ('black'), (self.x, self.y, self.width, self.height))
 
 
-class Player:
-    x=350
-    y=566
+class Player():
+    def __init__(self,x,y) :
+        self.x=x
+        self.y=y
+
     width=50
     height=50
     player_alive=True
@@ -175,6 +157,8 @@ def generate_enemies(num_of_enemies):
 
 
 class GameState:
+
+
     def __init__(self):
         self.running = False
 
@@ -189,6 +173,11 @@ class GameState:
 
 class MenuState(GameState):
     print('if current state is menu state this line must print')
+
+    free_play_posit=pygame.Rect(20, 20, 200, 50)
+    missions_posit= pygame.Rect(20, 90, 200, 50)
+    exit_posit= pygame.Rect(20, 230, 200, 50)
+
     def __init__(self):
         super().__init__()
 
@@ -198,35 +187,55 @@ class MenuState(GameState):
 
         
     def handle_events(self, events):
+        global current_state,p1
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if free_play_button.collidepoint(mouse_pos):
+                if self.free_play_posit.collidepoint(mouse_pos):
                     print("Clicked Free Play button")
-                    self.running = False
-                    return "free_play"
-                elif missions_button.collidepoint(mouse_pos):
+                #    self.running = False
+               #     return "free_play"
+                    
+                    p1=Player(random.randint(1,800),300)
+                    print('new player',p1)
+                    print(p1.x,p1.y)
+                    current_state=free_play_state
+                 
+                elif self.missions_posit.collidepoint(mouse_pos):
                     print("Clicked Missions button")
                     
-                elif shop_button.collidepoint(mouse_pos):
-                    print("Clicked Shop button")
-                    
-                elif exit_button.collidepoint(mouse_pos):
+                elif self.exit_posit.collidepoint(mouse_pos):
                     print("Clicked Exit button")
                     
 
 
 
     def draw(self):
-        pass
-       
+        screen.fill('black')
+        free_play_button = pygame.draw.rect(screen, (0, 0, 255),self.free_play_posit)
+        free_play_text = font.render("Free Play", True, (255, 255, 255))
+        free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
+        screen.blit(free_play_text, free_play_text_rect)
+
+
+        missions_button = pygame.draw.rect(screen, (0, 255, 0),self.missions_posit)
+        missions_text = font.render("Missions", True, (255, 255, 255))
+        missions_text_rect = missions_text.get_rect(center=missions_button.center)
+        screen.blit(missions_text, missions_text_rect)
+
+
+
+        exit_button = pygame.draw.rect(screen, (255, 0, 0),self.exit_posit)
+        exit_text = font.render("Exit", True, (255, 255, 255))
+        exit_text_rect = exit_text.get_rect(center=exit_button.center)
+        screen.blit(exit_text, exit_text_rect)
+            
        
      
 
 class FreePlayState(GameState):
-    p1=Player()
     paues=False
     pause_frame_color = ('silver')
     pause_surface_width=250
@@ -264,7 +273,8 @@ class FreePlayState(GameState):
                 elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Back to menu")
                     current_state = menu_state  # Update the current state
-                    return  # Exit the handle_events method
+                    self.paues = False
+                #    return  # Exit the handle_events method
 
                 elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Exit")
@@ -279,28 +289,29 @@ class FreePlayState(GameState):
 
 
     def draw(self):
+
         if not (self.paues):
             clock.tick(60)
             screen.fill('aqua')
 
-            self.p1.move_player()
-            self.p1.update_player()
-            self.p1.move_bullets() 
-            self.p1.update_bullets() 
+            p1.move_player()
+            p1.update_player()
+            p1.move_bullets() 
+            p1.update_bullets() 
             generate_enemies(2)
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
-                self.p1.shoot()
+                p1.shoot()
 
 
             enemies_to_remove = []
             bullets_to_remove = []
 
             for enemy in enemy_list:
-                if enemy.check_collision(self.p1.bullets):
+                if enemy.check_collision(p1.bullets):
                     enemies_to_remove.append(enemy)
 
-            for bullet in self.p1.bullets:
+            for bullet in p1.bullets:
                 if bullet.y < 0:
                     bullets_to_remove.append(bullet)
 
@@ -311,14 +322,14 @@ class FreePlayState(GameState):
                 enemy_list.remove(enemy)
 
             for bullet in bullets_to_remove:
-                self.p1.bullets.remove(bullet)
+                p1.bullets.remove(bullet)
 
         
             for enemy in enemy_list:
                 enemy.move_enemy()
                 enemy.update_enemy()
 
-            self.p1.update_bullets()
+            p1.update_bullets()
 
         elif (self.paues):
 
@@ -369,7 +380,7 @@ while current_state.running:
     
     events = pygame.event.get()
    
-    next_state = None  # Initialize next_state variable
+  #  next_state = None  # Initialize next_state variable
 
     for event in events:
         if event.type == pygame.QUIT:
@@ -381,12 +392,7 @@ while current_state.running:
     current_state.update()
     current_state.draw()
 
-    print(next_state)
-    if next_state == "free_play":
-        current_state = free_play_state
-    elif next_state=="menu":
-        print("Yes next state is menu")
-        current_state=menu_state
+
 
 
     pygame.display.flip()
