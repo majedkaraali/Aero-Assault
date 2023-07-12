@@ -2,6 +2,9 @@ import pygame
 import random
 from pygame.locals import *
 import sys
+import numpy as np
+import math
+
 pygame.init()
 
 width=1100
@@ -14,14 +17,37 @@ clock = pygame.time.Clock()
 # Create game states
 font = pygame.font.Font(None, 24)
 
-enemy_list=[]
+
 pygame.mixer.init()
 
 
 
 
 
-# Set the initial game state
+class Missile:
+    width=5
+    height=10
+    vel_x=2
+    vel_y=-3
+
+
+    def __init__(self,x,y,target):
+        self.x=x
+        self.y=y
+        self.targert=target
+    
+    def move_misile(self):
+        if self.targert.x>self.x:
+            self.x+=self.vel_x
+        elif self.targert.x<self.x:
+            self.x+=self.vel_x*-1
+        else :
+            self.x+=self.vel_x
+        self.y+=self.vel_y
+
+    def draw_missile(self):
+        pygame.draw.rect(screen, ('red'), (self.x, self.y, self.width, self.height))
+
 
 
 class Bullet:
@@ -41,9 +67,11 @@ class Bullet:
 
 
 class Player():
-    def __init__(self,x,y) :
+    def __init__(self,x,y,bullets,missiles) :
         self.x=x
         self.y=y
+        self.bullets=bullets
+        self.missiles=missiles
 
     width=50
     height=50
@@ -51,7 +79,7 @@ class Player():
     vel_x = 0
     vel_y = 0
     move_speed = 6
-    bullets = []
+    
     shoot_delay = 100  
     last_shot_time = 0
 
@@ -68,7 +96,9 @@ class Player():
         self.x = max(0, min(self.x, width - self.width))
         
     def update_player(self):
+        global pl
         pl = pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
+        
 
     def can_shoot(self):
         current_time = pygame.time.get_ticks()
@@ -84,10 +114,61 @@ class Player():
         for bullet in self.bullets:
             bullet.move_bullet()
 
+    def move_missiles(self):
+        for mis in self.missiles:
+            mis.move_misile()
+
     def update_bullets(self):
         for bullet in self.bullets:
             bullet.draw_bullet()
 
+    def update_missiles(self):
+        for mis in self.missiles:
+            mis.draw_missile()
+
+    def radar(self):
+        radar_range=300
+        max_left=self.x-radar_range//2
+        max_right=self.x+radar_range//2
+        radar_angle=list(range(max_left,max_right))
+        return radar_angle
+    
+    def lock_target(self):
+        global enemies_in_radar
+        get_enemies=FreePlayState.enemy_list
+        enemies_in_radar=[]
+        for enemy in get_enemies:
+            if enemy.x in self.radar():
+                enemies_in_radar.append(enemy)
+                print("append in radar ")
+
+        if len(enemies_in_radar)>0:        
+            locked_target=enemies_in_radar[0]
+            return locked_target
+        else:
+            return False
+        
+    
+
+    def fire_missile(self):
+        if self.lock_target():
+            if self.can_shoot():
+                locked=self.lock_target()
+                missile_start_x=self.x
+              
+                missile_start_y=self.y
+               
+                missile=Missile(missile_start_x, missile_start_y,locked)
+                self.missiles.append(missile)
+                self.last_shot_time = pygame.time.get_ticks()
+                print("append  list ")
+        else:
+            print("No")
+      
+
+    
+        
+        
 
 
 class Enemy:
@@ -113,8 +194,30 @@ class Enemy:
                 self.x+=self.vel
 
 
+    def get_angle_between_rects(rect1, rect2):
+        v1_x=(rect1.x)
+        v1_y=(rect1.y)
+        v2_x=(rect2.x)
+        v2_y=(rect2.y)
+
+        ddd=(v1_x*v2_x)+(v1_y*v2_y) 
+
+        direction1 = math.atan2(rect1.centery - rect1.top, rect1.centerx - rect1.left)
+        # Calculate the direction of the second rect.
+        direction2 = math.atan2(rect2.centery - rect2.top, rect2.centerx - rect2.left)
+
+        # Calculate the difference between the two directions.
+        difference = direction2 - direction1
+
+        # Convert the difference to degrees.
+        angle = difference * 180 / math.pi
+
+        # Return the angle.
+        return ddd
+
 
     def update_enemy(self):
+        global en
         en = pygame.draw.rect(screen, (29, 84, 158), (self.x, self.y, self.width, self.height))
 
     def check_collision(self, bullet_list):
@@ -128,27 +231,6 @@ class Enemy:
 
 
 
-
-
-
-
-
-
-
-def generate_enemies(num_of_enemies):
-    if len(enemy_list)<num_of_enemies:
-        move_dircton=random.randint(0,1)
-        if move_dircton==1:
-            vel=2
-            x=random.randint(-350,-50)
-            mdir='right'
-        else:
-            vel=-2
-            x=random.randint(width+50,width+350)
-            mdir='left'
-        
-        enemy=Enemy(x,10,50,50,vel,mdir)
-        enemy_list.append(enemy)
 
 
 
@@ -172,7 +254,7 @@ class GameState:
         pass
 
 class MenuState(GameState):
-    print('if current state is menu state this line must print')
+    #print('if current state is menu state this line must print')
 
     free_play_posit=pygame.Rect(20, 20, 200, 50)
     missions_posit= pygame.Rect(20, 90, 200, 50)
@@ -198,9 +280,12 @@ class MenuState(GameState):
                 #    self.running = False
                #     return "free_play"
                     
-                    p1=Player(random.randint(1,800),300)
+                    bulets=[]
+                    missiles=[]
+                    p1=Player(400,500,bulets,missiles)
+
                     print('new player',p1)
-                    print(p1.x,p1.y)
+                    print(p1.x,p1.y,p1.bullets)
                     current_state=free_play_state
                  
                 elif self.missions_posit.collidepoint(mouse_pos):
@@ -246,10 +331,11 @@ class FreePlayState(GameState):
     border_width = 1
     border_color = (0, 0, 0)
 
-
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
+
+    enemy_list=[]
 
     def __init__(self):
         super().__init__()
@@ -274,6 +360,7 @@ class FreePlayState(GameState):
                     print("Back to menu")
                     current_state = menu_state  # Update the current state
                     self.paues = False
+                    self.enemy_list.clear()
                 #    return  # Exit the handle_events method
 
                 elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
@@ -286,6 +373,21 @@ class FreePlayState(GameState):
                         self.paues = False
                     else:
                         self.paues = True
+    
+    def generate_enemies(self,num_of_enemies):
+        if len(self.enemy_list)<num_of_enemies:
+            move_dircton=random.randint(0,1)
+            if move_dircton==1:
+                vel=2
+                x=random.randint(-350,-50)
+                mdir='right'
+            else:
+                vel=-2
+                x=random.randint(width+50,width+350)
+                mdir='left'
+        
+            enemy=Enemy(x,10,50,50,vel,mdir)
+            self.enemy_list.append(enemy)
 
 
     def draw(self):
@@ -297,17 +399,25 @@ class FreePlayState(GameState):
             p1.move_player()
             p1.update_player()
             p1.move_bullets() 
-            p1.update_bullets() 
-            generate_enemies(2)
+            p1.update_bullets()
+            p1.move_missiles()
+            p1.update_missiles()
+            #print(pl)
+            
+           # p1.fire_missile()
+            self.generate_enemies(1)
+            
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 p1.shoot()
+            elif keys[pygame.K_f]:
+                p1.fire_missile()
 
 
             enemies_to_remove = []
             bullets_to_remove = []
 
-            for enemy in enemy_list:
+            for enemy in self.enemy_list:
                 if enemy.check_collision(p1.bullets):
                     enemies_to_remove.append(enemy)
 
@@ -315,21 +425,24 @@ class FreePlayState(GameState):
                 if bullet.y < 0:
                     bullets_to_remove.append(bullet)
 
-            for enemy in enemy_list:
+            for enemy in self.enemy_list:
                 pass
 
             for enemy in enemies_to_remove:
-                enemy_list.remove(enemy)
+                self.enemy_list.remove(enemy)
 
             for bullet in bullets_to_remove:
                 p1.bullets.remove(bullet)
 
         
-            for enemy in enemy_list:
+            for enemy in self.enemy_list:
                 enemy.move_enemy()
                 enemy.update_enemy()
 
             p1.update_bullets()
+            #print(en)
+            #print(pl)
+            #print(Enemy.get_angle_between_rects(pl,en))
 
         elif (self.paues):
 
@@ -384,7 +497,7 @@ while current_state.running:
 
 
     pygame.display.flip()
-
+    
 
 
 
