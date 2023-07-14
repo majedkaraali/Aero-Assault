@@ -38,7 +38,6 @@ class Missile:
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
                 self.target.destroyed=True
-                print(self.target,"DESTROYED")
                 return True
                 
             else:
@@ -168,6 +167,8 @@ class Player():
         self.missiles=missiles
         self.attacked_targets=[]
         self.enemies_in_radar=[]
+        self.tracked=[]
+        self.prev_lock=0
         
     
       
@@ -236,7 +237,7 @@ class Player():
             mis.draw_missile()
 
     def radar(self):
-        radar_range=5000
+        radar_range=1000
         max_left=self.x-radar_range//2
         max_right=self.x+radar_range//2
         radar_angle=list(range(max_left,max_right))
@@ -248,12 +249,12 @@ class Player():
         for enemy in enemies_list:
             if enemy.x in self.radar():
                 self.enemies_in_radar.append(enemy)
-      
-
+            else:
+                enemy.traced=False
+    
         if len(self.enemies_in_radar)>0:    
-            locked_target=self.enemies_in_radar[0]
-            if locked_target in self.attacked_targets:
-                locked_target =self.auto_next_target()
+         
+            locked_target =self.auto_next_target()
 
             return locked_target
 
@@ -263,28 +264,51 @@ class Player():
 
         
 
-       
-        
-            
     def auto_lock(self):
         if self.lock_target():
             auto_locked_target= self.lock_target()
             auto_locked_target.locked=True
 
 
-        
     def auto_next_target(self):
+        unlocked=[]
         untracked=[]
         for target in self.enemies_in_radar:
             if target not in self.attacked_targets:
                 untracked.append(target)
-            else:
-                target.locked=False
-       
+    
+  
+
+        closet=[]
+
+        for target in untracked :
+            dist=(target.x)-self.x
+            dist=abs(dist)
+            closet.append(dist)
+            unlocked.append(target)
+
+        if len(closet)>0:
+            min_dist=min(closet)
+
+        for target in unlocked:
+            target.locked=False
+
+    
+        
+        for dist_i in range (len(closet))  :
+            if closet[dist_i]==min_dist:
+                index=dist_i
+        
+
+    
+        tracked=untracked[index]
+
         if len(untracked)>0:
-            return untracked[0]
+            self.tracked.append(tracked)
+            return tracked
         else:
             return False
+       
 
 
         
@@ -300,7 +324,7 @@ class Player():
                 missile=Missile(missile_start_x, missile_start_y,locked)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
-                print(locked,"LOCKED TARGET")
+        
                 self.attacked_targets.append(locked)
                 
                 
