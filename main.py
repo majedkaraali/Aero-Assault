@@ -29,52 +29,54 @@ class Missile:
     height=17
     vel_x=2
     vel_y=-4
-    
-
 
     def __init__(self,x,y,target):
         self.x=x
         self.y=y
-        self.targert=target
-        #self.mis_rect=
-
-  
-    
-        
+        self.target=target
     
    
     def hit_target(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
-        if rect.colliderect(self.targert.get_rect()):
+        if rect.colliderect(self.target.get_rect()):
             print("Hit")
             return True
         else:
             return False
-
-    def move_misile(self):
-
-        enemy_dir=self.targert.move_dir
-        enx=(self.targert.x)-self.targert.width//2
-        eny=(self.targert.y)-self.targert.height//2
-        x_dis=self.x-enx
-        x_dis=abs(x_dis)
+        
+    def get_rect(self):
+        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        return  rect
+    
+    def path(self):
+        enemy_dir=self.target.move_dir
+        eny=(self.target.y)-self.target.height//2
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
-
-
         rich_target_time=y_dis//self.vel_y
         rich_target_time=abs(rich_target_time)
 
         if enemy_dir=="left":
-            cx=((self.targert.x)-rich_target_time)
-            x_path_dist=cx-self.x
-            x_path_dist=abs(x_path_dist)
+            cx=((self.target.x)-rich_target_time)
            
         elif enemy_dir=="right":
-            cx=((self.targert.x)+rich_target_time)+50
-            x_path_dist=cx-self.x
-            x_path_dist=abs(x_path_dist)
+            cx=((self.target.x)+rich_target_time)+50
+        
+        return cx
+    
+
+    def turn_vel(self):
+        eny=(self.target.y)-self.target.height//2
+        y_dis=self.y-eny
+        y_dis=abs(y_dis)
+
+        rich_target_time=y_dis//self.vel_y
+        rich_target_time=abs(rich_target_time)
+
+        x_path_dist=self.path()-self.x
+        x_path_dist=abs(x_path_dist)
+
 
 
         if rich_target_time and x_path_dist >0:
@@ -83,22 +85,28 @@ class Missile:
             missiile_x_turn_vel=2
 
 
-        if cx>self.x:
+        if self.path()>self.x:
             self.x+=missiile_x_turn_vel+1
-        elif cx<self.x:
+        elif self.path()<self.x:
             self.x-=missiile_x_turn_vel-1
 
-        print(missiile_x_turn_vel)
+        return missiile_x_turn_vel
+   
 
+    def move_misile(self):
+
+        if self.path()>self.x:
+            self.x+=self.turn_vel()+1
+        elif self.path()<self.x:
+            self.x-=self.turn_vel()-1
+
+    
         self.y+=self.vel_y
 
-        pygame.draw.rect(screen, ('red'), (cx, self.targert.y, 5, 5))
+        #pygame.draw.rect(screen, ('red'), (self.path(), self.target.y, 5, 5)) # THis is collisin point
 
-    def get_rect(self):
-        rect=pygame.Rect(self.x,self.y,self.width,self.height)
-        return  rect
+
         
-
 
     def draw_missile(self):
         width = self.width
@@ -106,10 +114,10 @@ class Missile:
         rect = pygame.Surface((width, height), pygame.SRCALPHA)
         pygame.draw.rect(rect, pygame.Color('blue'), (0, 0, width, height))
 
-        if self.targert.move_dir=="left":
-            angle = self.targert.get_angle_between_rects(self.get_rect(),self.targert.get_rect())+90
+        if self.target.move_dir=="left":
+            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+90
         else:
-            angle = self.targert.get_angle_between_rects(self.get_rect(),self.targert.get_rect())+45
+            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+45
 
         # Rotate the rectangle
 
@@ -515,7 +523,7 @@ class FreePlayState(GameState):
                     missiles_to_remove.append(missile)
                 elif missile.hit_target():
                     missiles_to_remove.append(missile)
-                    enemies_to_remove.append(missile.targert)
+                    enemies_to_remove.append(missile.target)
                     
 
 
