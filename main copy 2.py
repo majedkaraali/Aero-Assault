@@ -166,8 +166,7 @@ class Player():
         self.y=y
         self.bullets=bullets
         self.missiles=missiles
-        self.attacked_targets=[]
-        self.enemies_in_radar=[]
+        self.attacked_target=[]
         
     
       
@@ -184,7 +183,7 @@ class Player():
     
     shoot_delay = 100  
     last_shot_time = 0
-    fire_missie_delay=700
+    fire_missie_delay=1000
     last_fire_time=0
 
     def move_player(self):
@@ -244,34 +243,22 @@ class Player():
     
     def lock_target(self):
         enemies_list=free_play_state.get_enemies()
-        self.enemies_in_radar=[]
+        enemies_in_radar=[]
         for enemy in enemies_list:
             if enemy.x in self.radar():
-                self.enemies_in_radar.append(enemy)
+                enemies_in_radar.append(enemy)
       
-
-        if len(self.enemies_in_radar)>0:    
-            locked_target=self.enemies_in_radar[0]
-            if locked_target in self.attacked_targets:
-                locked_target =self.auto_next_target()
-
+        print(enemies_in_radar)
+        if len(enemies_in_radar)>0:    
+            locked_target=enemies_in_radar[0]
+            return locked_target
         
-
-        return locked_target
         
-            
-        
+        else:
+            return False
         
     def auto_next_target(self):
-        untracked=[]
-        for target in self.enemies_in_radar:
-            if target not in self.attacked_targets:
-                untracked.append(target)
-       
-        
-        return untracked[0]
-
-
+        pass
         
 
     def fire_missile(self):
@@ -286,7 +273,6 @@ class Player():
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
                 print(locked,"LOCKED TARGET")
-                self.attacked_targets.append(locked)
                 
                 
 
@@ -511,8 +497,8 @@ class FreePlayState(GameState):
                 vel=-2
                 x=random.randint(width+50,width+350)
                 mdir='left'
-            y=random.randint(5,40)
-            enemy=Enemy(x,y,80,25,vel,mdir)
+        
+            enemy=Enemy(x,10,80,25,vel,mdir)
             self.enemy_list.append(enemy)
 
     def get_enemies(self):
@@ -533,7 +519,7 @@ class FreePlayState(GameState):
             p1.update_missiles()
             
  
-            self.generate_enemies(4)
+            self.generate_enemies(2)
             
             
             keys = pygame.key.get_pressed()
