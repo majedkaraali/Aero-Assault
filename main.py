@@ -67,12 +67,12 @@ class Missile:
         rich_target_time=abs(rich_target_time)
 
         if enemy_dir=="left":
-            cx=(self.targert.x)-rich_target_time
+            cx=((self.targert.x)-rich_target_time)
             x_path_dist=cx-self.x
             x_path_dist=abs(x_path_dist)
            
         elif enemy_dir=="right":
-            cx=(self.targert.x)+rich_target_time
+            cx=((self.targert.x)+rich_target_time)+50
             x_path_dist=cx-self.x
             x_path_dist=abs(x_path_dist)
 
@@ -101,13 +101,27 @@ class Missile:
 
 
     def draw_missile(self):
-        position=(self.x,self.y)
-        m=pygame.Surface((5, 20))
-        m.fill('blue')
-        i=pygame.transform.rotate(m,180)
-        
-        screen.blit(i , position)
-        #print(m.get_rect())
+        width = self.width
+        height = self.height
+        rect = pygame.Surface((width, height), pygame.SRCALPHA)
+        pygame.draw.rect(rect, pygame.Color('blue'), (0, 0, width, height))
+
+        if self.targert.move_dir=="left":
+            angle = self.targert.get_angle_between_rects(self.get_rect(),self.targert.get_rect())+90
+        else:
+            angle = self.targert.get_angle_between_rects(self.get_rect(),self.targert.get_rect())+45
+
+        # Rotate the rectangle
+
+        rotated_rect = pygame.transform.rotate(rect, angle)
+
+        # Calculate the position adjustment to center the rotated rectangle
+        x_adjustment = (rotated_rect.get_width() - width) // 2
+        y_adjustment = (rotated_rect.get_height() - height) // 2
+
+        # Blit the rotated rectangle onto the screen at the adjusted position
+        screen.blit(rotated_rect, (self.x - x_adjustment,self.y - y_adjustment))
+             
 
 
 class Bullet:
@@ -264,7 +278,7 @@ class Enemy:
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
         return  rect
     
-    def get_angle_between_rects(rect1, rect2):
+    def get_angle_between_rects(self,rect1, rect2):
 
         v1_x=(rect1.x)
         v1_y=(rect1.y)
