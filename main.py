@@ -58,16 +58,16 @@ class Missile:
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
-        rich_target_time=y_dis//self.vel_y
-        rich_target_time=abs(rich_target_time)
+        reach_target_time=y_dis//self.vel_y
+        reach_target_time=abs(reach_target_time)
 
         if enemy_dir=="left":
-            cx=((self.target.x)-rich_target_time)
+            cx=((self.target.x)-reach_target_time)
            
         elif enemy_dir=="right":
-            cx=((self.target.x)+rich_target_time)+50
+            cx=((self.target.x)+reach_target_time)+50
         
-
+        self.target.tracked=True
         return cx
 
 
@@ -78,16 +78,16 @@ class Missile:
         y_dis=self.y-eny
         y_dis=abs(y_dis)
 
-        rich_target_time=y_dis//self.vel_y
-        rich_target_time=abs(rich_target_time)
+        reach_target_time=y_dis//self.vel_y
+        reach_target_time=abs(reach_target_time)
 
         x_path_dist=self.path()-self.x
         x_path_dist=abs(x_path_dist)
 
 
 
-        if rich_target_time and x_path_dist >0:
-            missiile_x_turn_vel=x_path_dist/rich_target_time
+        if reach_target_time and x_path_dist >0:
+            missiile_x_turn_vel=x_path_dist/reach_target_time
         else:
             missiile_x_turn_vel=2
 
@@ -255,21 +255,36 @@ class Player():
             if locked_target in self.attacked_targets:
                 locked_target =self.auto_next_target()
 
+            return locked_target
+
+
+        else:
+            return False
+
         
 
-        return locked_target
+       
         
             
-        
+    def auto_lock(self):
+        if self.lock_target():
+            auto_locked_target= self.lock_target()
+            auto_locked_target.locked=True
+
+
         
     def auto_next_target(self):
         untracked=[]
         for target in self.enemies_in_radar:
             if target not in self.attacked_targets:
                 untracked.append(target)
+            else:
+                target.locked=False
        
-        
-        return untracked[0]
+        if len(untracked)>0:
+            return untracked[0]
+        else:
+            return False
 
 
         
@@ -309,7 +324,8 @@ class Enemy:
         self.vel=vel
         self.move_dir=move_dir
         self.destroyed=False
-       
+        self.tracked=False
+        self.locked=False
 
     def set_x(self,x):
         self.x=x
@@ -345,8 +361,21 @@ class Enemy:
 
 
     def update_enemy(self):
-        global en
-        en = pygame.draw.rect(screen, (29, 84, 158), (self.x, self.y, self.width, self.height))
+        target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        pygame.draw.rect(screen, "blue", target_rect)
+        text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
+
+        if self.locked:
+            pygame.draw.rect(screen, "blue", target_rect)
+            text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
+        if self.tracked:
+            pass
+            #pygame.draw.rect(screen, "blue", target_rect)
+            #text = pygame.font.SysFont(None, 24).render("X", True, ('yellow'))
+
+        text_rect = text.get_rect(center=target_rect.center)
+        screen.blit(text, text_rect)
+
 
     def check_collision(self, obje):
         for bullet in obje:
@@ -354,7 +383,6 @@ class Enemy:
                 self.x + self.width > bullet.x and
                 self.y < bullet.y + bullet.height and
                 self.y + self.height > bullet.y):
-                self.destroyed=True
                 return True
                 
 
@@ -501,17 +529,30 @@ class FreePlayState(GameState):
                         self.paues = True
     
     def generate_enemies(self,num_of_enemies):
+        y_spawns=[3,33,60]
+        
         if len(self.enemy_list)<num_of_enemies:
             move_dircton=random.randint(0,1)
+            
             if move_dircton==1:
-                vel=2
-                x=random.randint(-350,-50)
+                x_spawns=[-500,-300,-200,-100,-400]
+                x=random.choice(x_spawns)-40
                 mdir='right'
+                vel=2
+
+
+
             else:
-                vel=-2
-                x=random.randint(width+50,width+350)
+                x_spawns=[width+500,width+300,width+200,width+100,width+400]
+                x=random.choice(x_spawns)+40
                 mdir='left'
-            y=random.randint(5,40)
+                vel=-2
+            print(x)
+                
+   
+
+
+            y=random.choice(y_spawns)
             enemy=Enemy(x,y,80,25,vel,mdir)
             self.enemy_list.append(enemy)
 
@@ -531,7 +572,7 @@ class FreePlayState(GameState):
             p1.update_bullets()
             p1.move_missiles()
             p1.update_missiles()
-            
+            p1.auto_lock()
  
             self.generate_enemies(4)
             
@@ -558,6 +599,7 @@ class FreePlayState(GameState):
                 elif enemy.move_dir=='right':
                     if enemy.x>width:
                         enemies_to_remove.append(enemy)
+                        
                      
 
 
@@ -577,15 +619,11 @@ class FreePlayState(GameState):
                     
 
 
-
-            
-
-            for enemy in self.enemy_list:
-                pass
-
             if len(enemies_to_remove)>0:
                 for enemy in enemies_to_remove:
+                    enemy.destroyed=True
                     self.enemy_list.remove(enemy)
+                    
 
             for bullet in bullets_to_remove:
                 p1.bullets.remove(bullet)
