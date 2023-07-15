@@ -213,19 +213,17 @@ class Player():
         max_left=self.x-radar_range//2
         max_right=self.x+radar_range//2
         radar_angle=list(range(max_left,max_right))
-
         rd=  pygame.draw.rect(screen, ('green'), (max_left, 10, radar_range , 2))
         enemies_list=free_play_state.get_enemies()
-
         self.enemies_in_radar=[]
-        
+
         for enemy in enemies_list:
             if enemy.get_centerx() in radar_angle:
-                    enemy.tracked=True
+                    #enemy.tracked=True
                     self.enemies_in_radar.append(enemy)
                     if enemy not in self.tracked :
-                            self.tracked.append(enemy)
-
+                            if enemy not in self.attacked_targets:
+                                self.tracked.append(enemy)
 
         for target in self.tracked:
             if target.destroyed==True:
@@ -233,14 +231,28 @@ class Player():
             elif target.get_centerx() not in radar_angle:
                 target.tracked=False
                 self.tracked.remove(target)
-                
-        print(len(self.tracked))
+            elif target in self.attacked_targets:
+                self.tracked.remove(target)
+            
+        
+        locked=self.auto_lock()
+
+        if locked:
+            locked.tracked=True
+        
 
 
 
     def auto_lock(self):
-        print(self.tracked)
-        print(self.enemies_in_radar)
+        searched_enemies=self.tracked
+        enemies_count=len(searched_enemies)
+        if enemies_count>0:
+            locked=searched_enemies[0]
+            return locked
+        
+        else:
+            return False
+        
     
     def fire_missile(self):
         if self.can_fire_missile():
@@ -252,7 +264,7 @@ class Player():
                 missile=Missile(missile_start_x, missile_start_y,locked)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
-        
+                locked.locked=True
                 self.attacked_targets.append(locked)
 
 
@@ -323,13 +335,16 @@ class Enemy:
         pygame.draw.rect(screen, "blue", target_rect)
         text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
 
+
         if self.locked:
             pygame.draw.rect(screen, "blue", target_rect)
             text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
-        if self.tracked:
+            print("kosad")
+            
+        elif self.tracked:
             pygame.draw.rect(screen, "blue", target_rect)
             text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
-
+            print("wwwwwwwww")
         text_rect = text.get_rect(center=target_rect.center)
         screen.blit(text, text_rect)
 
