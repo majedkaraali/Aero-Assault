@@ -2,7 +2,6 @@ import pygame
 import random
 from pygame.locals import *
 from math import atan2, degrees, pi
-import math
 
 pygame.init()
 
@@ -12,15 +11,11 @@ height=640
 
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
+
 font = pygame.font.Font(None, 24)
+
+
 pygame.mixer.init()
-
-
-pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
-
-
-
-
 
 
 
@@ -128,28 +123,17 @@ class Missile:
 class Bullet:
     width = 3
     height = 7
-    speed = 10
+    vel_y = -10
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.vel_x = 0
-        self.vel_y = 0
 
     def move_bullet(self):
-        self.x += self.vel_x
         self.y += self.vel_y
 
     def draw_bullet(self):
         pygame.draw.rect(screen, ('black'), (self.x, self.y, self.width, self.height))
-
-    def shoot_at(self, target_x, target_y):
-        dx = target_x - self.x
-        dy = target_y - self.y
-        distance = math.sqrt(dx ** 2 + dy ** 2)
-        if distance != 0:
-            self.vel_x = (dx / distance) * self.speed
-            self.vel_y = (dy / distance) * self.speed
 
 
 class Player():
@@ -171,14 +155,14 @@ class Player():
     move_speed = 6
     shoot_delay = 100  
     last_shot_time = 0
-    fire_missie_delay=200
+    fire_missie_delay=700
     last_fire_time=0
 
     def move_player(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
+        if keys[pygame.K_LEFT]:
             vel_x = -self.move_speed
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_RIGHT]:
             vel_x = self.move_speed
         else:
             vel_x = 0
@@ -203,11 +187,7 @@ class Player():
 
     def shoot(self):
         if self.can_shoot():
-
-
-            target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
-            bullet.shoot_at(target_x, target_y)
             self.bullets.append(bullet)
             self.last_shot_time = pygame.time.get_ticks()
 
@@ -275,6 +255,7 @@ class Player():
     def auto_lock(self):
         searched_enemies=self.tracked
         enemies_count=len(searched_enemies)
+        print(searched_enemies,self.selected)
         if enemies_count>0:
             if self.selected>=enemies_count:
                 locked=searched_enemies[0]
@@ -471,7 +452,6 @@ class MenuState(GameState):
      
 
 class FreePlayState(GameState):
-    mouse_button_pressed=False
     paues=False
     pause_frame_color = ('silver')
     pause_surface_width=250
@@ -498,8 +478,7 @@ class FreePlayState(GameState):
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.mouse_button_pressed=True
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 adjusted_mouse_pos = (
                     mouse_pos[0] - self.frame_position[0],
@@ -519,16 +498,8 @@ class FreePlayState(GameState):
                 elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Exit")
                     self.running = False
-                    print()
-       
-            elif event.type == pygame.MOUSEBUTTONUP:
-                self.mouse_button_pressed = False
-                
-            print(self.mouse_button_pressed)
-
             
-            
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     if self.paues:
                         self.paues = False
@@ -542,9 +513,6 @@ class FreePlayState(GameState):
             elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_TAB:
                         tab_pressed = False
-
-        if self.mouse_button_pressed:
-                p1.shoot()
     
     def generate_enemies(self,num_of_enemies):
         y_spawns=[3,33,60]
@@ -567,6 +535,8 @@ class FreePlayState(GameState):
                 vel=-2
           
                 
+   
+
 
             y=random.choice(y_spawns)
             enemy=Enemy(x,y,80,25,vel,mdir)
@@ -574,29 +544,13 @@ class FreePlayState(GameState):
 
     def get_enemies(self):
         return self.enemy_list
-    
-    def ground(self):
-        surface_width = width
-        surface_height = 100
-        ground_surface = pygame.Surface((surface_width, surface_height))
-        ground_surface.fill(pygame.Color('green'))
-        border = 1
-        position = (0, height-surface_height)
-
-        pygame.draw.rect(ground_surface, pygame.Color('green'), ground_surface.get_rect(), border)
-        screen.blit(ground_surface, position)
-    
-
-
 
 
     def draw(self):
-        
 
         if not (self.paues):
             clock.tick(60)
             screen.fill('aqua')
-            self.ground()
 
             p1.move_player()
             p1.update_player()
@@ -637,6 +591,9 @@ class FreePlayState(GameState):
                         enemies_to_remove.append(enemy)
                         
                      
+
+
+
 
             for bullet in p1.bullets:
                 if bullet.y < 0:
@@ -699,7 +656,6 @@ class FreePlayState(GameState):
             self.frame_surface.blit(resume_button_text,resume_button_text_rect)
             self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
             self.frame_surface.blit(exit_button_text,exit_button_text_rect)
-        
             
            
             
