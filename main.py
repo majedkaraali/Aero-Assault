@@ -145,9 +145,8 @@ class Player():
         self.attacked_targets=[]
         self.enemies_in_radar=[]
         self.tracked=[]
+        self.selected=0
 
-
-        
     width=50
     height=50
     player_alive=True
@@ -209,7 +208,7 @@ class Player():
             mis.draw_missile()
 
     def radar(self):
-        radar_range=800
+        radar_range=900
         max_left=self.x-radar_range//2
         max_right=self.x+radar_range//2
         radar_angle=list(range(max_left,max_right))
@@ -238,21 +237,37 @@ class Player():
         locked=self.auto_lock()
 
         if locked:
-            locked.tracked=True
+            for target in self.tracked:
+                if target==locked:
+                    locked.tracked=True
+                else:
+                    target.tracked=False
+
+
+    def next_lock(self):
+        searched_enemies=self.tracked
+        enemies_count=len(searched_enemies)
+        if ((self.selected)+1)>=(enemies_count):
+            self.selected=0
+        else:
+            self.selected+=1
         
-
-
-
     def auto_lock(self):
         searched_enemies=self.tracked
         enemies_count=len(searched_enemies)
+        print(searched_enemies,self.selected)
         if enemies_count>0:
-            locked=searched_enemies[0]
+            if self.selected>=enemies_count:
+                locked=searched_enemies[0]
+            else:
+                locked=searched_enemies[self.selected]
             return locked
         
         else:
             return False
-        
+    
+ 
+    
     
     def fire_missile(self):
         if self.can_fire_missile():
@@ -268,16 +283,7 @@ class Player():
                 self.attacked_targets.append(locked)
 
 
-        
-  
 
-    
-        
-      
-
-    
-        
-        
 
 
 class Enemy:
@@ -339,12 +345,10 @@ class Enemy:
         if self.locked:
             pygame.draw.rect(screen, "blue", target_rect)
             text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
-            print("kosad")
-            
+
         elif self.tracked:
             pygame.draw.rect(screen, "blue", target_rect)
             text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
-            print("wwwwwwwww")
         text_rect = text.get_rect(center=target_rect.center)
         screen.blit(text, text_rect)
 
@@ -470,6 +474,7 @@ class FreePlayState(GameState):
         
     def handle_events(self, events):
         global current_state
+        tab_pressed = False
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
@@ -493,13 +498,21 @@ class FreePlayState(GameState):
                 elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Exit")
                     self.running = False
-
+            
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     if self.paues:
                         self.paues = False
                     else:
                         self.paues = True
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_TAB] and not tab_pressed:
+                    p1.next_lock()
+                    tab_pressed = True
+
+            elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_TAB:
+                        tab_pressed = False
     
     def generate_enemies(self,num_of_enemies):
         y_spawns=[3,33,60]
@@ -555,6 +568,8 @@ class FreePlayState(GameState):
                 p1.shoot()
             elif keys[pygame.K_f]:
                 p1.fire_missile()
+                
+       
 
 
             enemies_to_remove = []
