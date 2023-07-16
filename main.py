@@ -339,7 +339,23 @@ class Player():
 
 
 
+class Bomb:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        self.width=4
+        self.height=6
+        self.vel=1
 
+    def move(self):
+        self.y+=self.vel
+        #print('moving')
+
+    def draw(self):
+        pygame.draw.rect(screen, pygame.Color('black'), (self.x, self.y, self.width, self.height))
+        #print('drawing')
+
+    
 
 class Enemy:
     def __init__(self,x,y,width,height,vel,move_dir):
@@ -352,10 +368,37 @@ class Enemy:
         self.destroyed=False
         self.tracked=False
         self.locked=False
+        self.bomb_dely=200
+        self.last_bomb_time=0
+        self.bomb_count=3
+        
+    bombs=[]
 
     def get_centerx(self):
         center_x=self.x+(self.width//2)
         return center_x
+    
+    def move_bombs(self):
+        for bomb in self.bombs:
+            bomb.move()
+            bomb.draw()
+            if bomb.y>height-15:
+                self.bombs.remove(bomb)
+                print("removed")
+
+    def can_bomb(self):
+        current_time = pygame.time.get_ticks()
+        return current_time - self.last_bomb_time >= self.bomb_dely
+    
+    def bomb(self,target):
+        if self.can_bomb():
+            distance=self.x-target.x
+            distance=abs(distance)
+            if distance<=300 and self.bomb_count>0:
+                self.bomb_count-=1
+                bomb=Bomb(self.get_centerx(),self.y)
+                self.bombs.append(bomb)
+                self.last_bomb_time = pygame.time.get_ticks()
 
 
     def set_x(self,x):
@@ -672,7 +715,7 @@ class FreePlayState(GameState):
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
                         
-                     
+             
 
             for bullet in p1.bullets:
                 if bullet.out_of_range():
@@ -701,10 +744,23 @@ class FreePlayState(GameState):
                 p1.missiles.remove(missile)
 
 
-        
+            bombs_to_remove=[]
+
+            
+
+
             for enemy in self.enemy_list:
                 enemy.move_enemy()
                 enemy.update_enemy()
+                enemy.bomb(p1)
+                enemy.move_bombs()
+                #if len(enemy.bombs)>0:
+                #print(enemy.bombs)
+
+                
+                        
+
+
 
             p1.update_bullets()
             #print(self.enemy_list)
