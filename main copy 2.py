@@ -20,6 +20,11 @@ pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
 
 
 
+
+
+
+
+
 class Missile:
     width=5
     height=17
@@ -122,7 +127,7 @@ class Missile:
 
 class Bullet:
     width = 3
-    height = 4
+    height = 7
     speed = 10
 
     def __init__(self, x, y):
@@ -130,51 +135,21 @@ class Bullet:
         self.y = y
         self.vel_x = 0
         self.vel_y = 0
-        self.max_y=0
-        self.max_x=0
-        self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
 
     def move_bullet(self):
         self.x += self.vel_x
         self.y += self.vel_y
-        self.max_y+=self.vel_y
-        self.max_x+=self.vel_x
-
 
     def draw_bullet(self):
-        screen.blit(self.surface, (self.x, self.y))
+        pygame.draw.rect(screen, ('black'), (self.x, self.y, self.width, self.height))
 
     def shoot_at(self, target_x, target_y):
         dx = target_x - self.x
         dy = target_y - self.y
         distance = math.sqrt(dx ** 2 + dy ** 2)
-
         if distance != 0:
             self.vel_x = (dx / distance) * self.speed
             self.vel_y = (dy / distance) * self.speed
-
-    def out_of_range(self):
-
-        if abs(self.max_y)>450:
-            return True
-        if abs(self.max_x)>550:
-        
-            return True
-        else:
-            return False
-
-    def rotate_bullet(self, target_x, target_y):
-        dx = target_x - self.x
-        dy = target_y - self.y
-        angle = math.degrees(math.atan2(dy, dx)) + 90
-
-        rotated_surface = pygame.transform.rotate(self.surface, angle)
-        x_adjustment = (rotated_surface.get_width() - self.width) // 2
-        y_adjustment = (rotated_surface.get_height() - self.height) // 2
-
-        screen.blit(rotated_surface, (self.x - x_adjustment, self.y - y_adjustment))
-       
 
 
 class Player():
@@ -232,13 +207,8 @@ class Player():
 
             target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
-            bullet2 = Bullet(20+self.x + self.width // 2 - Bullet.width // 2, self.y)
             bullet.shoot_at(target_x, target_y)
-            bullet.rotate_bullet(target_x,target_y)
-            bullet2.shoot_at(target_x, target_y)
-            bullet2.rotate_bullet(target_x,target_y)
             self.bullets.append(bullet)
-            self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
 
     def move_bullets(self):
@@ -554,7 +524,7 @@ class FreePlayState(GameState):
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
                 
-    
+            print(self.mouse_button_pressed)
 
             
             
@@ -577,7 +547,7 @@ class FreePlayState(GameState):
                 p1.shoot()
     
     def generate_enemies(self,num_of_enemies):
-        y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
+        y_spawns=[3,33,60]
         
         if len(self.enemy_list)<num_of_enemies:
             move_dircton=random.randint(0,1)
@@ -607,7 +577,7 @@ class FreePlayState(GameState):
     
     def ground(self):
         surface_width = width
-        surface_height = 80
+        surface_height = 100
         ground_surface = pygame.Surface((surface_width, surface_height))
         ground_surface.fill(pygame.Color('green'))
         border = 1
@@ -669,7 +639,7 @@ class FreePlayState(GameState):
                      
 
             for bullet in p1.bullets:
-                if bullet.out_of_range():
+                if bullet.y < 0:
                     bullets_to_remove.append(bullet)
 
 
