@@ -156,7 +156,13 @@ class Bullet:
 
     def out_of_range(self):
 
-        if abs(self.max_y)>450:
+        x_y=abs(self.max_x)+abs(self.max_y)
+
+
+        if x_y>700:
+            return True
+
+        if abs(self.max_y)>370:
             return True
         if abs(self.max_x)>550:
         
@@ -267,7 +273,7 @@ class Player():
         self.enemies_in_radar=[]
 
         for enemy in enemies_list:
-            if enemy.get_centerx() in radar_angle:
+            if enemy.get_centerx() in radar_angle and enemy.y < 300:
                     #enemy.tracked=True
                     self.enemies_in_radar.append(enemy)
                     if enemy not in self.tracked :
