@@ -198,7 +198,7 @@ class Player():
         self.selected=0
 
     width=60
-    height=30
+    height=33
     player_alive=True
     vel_x = 0
     vel_y = 0
@@ -725,13 +725,15 @@ class FreePlayState(GameState):
     def statics(self):
         surface_width = width
         surface_height = 30
-        ground_surface = pygame.Surface((surface_width, surface_height))
-        ground_surface.fill(pygame.Color('lightgreen'))
+        startic_surface = pygame.Surface((surface_width, surface_height))
+        startic_surface.fill(pygame.Color('lightgreen'))
         border = 1
         position = (0, height-30)
 
-        pygame.draw.rect(ground_surface, pygame.Color('lightgreen'), ground_surface.get_rect(), border)
-        screen.blit(ground_surface, position)
+        pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
+        screen.blit(startic_surface, position)
+
+
 
     
 
