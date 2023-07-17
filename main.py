@@ -140,6 +140,7 @@ class Bullet:
         self.y += self.vel_y
         self.max_y+=self.vel_y
         self.max_x+=self.vel_x
+        #print(self.vel_x,self.vel_y)
 
 
     def draw_bullet(self):
@@ -340,15 +341,18 @@ class Player():
 
 
 class Bomb:
-    def __init__(self,x,y):
+    def __init__(self,x,y,velx,vely):
         self.x=x
         self.y=y
         self.width=4
         self.height=6
-        self.vel=1
+        self.velx=velx
+        self.vely=vely
 
     def move(self):
-        self.y+=self.vel
+        self.y+=self.vely
+        self.x+=self.velx
+        print(self.velx,self.vely)
         #print('moving')
 
     def draw(self):
@@ -381,10 +385,15 @@ class Enemy:
     def move_bombs(self):
         for bomb in self.bombs:
             bomb.move()
-            bomb.draw()
             if bomb.y>height-15:
                 self.bombs.remove(bomb)
-                print("removed")
+    
+    def draw_bombs(self):
+        for bomb in self.bombs:
+            bomb.draw()
+          
+    
+
 
     def can_bomb(self):
         current_time = pygame.time.get_ticks()
@@ -396,7 +405,13 @@ class Enemy:
             distance=abs(distance)
             if distance<=300 and self.bomb_count>0:
                 self.bomb_count-=1
-                bomb=Bomb(self.get_centerx(),self.y)
+                x_vel=1
+                y_vel=1
+                if self.move_dir=='right':
+                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel)
+                else:
+                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel)
+
                 self.bombs.append(bomb)
                 self.last_bomb_time = pygame.time.get_ticks()
 
@@ -577,6 +592,7 @@ class FreePlayState(GameState):
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouse_button_pressed=True
                 mouse_pos = pygame.mouse.get_pos()
@@ -584,21 +600,24 @@ class FreePlayState(GameState):
                     mouse_pos[0] - self.frame_position[0],
                     mouse_pos[1] - self.frame_position[1]
                 )
-                if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
-                    print("Resume button clicked!")
-                    self.paues = False
 
-                elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
-                    print("Back to menu")
-                    current_state = menu_state  # Update the current state
-                    self.paues = False
-                    self.enemy_list.clear()
-               
+                if self.paues:
+                    if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
+                        
+                        print("Resume button clicked!")
+                        self.paues = False
 
-                elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
-                    print("Exit")
-                    self.running = False
-                    print()
+                    elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
+                        print("Back to menu")
+                        current_state = menu_state  # Update the current state
+                        self.paues = False
+                        self.enemy_list.clear()
+                
+
+                    elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
+                        print("Exit22")
+                        self.running = False
+                   
        
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -748,15 +767,17 @@ class FreePlayState(GameState):
 
             
 
-
+            loop_once=0
             for enemy in self.enemy_list:
+
                 enemy.move_enemy()
                 enemy.update_enemy()
-                enemy.bomb(p1)
-                enemy.move_bombs()
-                #if len(enemy.bombs)>0:
-                #print(enemy.bombs)
-
+               
+                if loop_once==0:
+                    enemy.bomb(p1)
+                    enemy.move_bombs()
+                    enemy.draw_bombs()
+                    loop_once+=1
                 
                         
 
