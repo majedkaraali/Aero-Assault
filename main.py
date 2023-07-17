@@ -7,7 +7,7 @@ import math
 pygame.init()
 
 width=1100
-height=640
+height=660
 
 
 screen = pygame.display.set_mode((width, height))
@@ -197,8 +197,8 @@ class Player():
         self.tracked=[]
         self.selected=0
 
-    width=50
-    height=50
+    width=60
+    height=30
     player_alive=True
     vel_x = 0
     vel_y = 0
@@ -721,6 +721,18 @@ class FreePlayState(GameState):
 
         pygame.draw.rect(ground_surface, pygame.Color('green'), ground_surface.get_rect(), border)
         screen.blit(ground_surface, position)
+
+    def statics(self):
+        surface_width = width
+        surface_height = 30
+        ground_surface = pygame.Surface((surface_width, surface_height))
+        ground_surface.fill(pygame.Color('lightgreen'))
+        border = 1
+        position = (0, height-30)
+
+        pygame.draw.rect(ground_surface, pygame.Color('lightgreen'), ground_surface.get_rect(), border)
+        screen.blit(ground_surface, position)
+
     
 
 
@@ -733,6 +745,7 @@ class FreePlayState(GameState):
             clock.tick(60)
             screen.fill('aqua')
             self.ground()
+            self.statics()
 
             p1.move_player()
             p1.update_player()
