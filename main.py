@@ -133,7 +133,9 @@ class Bullet:
         self.max_y=0
         self.max_x=0
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
+        self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
+        self.hitted=False
+
 
     def move_bullet(self):
         self.x += self.vel_x
@@ -352,7 +354,7 @@ class Bomb:
     def move(self):
         self.y+=self.vely
         self.x+=self.velx
-        print(self.velx,self.vely)
+        #print(self.velx,self.vely)
         #print('moving')
 
     def draw(self):
@@ -375,8 +377,12 @@ class Enemy:
         self.bomb_dely=200
         self.last_bomb_time=0
         self.bomb_count=3
+        self.health=100
+        self.damaged=False
         
     bombs=[]
+
+
 
     def get_centerx(self):
         center_x=self.x+(self.width//2)
@@ -465,6 +471,12 @@ class Enemy:
         text_rect = text.get_rect(center=target_rect.center)
         screen.blit(text, text_rect)
 
+    
+    def is_taken_damage(self):
+        if self.damaged==True:
+            return True
+        else:
+            return False
 
     def check_collision(self, obje):
         for bullet in obje:
@@ -472,8 +484,13 @@ class Enemy:
                 self.x + self.width > bullet.x and
                 self.y < bullet.y + bullet.height and
                 self.y + self.height > bullet.y):
-                self.destroyed=True
-                return True
+                bullet.hitted=True
+
+                self.health-=20
+
+                if self.health<0:
+                    self.destroyed=True
+                    return True
                 
 
                 
@@ -739,6 +756,10 @@ class FreePlayState(GameState):
             for bullet in p1.bullets:
                 if bullet.out_of_range():
                     bullets_to_remove.append(bullet)
+    
+                elif bullet.hitted:
+                    bullets_to_remove.append(bullet)
+
 
 
             for missile in  p1.missiles:
