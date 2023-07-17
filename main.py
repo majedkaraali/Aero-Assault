@@ -13,6 +13,7 @@ height=660
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
+score=0
 pygame.mixer.init()
 
 
@@ -500,6 +501,7 @@ class Enemy:
             return False
 
     def check_collision(self, obje):
+        global score
         for bullet in obje:
             if (self.x < bullet.x + bullet.width and
                 self.x + self.width > bullet.x and
@@ -508,10 +510,12 @@ class Enemy:
                 bullet.hitted=True
 
                 self.health-=15
- 
+                score+=5
                 if self.health<0:
                     self.destroyed=True
+                    score+=40
                     return True
+                    
                 
 
                 
@@ -614,9 +618,20 @@ class FreePlayState(GameState):
     border_width = 1
     border_color = (0, 0, 0)
 
+
+
+
+
+
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
+    
+    score_rect=pygame.Rect(35, height-15, 100, 20)
+    menu_rect=pygame.Rect((width//2), height-15, 100, 66)
+    missile_count_rect=pygame.Rect(width-50, height-15, 50, 66)
+    bullet_count_rect=pygame.Rect(width-150, height-15, 50, 66)
+    scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
 
     enemy_list=[]
 
@@ -723,6 +738,7 @@ class FreePlayState(GameState):
         screen.blit(ground_surface, position)
 
     def statics(self):
+        global score
         surface_width = width
         surface_height = 30
         startic_surface = pygame.Surface((surface_width, surface_height))
@@ -732,11 +748,28 @@ class FreePlayState(GameState):
 
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
         screen.blit(startic_surface, position)
+        score_value =str(score)
+
+        score_text = font.render("Score: "+score_value, True, ('black'))
+        score_text_pos=(10,height-25)
+
+        menu_text = font.render("menu", True, 'black')
+        menu_text_pos=(width//2,height-25)
+        menurect=menu_text.get_rect()
+
+        bullets_text = font.render("bullets: 0", True, 'black')
+        bullets_text_pos=(width-100,height-25)
+
+        missiles_text = font.render("missiles: 0", True, 'black')
+        missiles_text_pos=(width-200,height-25)
+      
+        screen.blit(score_text,score_text_pos)
+        screen.blit(menu_text, menu_text_pos)
+        screen.blit(bullets_text, bullets_text_pos)
+        screen.blit(missiles_text, missiles_text_pos)
 
 
-
-    
-
+           
 
 
 
