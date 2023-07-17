@@ -212,8 +212,8 @@ class Player():
     fire_missie_delay=200
     last_fire_time=0
 
-    relod_deley=2000
-    relod_start_time=0
+    reload_delay=4000
+    reload_start_time=0
 
 
     def get_centerx(self):
@@ -238,21 +238,44 @@ class Player():
         self.radar()
 
     def reload(self):
-        self.magazine=120
-        self.bullets_count-=120
+      
+        if (self.finih_reload()):
+            self.magazine=120
+            self.bullets_count-=120
+
+        
+    def finih_reload(self):
+        current_time = pygame.time.get_ticks()
+        print(current_time,"CTM")
+        print(self.reload_start_time,"SSSTTM")
+
+        if self.reload_start_time+self.reload_delay<=current_time:
+            self.update_magazen()
+            return True
+            
+        else:
+            return False 
+
 
     def chek_magazine(self):
-        return self.magazine>0
+        if self.magazine>0:
+            self.reload()
+            return True
+        else:
+            self.magazine="---" 
+            return False
+      
         
+    def update_magazen(self):
+        print("updated")
 
     def can_shoot(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_delay:
             if self.chek_magazine():
                 return True
-            else:
-                print("GO RELOAD")
-                self.reload()
+
+
     
     def can_fire_missile(self):
         current_time = pygame.time.get_ticks()
@@ -261,7 +284,7 @@ class Player():
 
     def shoot(self):
         if self.can_shoot():
-            self.magazine-=1
+            self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
             bullet2 = Bullet(20+self.x + self.width // 2 - Bullet.width // 2, self.y)
@@ -272,6 +295,9 @@ class Player():
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
+            if not self.chek_magazine():
+                self.reload_start_time=pygame.time.get_ticks()
+            
 
     def move_bullets(self):
         for bullet in self.bullets:
@@ -282,6 +308,7 @@ class Player():
             mis.move_misile()
 
     def update_bullets(self):
+        self.chek_magazine()
         for bullet in self.bullets:
             bullet.draw_bullet()
 
