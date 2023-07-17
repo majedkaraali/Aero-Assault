@@ -208,6 +208,11 @@ class Player():
     fire_missie_delay=200
     last_fire_time=0
 
+
+    def get_centerx(self):
+        center_x=self.x+(self.width//2)
+        return center_x
+
     def move_player(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
@@ -374,7 +379,7 @@ class Enemy:
         self.destroyed=False
         self.tracked=False
         self.locked=False
-        self.bomb_dely=200
+        self.bomb_dely=250
         self.last_bomb_time=0
         self.bomb_count=3
         self.health=100
@@ -391,7 +396,7 @@ class Enemy:
     def move_bombs(self):
         for bomb in self.bombs:
             bomb.move()
-            if bomb.y>height-15:
+            if bomb.y>height-50:
                 self.bombs.remove(bomb)
     
     def draw_bombs(self):
@@ -407,19 +412,35 @@ class Enemy:
     
     def bomb(self,target):
         if self.can_bomb():
-            distance=self.x-target.x
-            distance=abs(distance)
-            if distance<=300 and self.bomb_count>0:
-                self.bomb_count-=1
-                x_vel=1
-                y_vel=1
-                if self.move_dir=='right':
-                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel)
-                else:
-                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel)
+            distance_x=self.get_centerx()-target.x
+            distance_x=abs(distance_x)
+            distance_y=abs(self.y)-abs(target.y)
+            target_x=target.get_centerx()
+            target_attak_range=list(range(target_x-50,target_x+50))
+            y_vel=1
+            x_vel=1
 
-                self.bombs.append(bomb)
-                self.last_bomb_time = pygame.time.get_ticks()
+            reach_time=distance_y//y_vel
+            reach_time=abs(reach_time)
+            
+            if self.move_dir=="right":
+                reach_x=self.x+reach_time//x_vel
+            else:
+                reach_x=self.x-reach_time//x_vel
+
+          
+            if reach_x in target_attak_range :
+                if self.can_bomb():
+                    if self.bomb_count>0:
+                        if self.move_dir=='right':
+                            bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel)
+                        else:
+                            bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel)
+
+                        self.bombs.append(bomb)
+                        self.last_bomb_time = pygame.time.get_ticks()
+                        self.bomb_count-=1
+    
 
 
     def set_x(self,x):
@@ -486,8 +507,8 @@ class Enemy:
                 self.y + self.height > bullet.y):
                 bullet.hitted=True
 
-                self.health-=20
-
+                self.health-=15
+ 
                 if self.health<0:
                     self.destroyed=True
                     return True
@@ -793,9 +814,9 @@ class FreePlayState(GameState):
 
                 enemy.move_enemy()
                 enemy.update_enemy()
-               
+                enemy.bomb(p1)
                 if loop_once==0:
-                    enemy.bomb(p1)
+                    
                     enemy.move_bombs()
                     enemy.draw_bombs()
                     loop_once+=1
