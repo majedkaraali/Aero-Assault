@@ -46,6 +46,7 @@ class Missile:
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
         return  rect
     
+    
     def path(self):
         enemy_dir=self.target.move_dir
         eny=(self.target.y)-self.target.height//2
@@ -136,7 +137,7 @@ class Bullet:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
         self.hitted=False
-
+       
 
     def move_bullet(self):
         self.x += self.vel_x
@@ -197,6 +198,8 @@ class Player():
         self.enemies_in_radar=[]
         self.tracked=[]
         self.selected=0
+        self.bullets_count=1080
+        self.magazine=120
 
     width=60
     height=33
@@ -208,6 +211,9 @@ class Player():
     last_shot_time = 0
     fire_missie_delay=200
     last_fire_time=0
+
+    relod_deley=2000
+    relod_start_time=0
 
 
     def get_centerx(self):
@@ -230,11 +236,23 @@ class Player():
         global pl
         pl = pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
         self.radar()
+
+    def reload(self):
+        self.magazine=120
+        self.bullets_count-=120
+
+    def chek_magazine(self):
+        return self.magazine>0
         
 
     def can_shoot(self):
         current_time = pygame.time.get_ticks()
-        return current_time - self.last_shot_time >= self.shoot_delay
+        if current_time - self.last_shot_time >= self.shoot_delay:
+            if self.chek_magazine():
+                return True
+            else:
+                print("GO RELOAD")
+                self.reload()
     
     def can_fire_missile(self):
         current_time = pygame.time.get_ticks()
@@ -243,8 +261,7 @@ class Player():
 
     def shoot(self):
         if self.can_shoot():
-
-
+            self.magazine-=1
             target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
             bullet2 = Bullet(20+self.x + self.width // 2 - Bullet.width // 2, self.y)
@@ -757,11 +774,14 @@ class FreePlayState(GameState):
         menu_text_pos=(width//2,height-25)
         menurect=menu_text.get_rect()
 
-        bullets_text = font.render("bullets: 0", True, 'black')
-        bullets_text_pos=(width-100,height-25)
+        magazine=str(p1.magazine)
+        bullets=str(p1.bullets_count)
+
+        bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
+        bullets_text_pos=(width-150,height-25)
 
         missiles_text = font.render("missiles: 0", True, 'black')
-        missiles_text_pos=(width-200,height-25)
+        missiles_text_pos=(width-300,height-25)
       
         screen.blit(score_text,score_text_pos)
         screen.blit(menu_text, menu_text_pos)
