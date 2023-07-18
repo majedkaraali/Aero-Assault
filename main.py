@@ -247,17 +247,17 @@ class Player():
         if self.reload_start_time+self.reload_delay<=current_time:
             self.magazine=120
             self.bullets_count-=120
-        else:
-            self.magazine='---'
+
+
 
 
     def chek_magazine(self):
-        if self.magazine != '---':
-            if self.magazine<0:
-                self.reload()
-                self.reloading=True
-            else:
-                self.reloading=False
+        if self.magazine<=0:
+            self.reload()
+            self.reloading=True
+        else:
+            self.reloading=False
+
 
    
 
@@ -795,7 +795,11 @@ class FreePlayState(GameState):
         menu_text_pos=(width//2,height-25)
         menurect=menu_text.get_rect()
 
-        magazine=str(p1.magazine)
+        if p1.reloading:
+            magazine='---'
+        else:
+            magazine=str(p1.magazine)
+            
         bullets=str(p1.bullets_count)
 
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
