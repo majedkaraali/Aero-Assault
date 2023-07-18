@@ -201,6 +201,7 @@ class Player():
         self.bullets_count=1080
         self.magazine=120
         self.reloading=False
+        self.droped_ammo=0
 
     width=60
     height=33
@@ -244,12 +245,13 @@ class Player():
         
     def reload(self):
         current_time = pygame.time.get_ticks()
-        print("Hi")
         if self.reload_start_time+self.reload_delay<=current_time:
+            if self.droped_ammo>0:
+                self.bullets_count+=self.droped_ammo
+                self.droped_ammo=0
             self.magazine=120
             self.bullets_count-=120
-        else:
-            print('NOO')
+
 
 
 
@@ -710,7 +712,7 @@ class FreePlayState(GameState):
                 
 
                     elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
-                        print("Exit22")
+                        print("Exit")
                         self.running = False
                    
        
@@ -732,7 +734,7 @@ class FreePlayState(GameState):
 
                 if keys[pygame.K_r]:
                     p1.reload_start_time=pygame.time.get_ticks()
-                    p1.bullets_count+=p1.magazine
+                    p1.droped_ammo+=p1.magazine
                     p1.magazine=0
  
             elif event.type == pygame.KEYUP:
