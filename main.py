@@ -248,28 +248,28 @@ class Player():
             self.magazine=120
             self.bullets_count-=120
         else:
-            pass
-            #self.magazine='---'
+            self.magazine='---'
 
 
     def chek_magazine(self):
-        if self.magazine<2:
-            self.reload()
-            self.reloading=True
-        else:
-            self.reloading=False
+        if self.magazine != '---':
+            if self.magazine<0:
+                self.reload()
+                self.reloading=True
+            else:
+                self.reloading=False
 
-
-      
-        
    
 
     def can_shoot(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_shot_time >= self.shoot_delay:
-            if not self.reloading:
+        
+        if not self.reloading:
+            if current_time - self.last_shot_time >= self.shoot_delay:
                 return True
-
+        else:
+            return False
+        
 
     
     def can_fire_missile(self):
@@ -290,7 +290,7 @@ class Player():
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
-            self.reload_start_time=pygame.time.get_ticks()
+            self.reload_start_time=self.last_shot_time
             
             
 
