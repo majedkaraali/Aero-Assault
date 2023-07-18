@@ -244,10 +244,12 @@ class Player():
         
     def reload(self):
         current_time = pygame.time.get_ticks()
+        print("Hi")
         if self.reload_start_time+self.reload_delay<=current_time:
             self.magazine=120
             self.bullets_count-=120
-
+        else:
+            print('NOO')
 
 
 
@@ -672,10 +674,12 @@ class FreePlayState(GameState):
     scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
 
     enemy_list=[]
+    
 
     def __init__(self):
         super().__init__()
         self.running=True
+        self.force_reload=False
         
     def handle_events(self, events):
         global current_state
@@ -712,9 +716,6 @@ class FreePlayState(GameState):
        
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
-                
-    
-
             
             
             if event.type == pygame.KEYDOWN:
@@ -727,10 +728,18 @@ class FreePlayState(GameState):
                 if keys[pygame.K_TAB] and not tab_pressed:
                     p1.next_lock()
                     tab_pressed = True
+                    
 
+                if keys[pygame.K_r]:
+                    p1.reload_start_time=pygame.time.get_ticks()
+                    p1.bullets_count+=p1.magazine
+                    p1.magazine=0
+ 
             elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_TAB:
                         tab_pressed = False
+
+        
 
         if self.mouse_button_pressed:
                 p1.shoot()
@@ -799,7 +808,7 @@ class FreePlayState(GameState):
             magazine='---'
         else:
             magazine=str(p1.magazine)
-            
+
         bullets=str(p1.bullets_count)
 
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
@@ -834,6 +843,8 @@ class FreePlayState(GameState):
             p1.move_missiles()
             p1.update_missiles()
             p1.chek_magazine()
+            
+            
 
  
             self.generate_enemies(4)
