@@ -200,6 +200,7 @@ class Player():
         self.selected=0
         self.bullets_count=1080
         self.magazine=120
+        self.reloading=False
 
     width=60
     height=33
@@ -214,6 +215,7 @@ class Player():
 
     reload_delay=4000
     reload_start_time=0
+    
 
 
     def get_centerx(self):
@@ -237,42 +239,35 @@ class Player():
         pl = pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
         self.radar()
 
-    def reload(self):
-      
-        if (self.finih_reload()):
-            self.magazine=120
-            self.bullets_count-=120
+            
 
         
-    def finih_reload(self):
+    def reload(self):
         current_time = pygame.time.get_ticks()
-        print(current_time,"CTM")
-        print(self.reload_start_time,"SSSTTM")
-
         if self.reload_start_time+self.reload_delay<=current_time:
-            self.update_magazen()
-            return True
-            
+            self.magazine=120
+            self.bullets_count-=120
         else:
-            return False 
+            pass
+            #self.magazine='---'
 
 
     def chek_magazine(self):
-        if self.magazine>0:
+        if self.magazine<2:
             self.reload()
-            return True
+            self.reloading=True
         else:
-            self.magazine="---" 
-            return False
+            self.reloading=False
+
+
       
         
-    def update_magazen(self):
-        print("updated")
+   
 
     def can_shoot(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_delay:
-            if self.chek_magazine():
+            if not self.reloading:
                 return True
 
 
@@ -295,8 +290,8 @@ class Player():
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
-            if not self.chek_magazine():
-                self.reload_start_time=pygame.time.get_ticks()
+            self.reload_start_time=pygame.time.get_ticks()
+            
             
 
     def move_bullets(self):
@@ -308,7 +303,6 @@ class Player():
             mis.move_misile()
 
     def update_bullets(self):
-        self.chek_magazine()
         for bullet in self.bullets:
             bullet.draw_bullet()
 
@@ -835,6 +829,7 @@ class FreePlayState(GameState):
             p1.update_bullets()
             p1.move_missiles()
             p1.update_missiles()
+            p1.chek_magazine()
 
  
             self.generate_enemies(4)
