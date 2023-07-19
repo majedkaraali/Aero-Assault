@@ -1,6 +1,5 @@
 import pygame
 import random
-from pygame.locals import *
 from math import atan2, degrees, pi
 import math
 
@@ -215,6 +214,7 @@ class Player():
         self.reloading_pods=False
         self.out_of_missiles=False
         self.out_of_ammo=False
+        self.health=100
 
     width=60
     height=33
@@ -233,7 +233,9 @@ class Player():
     pods_reload_start_time=0
     
     
-
+    def get_rect(self):
+        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        return  rect
 
     def get_centerx(self):
         center_x=self.x+(self.width//2)
@@ -462,9 +464,15 @@ class Bomb:
         self.vely=vely
         self.guided=guided
         self.target=target
+        self.dmage=50
+        self.exploded=False
+    def get_rect(self):
+        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        return  rect
 
     def move(self):
         if self.guided:
+            self.dmage=75
             self.width=6
             self.height=10
             self.guide_move()
@@ -480,30 +488,49 @@ class Bomb:
         y_dis=abs(self.y-target_y)
         reach_time=y_dis//self.vely
 
-
         if reach_time >0:
             velx=x_dis/reach_time
         else:
             velx=2
 
-       
-
         if velx>=2.2:
             velx=2.2
-
 
         if self.x<target_x:
             self.x+=velx
         else:
             self.x-=velx
-            
+
         self.y+=self.vely
            
-
 
     def dum_move(self):
         self.y+=self.vely
         self.x+=self.velx
+
+
+
+    def hit_player(self):
+        if self.get_rect().colliderect(self.target.get_rect()):
+            return True
+        
+    def explode_and_dmage(self):
+        if not self.exploded:
+            self.target.health-=self.dmage
+        
+
+        
+    def status(self):
+        if self.hit_player():
+            self.explode_and_dmage()
+            self.effect()
+            self.exploded=True
+        elif self.y > height-70:
+            self.effect()
+            self.exploded=True
+
+    def effect(self):
+        pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
 
 
     def draw(self):
@@ -544,9 +571,9 @@ class Enemy:
     def move_bombs(self):
         for bomb in self.bombs:
             bomb.move()
-            if bomb.y>height-50:
+            bomb.status()
+            if bomb.exploded==True:
                 self.bombs.remove(bomb)
-    
     def draw_bombs(self):
         for bomb in self.bombs:
             bomb.draw()
@@ -620,6 +647,9 @@ class Enemy:
     def set_x(self,x):
         self.x=x
 
+    def effect(self):
+        pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
+
 
     def kamikaze_move(self,target):
         target_x=target.get_centerx()
@@ -645,6 +675,22 @@ class Enemy:
             
         self.y+=self.vely
 
+        self.check_hit_player(target)
+            
+
+        
+
+
+    def check_hit_player(self,target):
+        if self.get_rect().colliderect(target.get_rect()):
+            self.destroyed=True
+            self.effect()
+            target.health-=80
+            print("GGG")
+      
+
+        
+
     def side_move(self):
         if self.move_dir=='right':
             self.x+=self.vel
@@ -652,10 +698,11 @@ class Enemy:
             self.x+=self.vel
 
     def move_enemy(self):
-        if not self.kamikaze:
-            self.side_move()
-        else:
-            self.kamikaze_move(p1)
+        if not self.destroyed:
+            if not self.kamikaze:
+                self.side_move()
+            else:
+                self.kamikaze_move(p1)
     
 
 
@@ -723,12 +770,6 @@ class Enemy:
                     return True       
                    
         return False
-
-
-
-
-
-    
 
 
 
@@ -979,11 +1020,11 @@ class FreePlayState(GameState):
 
         def respawn_enemy():
             respawn_chance = random.random()
-            if respawn_chance <= 0.6:  
+            if respawn_chance <= 0.0:  
                 return 'strike_aircraft'
-            elif respawn_chance <= 0.8:  
+            elif respawn_chance <= 0.0:  
                 return 'fighter_aircraft'
-            elif respawn_chance <= 0.9:  
+            elif respawn_chance <= 0.0:  
                 return 'bomber'
             elif respawn_chance <= 1.0:  
                 return 'kamikaze_drone'
@@ -1065,15 +1106,21 @@ class FreePlayState(GameState):
         storage=p1.missiles_storage
 
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
-        bullets_text_pos=(width-150,height-25)
+        bullets_text_pos=(width-250,height-25)
 
         missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
-        missiles_text_pos=(width-300,height-25)
+        missiles_text_pos=(width-400,height-25)
+
+        heath_value=p1.health
+
+        heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
+        heatl_text_pos=(width-100,height-25)
       
         screen.blit(score_text,score_text_pos)
         screen.blit(menu_text, menu_text_pos)
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
+        screen.blit(heatl_text, heatl_text_pos)
 
 
            
@@ -1101,7 +1148,7 @@ class FreePlayState(GameState):
             
 
  
-            self.generate_enemies(4)
+            self.generate_enemies(1)
             
             
             keys = pygame.key.get_pressed()
@@ -1119,6 +1166,8 @@ class FreePlayState(GameState):
 
 
             for enemy in self.enemy_list:
+                if enemy.destroyed:
+                    enemies_to_remove.append(enemy)
                 if enemy.check_collision(p1.bullets):
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
@@ -1169,12 +1218,14 @@ class FreePlayState(GameState):
                 p1.missiles.remove(missile)
 
 
-            bombs_to_remove=[]
+            
 
             
 
             loop_once=0
             for enemy in self.enemy_list:
+                if enemy.destroyed==True:
+                    enemies_to_remove.append(enemy)
 
                 enemy.move_enemy()
                 enemy.update_enemy()
@@ -1190,7 +1241,8 @@ class FreePlayState(GameState):
 
 
             p1.update_bullets()
-            #print(self.enemy_list)
+
+            print(self.enemy_list)
             #print(en)
             #print(pl)
             #print(Enemy.get_angle_between_rects(pl,en))
