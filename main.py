@@ -1128,6 +1128,11 @@ class FreePlayState(GameState):
                     if (enemy.x)>width+300:
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
+
+                if enemy.y>580:
+                    enemy.destroyed=True
+                    enemies_to_remove.append(enemy)
+
                         
              
 
