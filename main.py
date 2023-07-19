@@ -57,10 +57,10 @@ class Missile:
         reach_target_time=abs(reach_target_time)
 
         if enemy_dir=="left":
-            cx=((self.target.x)-reach_target_time)
+            cx=((self.target.get_centerx())-reach_target_time)
            
         elif enemy_dir=="right":
-            cx=((self.target.x)+reach_target_time)+50
+            cx=((self.target.get_centerx())+reach_target_time)
         
         self.target.tracked=True
         return cx
@@ -84,8 +84,7 @@ class Missile:
         if missiile_x_turn_vel>=4:
             if self.vel_y<-2:
                 self.vel_y+=1
-                print("EX")
-        print(missiile_x_turn_vel)
+ 
 
         if self.path()>self.x:
             self.x+=missiile_x_turn_vel+1
@@ -496,13 +495,11 @@ class Enemy:
     def move_enemy(self):
     
         if self.move_dir=='right':
-            if self.x<width+1:
-                self.x+=self.vel
+            self.x+=self.vel
 
 
         elif self.move_dir=="left":
-            if self.x>-1:
-                self.x+=self.vel
+            self.x+=self.vel
 
     def get_rect(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
@@ -875,12 +872,13 @@ class FreePlayState(GameState):
                 if enemy.check_collision(p1.bullets):
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
-                    if enemy.x<0:
+                    if (enemy.x)<-300:
+                        print("WTF")
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
                  
                 elif enemy.move_dir=='right':
-                    if enemy.x>width:
+                    if (enemy.x)>width+300:
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
                         
