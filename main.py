@@ -202,10 +202,16 @@ class Player():
         self.enemies_in_radar=[]
         self.tracked=[]
         self.selected=0
-        self.bullets_count=1080
+        self.bullets_count=120
         self.magazine=120
         self.reloading=False
+        self.moving=False
         self.droped_ammo=0
+        self.missiles_storage=4
+        self.ready_to_fire_missiles=4
+        self.reloading_pods=False
+        self.out_of_missiles=False
+        self.out_of_ammo=False
 
     width=60
     height=33
@@ -219,7 +225,9 @@ class Player():
     last_fire_time=0
 
     reload_delay=4000
+    pods_reload_delay=8000
     reload_start_time=0
+    pods_reload_start_time=0
     
 
 
@@ -231,11 +239,14 @@ class Player():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             vel_x = -self.move_speed
+            self.moving=True
         elif keys[pygame.K_d]:
             vel_x = self.move_speed
+            self.moving=True
         else:
             vel_x = 0
-
+            self.moving=False
+        
         self.x += vel_x
         self.x = max(0, min(self.x, width - self.width))
         
@@ -253,18 +264,59 @@ class Player():
             if self.droped_ammo>0:
                 self.bullets_count+=self.droped_ammo
                 self.droped_ammo=0
-            self.magazine=120
-            self.bullets_count-=120
+            
+            if self.bullets_count>0:
+                if self.bullets_count<120:
+                    self.magazine=self.bullets_count
+                    self.bullets_count=0
+                else:
+                    self.magazine=120
+                    self.bullets_count-=120
+
+            print(self.bullets_count)
+            print(self.magazine)
+   
+
+
+    def reload_pods(self):
+        current_time = pygame.time.get_ticks()
+        if self.pods_reload_start_time+self.pods_reload_delay<=current_time:
+            if self.missiles_storage>=4:
+                self.ready_to_fire_missiles=4
+                self.missiles_storage-=4
+     
 
 
 
+    def chek_missile_lounchers_pods(self):
+        if  self.missiles_storage>0:
+            if self.ready_to_fire_missiles<=0:
+                self.reload_pods()
+                self.reloading_pods=True
+            else:
+                self.reloading_pods=False
+
+        elif self.missiles_storage<=0:
+            if self.ready_to_fire_missiles<=0:
+                self.reloading_pods=True
+            else:
+                self.reloading_pods=False
+            self.out_of_missiles=True
 
     def chek_magazine(self):
-        if self.magazine<=0:
-            self.reload()
-            self.reloading=True
-        else:
-            self.reloading=False
+        if  self.bullets_count>0:
+            if self.magazine<=0:
+                self.reload()
+                self.reloading=True
+            else:
+                self.reloading=False
+
+        elif self.bullets_count<=0:
+            if self.magazine<=0:
+                self.reloading=True
+            else:
+                self.reloading=False
+            self.out_of_ammo=True
 
 
    
@@ -282,7 +334,11 @@ class Player():
     
     def can_fire_missile(self):
         current_time = pygame.time.get_ticks()
-        return current_time - self.last_fire_time >= self.fire_missie_delay
+        if not self.reloading_pods:
+            if current_time - self.last_fire_time >= self.fire_missie_delay:
+                return True
+        else:
+            return False
 
 
     def shoot(self):
@@ -385,12 +441,13 @@ class Player():
                 locked=self.auto_lock()
                 missile_start_x=self.x
                 missile_start_y=self.y
-               
+                self.ready_to_fire_missiles-=1
                 missile=Missile(missile_start_x, missile_start_y,locked)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
                 locked.locked=True
                 self.attacked_targets.append(locked)
+                self.pods_reload_start_time=self.last_fire_time
 
 
 
@@ -815,10 +872,17 @@ class FreePlayState(GameState):
 
         bullets=str(p1.bullets_count)
 
+        if p1.reloading_pods:
+            missiles='--'
+        else:
+            missiles=p1.ready_to_fire_missiles
+
+        storage=p1.missiles_storage
+
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
         bullets_text_pos=(width-150,height-25)
 
-        missiles_text = font.render("missiles: 0", True, 'black')
+        missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
         missiles_text_pos=(width-300,height-25)
       
         screen.blit(score_text,score_text_pos)
@@ -847,6 +911,7 @@ class FreePlayState(GameState):
             p1.move_missiles()
             p1.update_missiles()
             p1.chek_magazine()
+            p1.chek_missile_lounchers_pods()
             
             
 
@@ -873,7 +938,6 @@ class FreePlayState(GameState):
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
                     if (enemy.x)<-300:
-                        print("WTF")
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
                  
