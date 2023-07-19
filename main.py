@@ -206,7 +206,7 @@ class Player():
         self.tracked=[]
         self.selected=0
         self.bullets_count=1200
-        self.magazine=120
+        self.magazine=180
         self.reloading=False
         self.moving=False
         self.droped_ammo=0
@@ -270,12 +270,12 @@ class Player():
                 self.droped_ammo=0
             
             if self.bullets_count>0:
-                if self.bullets_count<120:
+                if self.bullets_count<180:
                     self.magazine=self.bullets_count
                     self.bullets_count=0
                 else:
-                    self.magazine=120
-                    self.bullets_count-=120
+                    self.magazine=180
+                    self.bullets_count-=180
 
             print(self.bullets_count)
             print(self.magazine)
@@ -465,6 +465,8 @@ class Bomb:
 
     def move(self):
         if self.guided:
+            self.width=6
+            self.height=10
             self.guide_move()
         else:
             self.dum_move()
@@ -511,7 +513,7 @@ class Bomb:
     
 
 class Enemy:
-    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag):
+    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag,health):
         self.x=x
         self.y=y
         self.width=width
@@ -524,7 +526,7 @@ class Enemy:
         self.bomb_dely=250
         self.last_bomb_time=0
         self.bomb_count=bomb_count
-        self.health=100
+        self.health=health
         self.damaged=False
         self.color=color
         self.shooting_range=shooting_range
@@ -918,7 +920,7 @@ class FreePlayState(GameState):
             mdir='left'
             vel=-2
            
-        enemy=Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter')
+        enemy=Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80)
         self.enemy_list.append(enemy)
 
     
@@ -935,7 +937,7 @@ class FreePlayState(GameState):
             mdir='left'
             vel=-2
            
-        enemy=Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike')
+        enemy=Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100)
         self.enemy_list.append(enemy)
 
     def respawn_bomber(self,move_dircton,y):
@@ -951,7 +953,7 @@ class FreePlayState(GameState):
             mdir='left'
             vel=-2
            
-        enemy=Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber')
+        enemy=Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130)
         self.enemy_list.append(enemy)
 
 
@@ -968,7 +970,7 @@ class FreePlayState(GameState):
             mdir='left'
             vel=-2
            
-        enemy=Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze')
+        enemy=Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30)
         self.enemy_list.append(enemy)
 
 
@@ -977,11 +979,11 @@ class FreePlayState(GameState):
 
         def respawn_enemy():
             respawn_chance = random.random()
-            if respawn_chance <= 0.2:  
+            if respawn_chance <= 0.6:  
                 return 'strike_aircraft'
-            elif respawn_chance <= 0.2:  
+            elif respawn_chance <= 0.8:  
                 return 'fighter_aircraft'
-            elif respawn_chance <= 0.2:  
+            elif respawn_chance <= 0.9:  
                 return 'bomber'
             elif respawn_chance <= 1.0:  
                 return 'kamikaze_drone'
