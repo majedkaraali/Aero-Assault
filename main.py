@@ -14,10 +14,12 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 score=0
+enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
+
+
 pygame.mixer.init()
-
-
 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
+
 
 
 
@@ -141,6 +143,7 @@ class Bullet:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
         self.hitted=False
+        
        
 
     def move_bullet(self):
@@ -202,12 +205,12 @@ class Player():
         self.enemies_in_radar=[]
         self.tracked=[]
         self.selected=0
-        self.bullets_count=120
+        self.bullets_count=1200
         self.magazine=120
         self.reloading=False
         self.moving=False
         self.droped_ammo=0
-        self.missiles_storage=4
+        self.missiles_storage=12
         self.ready_to_fire_missiles=4
         self.reloading_pods=False
         self.out_of_missiles=False
@@ -224,8 +227,8 @@ class Player():
     fire_missie_delay=200
     last_fire_time=0
 
-    reload_delay=4000
-    pods_reload_delay=8000
+    reload_delay=3000
+    pods_reload_delay=7000
     reload_start_time=0
     pods_reload_start_time=0
     
@@ -385,7 +388,6 @@ class Player():
 
         for enemy in enemies_list:
             if enemy.get_centerx() in radar_angle and enemy.y < 300:
-                    #enemy.tracked=True
                     self.enemies_in_radar.append(enemy)
                     if enemy not in self.tracked :
                             if enemy not in self.attacked_targets:
@@ -433,8 +435,6 @@ class Player():
             return False
     
  
-    
-    
     def fire_missile(self):
         if self.can_fire_missile():
             if self.auto_lock():
@@ -452,28 +452,65 @@ class Player():
 
 
 class Bomb:
-    def __init__(self,x,y,velx,vely):
+    def __init__(self,x,y,velx,vely,guided,target):
         self.x=x
         self.y=y
         self.width=4
         self.height=6
         self.velx=velx
         self.vely=vely
+        self.guided=guided
+        self.target=target
 
     def move(self):
+        if self.guided:
+            self.guide_move()
+        else:
+            self.dum_move()
+
+    def guide_move(self):
+        target_x=self.target.get_centerx()
+        target_y=self.target.y
+        x_dis=self.x-target_x
+        x_dis=abs(x_dis)
+        self.vely=1.5
+        y_dis=abs(self.y-target_y)
+        reach_time=y_dis//self.vely
+
+
+        if reach_time >0:
+            velx=x_dis/reach_time
+        else:
+            velx=2
+
+       
+
+        if velx>=2.2:
+            velx=2.2
+
+
+        if self.x<target_x:
+            self.x+=velx
+        else:
+            self.x-=velx
+            
+        self.y+=self.vely
+           
+
+
+    def dum_move(self):
         self.y+=self.vely
         self.x+=self.velx
-        #print(self.velx,self.vely)
-        #print('moving')
+
 
     def draw(self):
         pygame.draw.rect(screen, pygame.Color('black'), (self.x, self.y, self.width, self.height))
-        #print('drawing')
+
 
     
 
 class Enemy:
-    def __init__(self,x,y,width,height,vel,move_dir):
+    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag):
         self.x=x
         self.y=y
         self.width=width
@@ -485,10 +522,13 @@ class Enemy:
         self.locked=False
         self.bomb_dely=250
         self.last_bomb_time=0
-        self.bomb_count=3
+        self.bomb_count=bomb_count
         self.health=100
         self.damaged=False
-        
+        self.color=color
+        self.shooting_range=shooting_range
+        self.tag=tag
+        self.guided_bomb=guided_bomb
     bombs=[]
 
 
@@ -514,13 +554,22 @@ class Enemy:
         current_time = pygame.time.get_ticks()
         return current_time - self.last_bomb_time >= self.bomb_dely
     
-    def bomb(self,target):
+    def attack(self,target):
         if self.can_bomb():
             distance_x=self.get_centerx()-target.x
             distance_x=abs(distance_x)
             distance_y=abs(self.y)-abs(target.y)
             target_x=target.get_centerx()
-            target_attak_range=list(range(target_x-50,target_x+50))
+
+
+            guided=False
+            if self.tag=='strike':
+                guided=True
+            if self.y >300:
+                guided=False
+             
+                self.shooting_range=70
+            target_attak_range=list(range(target_x-self.shooting_range,target_x+self.shooting_range))
             y_vel=1
             x_vel=1
 
@@ -531,20 +580,35 @@ class Enemy:
                 reach_x=self.x+reach_time//x_vel
             else:
                 reach_x=self.x-reach_time//x_vel
-
+            
           
-            if reach_x in target_attak_range :
-                if self.can_bomb():
-                    if self.bomb_count>0:
-                        if self.move_dir=='right':
-                            bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel)
-                        else:
-                            bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel)
 
-                        self.bombs.append(bomb)
-                        self.last_bomb_time = pygame.time.get_ticks()
-                        self.bomb_count-=1
-    
+
+            if  self.get_centerx()>0 and self.get_centerx()<width-10:
+                if reach_x in target_attak_range:
+                    if self.can_bomb():
+                        if not guided:
+                            if self.bomb_count>0:
+                                if self.move_dir=='right':
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,target)
+                                else:
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,target)
+                                self.bombs.append(bomb)
+                                self.last_bomb_time = pygame.time.get_ticks()
+                                self.bomb_count-=1
+
+
+                        else:
+                            if self.guided_bomb>0:
+                                if self.move_dir=='right':
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,target)
+                                else:
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,target)
+
+                                self.bombs.append(bomb)
+                                self.last_bomb_time = pygame.time.get_ticks()
+                                self.guided_bomb-=1
+        
 
 
     def set_x(self,x):
@@ -580,19 +644,23 @@ class Enemy:
 
     def update_enemy(self):
         target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(screen, "blue", target_rect)
+        pygame.draw.rect(screen, self.color, target_rect)
         text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
 
 
         if self.locked:
-            pygame.draw.rect(screen, "blue", target_rect)
+            pygame.draw.rect(screen, self.color, target_rect)
             text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
 
         elif self.tracked:
-            pygame.draw.rect(screen, "blue", target_rect)
+            pygame.draw.rect(screen, self.color, target_rect)
             text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
         text_rect = text.get_rect(center=target_rect.center)
         screen.blit(text, text_rect)
+
+    
+    def kamikaze_move(self):
+        pass
 
     
     def is_taken_damage(self):
@@ -615,17 +683,15 @@ class Enemy:
                 if self.health<0:
                     self.destroyed=True
                     score+=40
-                    return True
-                    
-                
-
-                
+                    return True       
+                   
         return False
 
 
 
 
 
+    
 
 
 
@@ -720,10 +786,6 @@ class FreePlayState(GameState):
     border_color = (0, 0, 0)
 
 
-
-
-
-
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
@@ -804,32 +866,118 @@ class FreePlayState(GameState):
 
         if self.mouse_button_pressed:
                 p1.shoot()
-    
-    def generate_enemies(self,num_of_enemies):
-        y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
-        
-        if len(self.enemy_list)<num_of_enemies:
-            move_dircton=random.randint(0,1)
-            
-            if move_dircton==1:
+
+
+
+
+    def respawn_fighter(self,move_dircton,y):
+        if move_dircton==1:
                 x_spawns=[-500,-300,-200,-100,-400]
                 x=random.choice(x_spawns)-40
                 mdir='right'
                 vel=2
 
+        else:
+            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x=random.choice(x_spawns)+40
+            mdir='left'
+            vel=-2
+           
+        enemy=Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter')
+        self.enemy_list.append(enemy)
+
+    
+    def respawn_strike(self,move_dircton,y):
+        if move_dircton==1:
+                x_spawns=[-500,-300,-200,-100,-400]
+                x=random.choice(x_spawns)-40
+                mdir='right'
+                vel=2
+
+        else:
+            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x=random.choice(x_spawns)+40
+            mdir='left'
+            vel=-2
+           
+        enemy=Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike')
+        self.enemy_list.append(enemy)
+
+    def respawn_bomber(self,move_dircton,y):
+        if move_dircton==1:
+                x_spawns=[-500,-300,-200,-100,-400]
+                x=random.choice(x_spawns)-40
+                mdir='right'
+                vel=2
+
+        else:
+            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x=random.choice(x_spawns)+40
+            mdir='left'
+            vel=-2
+           
+        enemy=Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber')
+        self.enemy_list.append(enemy)
 
 
+    def respawn_drone(self,move_dircton,y):
+        if move_dircton==1:
+                x_spawns=[-500,-300,-200,-100,-400]
+                x=random.choice(x_spawns)-40
+                mdir='right'
+                vel=2
+
+        else:
+            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x=random.choice(x_spawns)+40
+            mdir='left'
+            vel=-2
+           
+        enemy=Enemy(x,y,40,20,vel,mdir,0,0,'white',300,'kamikaze')
+        self.enemy_list.append(enemy)
+
+
+    
+    def generate_enemies(self,num_of_enemies):
+
+        def respawn_enemy():
+            respawn_chance = random.random()
+            if respawn_chance <= 0.2:  
+                return 'strike_aircraft'
+            elif respawn_chance <= 0.2:  
+                return 'fighter_aircraft'
+            elif respawn_chance <= 0.2:  
+                return 'bomber'
+            elif respawn_chance <= 1.0:  
+                return 'kamikaze_drone'
             else:
-                x_spawns=[width+500,width+300,width+200,width+100,width+400]
-                x=random.choice(x_spawns)+40
-                mdir='left'
-                vel=-2
-          
-                
+                return None  
 
+    
+        
+        if len(self.enemy_list)<num_of_enemies:
+            respawned_enemy = respawn_enemy()
+            move_dircton=random.randint(0,1)
+            y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
             y=random.choice(y_spawns)
-            enemy=Enemy(x,y,80,25,vel,mdir)
-            self.enemy_list.append(enemy)
+            
+            if respawned_enemy=='fighter_aircraft':
+                self.respawn_fighter(move_dircton,y)
+            
+            elif respawned_enemy=='strike_aircraft':
+                self.respawn_strike(move_dircton,y)
+     
+
+            elif respawned_enemy=="bomber":
+                self.respawn_bomber(move_dircton,y)
+               
+            
+            elif respawned_enemy=="kamikaze_drone":
+                self.respawn_drone(move_dircton,y)
+
+           
+
+            
 
     def get_enemies(self):
         return self.enemy_list
@@ -988,7 +1136,7 @@ class FreePlayState(GameState):
 
                 enemy.move_enemy()
                 enemy.update_enemy()
-                enemy.bomb(p1)
+                enemy.attack(p1)
                 if loop_once==0:
                     
                     enemy.move_bombs()
