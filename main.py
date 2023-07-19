@@ -232,6 +232,7 @@ class Player():
     reload_start_time=0
     pods_reload_start_time=0
     
+    
 
 
     def get_centerx(self):
@@ -529,6 +530,7 @@ class Enemy:
         self.shooting_range=shooting_range
         self.tag=tag
         self.guided_bomb=guided_bomb
+        self.kamikaze=False
     bombs=[]
 
 
@@ -586,6 +588,8 @@ class Enemy:
 
             if  self.get_centerx()>0 and self.get_centerx()<width-10:
                 if reach_x in target_attak_range:
+                    if self.tag=='kamikaze':
+                        self.kamikaze=True
                     if self.can_bomb():
                         if not guided:
                             if self.bomb_count>0:
@@ -613,14 +617,46 @@ class Enemy:
 
     def set_x(self,x):
         self.x=x
-    def move_enemy(self):
-    
+
+
+    def kamikaze_move(self,target):
+        target_x=target.get_centerx()
+        target_y=target.y
+        x_dis=self.x-target_x
+        x_dis=abs(x_dis)
+        self.vely=1.5
+        y_dis=abs(self.y-target_y)
+        reach_time=y_dis//self.vely
+
+        if reach_time >0:
+            velx=x_dis/reach_time
+        else:
+            velx=2
+
+        if velx>=2.2:
+            velx=2.2
+
+        if self.x<target_x:
+            self.x+=velx
+        else:
+            self.x-=velx
+            
+        self.y+=self.vely
+
+    def side_move(self):
         if self.move_dir=='right':
             self.x+=self.vel
-
-
         elif self.move_dir=="left":
             self.x+=self.vel
+
+    def move_enemy(self):
+        if not self.kamikaze:
+            self.side_move()
+        else:
+            self.kamikaze_move(p1)
+    
+
+
 
     def get_rect(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
@@ -659,8 +695,7 @@ class Enemy:
         screen.blit(text, text_rect)
 
     
-    def kamikaze_move(self):
-        pass
+
 
     
     def is_taken_damage(self):
@@ -933,7 +968,7 @@ class FreePlayState(GameState):
             mdir='left'
             vel=-2
            
-        enemy=Enemy(x,y,40,20,vel,mdir,0,0,'white',300,'kamikaze')
+        enemy=Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze')
         self.enemy_list.append(enemy)
 
 
