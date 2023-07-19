@@ -81,6 +81,11 @@ class Missile:
         else:
             missiile_x_turn_vel=2
 
+        if missiile_x_turn_vel>=4:
+            if self.vel_y<-2:
+                self.vel_y+=1
+                print("EX")
+        print(missiile_x_turn_vel)
 
         if self.path()>self.x:
             self.x+=missiile_x_turn_vel+1
