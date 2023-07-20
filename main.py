@@ -33,7 +33,7 @@ class Item:
 
 
     def drop_value(self):
-        value_list=['missiles','missiles','missiles']
+        value_list=['health','ammo','missiles']
         value=random.choice(value_list)
         return value
 
@@ -79,8 +79,10 @@ class Missile:
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
                 self.target.destroyed=True
-                drop=Item(self.target.get_centerx(),self.target.y,'gift')
-                self.owner.drops.append(drop)
+                chanse=random.randint(1,5)
+                if chanse==1:
+                    drop=Item(self.target.get_centerx(),self.target.y,'gift')
+                    self.owner.drops.append(drop)
                 return True
                 
             else:
@@ -1234,8 +1236,10 @@ class FreePlayState(GameState):
                 if enemy.destroyed:
                     enemies_to_remove.append(enemy)
                 if enemy.check_collision(p1.bullets):
-                    drop=Item(enemy.get_centerx(),enemy.y,'gift')
-                    p1.drops.append(drop)
+                    chanse=random.randint(1,5)
+                    if chanse==1:
+                        drop=Item(enemy.get_centerx(),enemy.y,'gift')
+                        p1.drops.append(drop)
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
                     if (enemy.x)<-300:
