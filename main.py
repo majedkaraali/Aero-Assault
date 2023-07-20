@@ -32,9 +32,24 @@ class Item:
     vely=1
 
 
-    def check_claim(self):
-        pass
-    
+    def drop_value(self):
+        value_list=['missiles','missiles','missiles']
+        value=random.choice(value_list)
+        return value
+
+
+    def activate(self,player):
+        if self.drop_value()=='health':
+            player.health+=50
+        elif self.drop_value()=='ammo':
+            player.ammo+=180
+        elif self.drop_value()=='missiles':
+            player.missiles_storage+=4
+
+    def expired(self):
+        return self.y >=height-70
+
+
 
     def move_item(self):
         self.y+=self.vely
@@ -233,7 +248,7 @@ class Player():
         self.tracked=[]
         self.drops=[]
         self.selected=0
-        self.bullets_count=1200
+        self.ammo=1200
         self.magazine=180
         self.reloading=False
         self.moving=False
@@ -297,16 +312,16 @@ class Player():
         current_time = pygame.time.get_ticks()
         if self.reload_start_time+self.reload_delay<=current_time:
             if self.droped_ammo>0:
-                self.bullets_count+=self.droped_ammo
+                self.ammo+=self.droped_ammo
                 self.droped_ammo=0
             
-            if self.bullets_count>0:
-                if self.bullets_count<180:
-                    self.magazine=self.bullets_count
-                    self.bullets_count=0
+            if self.ammo>0:
+                if self.ammo<180:
+                    self.magazine=self.ammo
+                    self.ammo=0
                 else:
                     self.magazine=180
-                    self.bullets_count-=180
+                    self.ammo-=180
 
    
 
@@ -337,14 +352,14 @@ class Player():
             self.out_of_missiles=True
 
     def chek_magazine(self):
-        if  self.bullets_count>0:
+        if  self.ammo>0:
             if self.magazine<=0:
                 self.reload()
                 self.reloading=True
             else:
                 self.reloading=False
 
-        elif self.bullets_count<=0:
+        elif self.ammo<=0:
             if self.magazine<=0:
                 self.reloading=True
             else:
@@ -479,10 +494,18 @@ class Player():
                 self.attacked_targets.append(locked)
                 self.pods_reload_start_time=self.last_fire_time
 
+
+
     def move_drops(self):
         for drop in self.drops:
             drop.move_item()
             drop.draw()
+            if self.get_rect().colliderect(drop.get_rect()):
+                drop.activate(p1)
+                self.drops.remove(drop)
+            if drop.expired():
+                if drop in self.drops:
+                    self.drops.remove(drop)
 
 
         
@@ -1135,7 +1158,7 @@ class FreePlayState(GameState):
         else:
             magazine=str(p1.magazine)
 
-        bullets=str(p1.bullets_count)
+        bullets=str(p1.ammo)
 
         if p1.reloading_pods:
             missiles='--'
@@ -1319,6 +1342,7 @@ class FreePlayState(GameState):
             self.frame_surface.blit(resume_button_text,resume_button_text_rect)
             self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
             self.frame_surface.blit(exit_button_text,exit_button_text_rect)
+
         
             
            
@@ -1333,8 +1357,7 @@ current_state = menu_state
 while current_state.running:
     
     events = pygame.event.get()
-   
-  #  next_state = None  # Initialize next_state variable
+
 
     for event in events:
         if event.type == pygame.QUIT:
@@ -1345,14 +1368,9 @@ while current_state.running:
     next_state = current_state.handle_events(events)
     current_state.update()
     current_state.draw()
-
-
-
+    #print(clock.get_fps())
 
     pygame.display.flip()
     
-
-
-
 
 pygame.quit()
