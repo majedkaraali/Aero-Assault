@@ -261,6 +261,10 @@ class Player():
         self.out_of_missiles=False
         self.out_of_ammo=False
         self.health=100
+        self.destroyed=False
+        self.forced=False
+        self.forced_time = 0
+
 
     width=60
     height=33
@@ -272,7 +276,7 @@ class Player():
     last_shot_time = 0
     fire_missie_delay=200
     last_fire_time=0
-
+    caluculate_rewards_deleay=2000
     reload_delay=3000
     pods_reload_delay=7000
     reload_start_time=0
@@ -309,7 +313,20 @@ class Player():
 
             
 
-        
+    
+
+    def is_destroyed(self):
+        if self.health <= 0:
+            if not self.forced:
+                self.forced = True
+                self.forced_time = pygame.time.get_ticks()  
+            else:
+                current_time = pygame.time.get_ticks()
+                if current_time >= self.forced_time + 2000: 
+                    self.destroyed = True
+
+           
+
     def reload(self):
         current_time = pygame.time.get_ticks()
         if self.reload_start_time+self.reload_delay<=current_time:
@@ -576,7 +593,10 @@ class Bomb:
         
     def explode_and_dmage(self):
         if not self.exploded:
-            self.target.health-=self.dmage
+            if self.target.heatlth-self.dmage<0:
+                self.target.health=0
+            else:
+                self.target.health-=self.dmage
         
 
         
@@ -914,8 +934,6 @@ class MenuState(GameState):
      
 
 class FreePlayState(GameState):
-    droped_items=[]
-    gifts=[]
     mouse_button_pressed=False
     paues=False
     pause_frame_color = ('silver')
@@ -991,9 +1009,10 @@ class FreePlayState(GameState):
                         self.paues = True
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_TAB] and not tab_pressed:
-                    p1.next_lock()
-                    tab_pressed = True
-                    
+                    if not p1.forced:
+                        p1.next_lock()
+                        tab_pressed = True
+                        
 
                 if keys[pygame.K_r]:
                     p1.reload_start_time=pygame.time.get_ticks()
@@ -1007,7 +1026,8 @@ class FreePlayState(GameState):
         
 
         if self.mouse_button_pressed:
-                p1.shoot()
+                if not p1.forced:
+                    p1.shoot()
 
 
 
@@ -1200,7 +1220,9 @@ class FreePlayState(GameState):
             self.ground()
             self.statics()
 
-            p1.move_player()
+            if not p1.forced:
+                p1.move_player()
+
             p1.update_player()
             p1.move_bullets() 
             p1.update_bullets()
@@ -1209,6 +1231,10 @@ class FreePlayState(GameState):
             p1.chek_magazine()
             p1.chek_missile_lounchers_pods()
             p1.move_drops()
+            p1.is_destroyed()
+
+            if p1.destroyed:
+                print("DUUUU")
 
 
             
@@ -1220,9 +1246,11 @@ class FreePlayState(GameState):
             
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
-                p1.shoot()
+                if not p1.forced:
+                    p1.shoot()
             elif keys[pygame.K_f]:
-                p1.fire_missile()
+                if not p1.forced:
+                    p1.fire_missile()
                 
        
 
