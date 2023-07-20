@@ -655,6 +655,10 @@ class Enemy:
             bomb.status()
             if bomb.exploded==True:
                 self.bombs.remove(bomb)
+
+    def clear_bombs(self):
+        self.bombs.clear()
+
     def draw_bombs(self):
         for bomb in self.bombs:
             bomb.draw()
@@ -970,6 +974,9 @@ class FreePlayState(GameState):
     bullet_count_rect=pygame.Rect(width-150, height-15, 50, 66)
     scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
 
+    main_menu_btn_rect=pygame.Rect((rwd_surface_width//2)-150,rwd_surface_height-70,100,20)
+    exit_btn_rect=pygame.Rect((rwd_surface_width//2)+100,rwd_surface_height-70,70,20)
+
 
 
 
@@ -998,19 +1005,15 @@ class FreePlayState(GameState):
 
                 if self.paues:
                     if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
-                        
-                        print("Resume button clicked!")
                         self.paues = False
 
                     elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
-                        print("Back to menu")
-                        current_state = menu_state  # Update the current state
+                        current_state = menu_state 
                         self.paues = False
                         self.enemy_list.clear()
                 
 
                     elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
-                        print("Exit")
                         self.running = False
 
                 if self.reward_screen:
@@ -1019,15 +1022,18 @@ class FreePlayState(GameState):
                     mouse_pos[1] - self.reward_scr_position[1]
                     )
                     
-                    #print(menu_but_rect)
-                    #print(mouse_pos)
-                    #print(adjusted_mouse_pos,"------")
-                    #if menu_but_rect.collidepoint(adjusted_mouse_pos):
-                        #print("MMMENU")
+                
+                    if self.main_menu_btn_rect.collidepoint(adjusted_mouse_pos):
+                        current_state = menu_state 
+                        self.paues = False
+                        self.reward_screen=False
+                        for enemy in self.enemy_list:
+                            enemy.clear_bombs()
+                        self.enemy_list.clear()
 
-                    #elif menu_but_rect.collidepoint(adjusted_mouse_pos):
-                        #print("EXXXT")
-                   
+
+                    elif self.exit_btn_rect.collidepoint(adjusted_mouse_pos):
+                        self.running = False
        
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -1038,7 +1044,8 @@ class FreePlayState(GameState):
                     if self.paues:
                         self.paues = False
                     else:
-                        self.paues = True
+                        if not self.reward_screen:
+                            self.paues = True
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_TAB] and not tab_pressed:
                     if not p1.forced:
@@ -1184,22 +1191,33 @@ class FreePlayState(GameState):
         self.rewards_surface.fill('silver')
 
 
-        main_menu_btn_rect=pygame.Rect(10, 10, 100, 30)
+        
         main_menu_text = font.render("Main Menu", True, (255, 255, 255))
-        main_menu_text_rect=main_menu_text.get_rect(center=main_menu_btn_rect.center)
+        main_menu_text_rect=main_menu_text.get_rect(center=self.main_menu_btn_rect.center)
 
-        exit_btn_rect=pygame.Rect(50, 10, 100, 30)
+        
         exit_text = font.render("Exit ", True, (255, 255, 255))
-        exit_text_rect=exit_text.get_rect(center=exit_btn_rect.center)
+        exit_text_rect=exit_text.get_rect(center=self.exit_btn_rect.center)
 
 
-        scor_text= font.render("Score: ", True, (255, 255, 255))
-        score_pos=(10,100)
+        scor_text= font.render("Score: 0", True, (255, 255, 255))
+        score_pos=((self.rwd_surface_width//2)-scor_text.get_width()//2,80)
+
+        high_score= font.render("High Score: 0", True, (255, 255, 255))
+        high_score_pos=((self.rwd_surface_width//2)-high_score.get_width()//2,120)
+
+
+        died_text= font.render(" YOU HAVE BEEN DESTROYED ! ", True, (255, 255, 255))
+        died_text_pos=((self.rwd_surface_width//2)-(died_text.get_width()//2),20)
+
        
 
         self.rewards_surface.blit(main_menu_text,main_menu_text_rect)
         self.rewards_surface.blit(exit_text,exit_text_rect)
+        self.rewards_surface.blit(died_text,died_text_pos)
         self.rewards_surface.blit(scor_text,score_pos)
+        self.rewards_surface.blit(high_score,high_score_pos)
+
 
 
         
