@@ -593,7 +593,7 @@ class Bomb:
         
     def explode_and_dmage(self):
         if not self.exploded:
-            if self.target.heatlth-self.dmage<0:
+            if self.target.health-self.dmage<0:
                 self.target.health=0
             else:
                 self.target.health-=self.dmage
@@ -936,25 +936,42 @@ class MenuState(GameState):
 class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
+    reward_screen=False
+
     pause_frame_color = ('silver')
+    rerawrds_frame_color=('silver')
     pause_surface_width=250
     pause_surface_height=150
     frame_position = ((width//2)-(pause_surface_width//2),(height//2)-(pause_surface_height//2))
     frame_surface = pygame.Surface((pause_surface_width,pause_surface_height))
     frame_surface.fill(pause_frame_color)
+
     border_width = 1
     border_color = (0, 0, 0)
+
+
+    
+    rwd_surface_width = width//2
+    rwd_surface_height = height//2
+    reward_scr_position =  ((width//2)-(rwd_surface_width//2),(height//2)-(rwd_surface_height//2))
+    rewards_surface = pygame.Surface((rwd_surface_width, rwd_surface_height))
+    rewards_surface.fill(rerawrds_frame_color)
 
 
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
+
+
     
     score_rect=pygame.Rect(35, height-15, 100, 20)
     menu_rect=pygame.Rect((width//2), height-15, 100, 66)
     missile_count_rect=pygame.Rect(width-50, height-15, 50, 66)
     bullet_count_rect=pygame.Rect(width-150, height-15, 50, 66)
     scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
+
+
+
 
     enemy_list=[]
     
@@ -995,6 +1012,21 @@ class FreePlayState(GameState):
                     elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
                         print("Exit")
                         self.running = False
+
+                if self.reward_screen:
+                    adjusted_mouse_pos = (
+                    mouse_pos[0] - self.reward_scr_position[0],
+                    mouse_pos[1] - self.reward_scr_position[1]
+                    )
+                    
+                    #print(menu_but_rect)
+                    #print(mouse_pos)
+                    #print(adjusted_mouse_pos,"------")
+                    #if menu_but_rect.collidepoint(adjusted_mouse_pos):
+                        #print("MMMENU")
+
+                    #elif menu_but_rect.collidepoint(adjusted_mouse_pos):
+                        #print("EXXXT")
                    
        
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -1143,6 +1175,36 @@ class FreePlayState(GameState):
 
     def get_enemies(self):
         return self.enemy_list
+        
+
+
+    def reward_screen_view(self):
+        pygame.draw.rect(self.rewards_surface,self.border_color, self.rewards_surface.get_rect(), self.border_width)
+        screen.blit(self.rewards_surface, self.reward_scr_position)
+        self.rewards_surface.fill('silver')
+
+
+        main_menu_btn_rect=pygame.Rect(10, 10, 100, 30)
+        main_menu_text = font.render("Main Menu", True, (255, 255, 255))
+        main_menu_text_rect=main_menu_text.get_rect(center=main_menu_btn_rect.center)
+
+        exit_btn_rect=pygame.Rect(50, 10, 100, 30)
+        exit_text = font.render("Exit ", True, (255, 255, 255))
+        exit_text_rect=exit_text.get_rect(center=exit_btn_rect.center)
+
+
+        scor_text= font.render("Score: ", True, (255, 255, 255))
+        score_pos=(10,100)
+       
+
+        self.rewards_surface.blit(main_menu_text,main_menu_text_rect)
+        self.rewards_surface.blit(exit_text,exit_text_rect)
+        self.rewards_surface.blit(scor_text,score_pos)
+
+
+        
+   
+
     
     def ground(self):
         surface_width = width
@@ -1156,7 +1218,7 @@ class FreePlayState(GameState):
         screen.blit(ground_surface, position)
 
     def statics(self):
-        global score
+        global score,pause_menurect
         surface_width = width
         surface_height = 30
         startic_surface = pygame.Surface((surface_width, surface_height))
@@ -1173,7 +1235,7 @@ class FreePlayState(GameState):
 
         menu_text = font.render("menu", True, 'black')
         menu_text_pos=(width//2,height-25)
-        menurect=menu_text.get_rect()
+        pause_menurect=menu_text.get_rect()
 
         if p1.reloading:
             magazine='---'
@@ -1214,146 +1276,123 @@ class FreePlayState(GameState):
     def draw(self):
         
         
-        if not (self.paues):
-            clock.tick(60)
-            screen.fill('aqua')
-            self.ground()
-            self.statics()
-
-            if not p1.forced:
-                p1.move_player()
-
-            p1.update_player()
-            p1.move_bullets() 
-            p1.update_bullets()
-            p1.move_missiles()
-            p1.update_missiles()
-            p1.chek_magazine()
-            p1.chek_missile_lounchers_pods()
-            p1.move_drops()
-            p1.is_destroyed()
-
-            if p1.destroyed:
-                print("DUUUU")
-
-
-            
-            
-
- 
-            self.generate_enemies(3)
-            
-            
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE]:
+        if not (self.paues) :
+            if not self.reward_screen:
+                clock.tick(60)
+                screen.fill('aqua')
+                self.ground()
+                self.statics()
                 if not p1.forced:
-                    p1.shoot()
-            elif keys[pygame.K_f]:
-                if not p1.forced:
-                    p1.fire_missile()
+                    p1.move_player()
+                    self.generate_enemies(3)
+                p1.update_player()
+                p1.move_bullets() 
+                p1.update_bullets()
+                p1.move_missiles()
+                p1.update_missiles()
+                p1.chek_magazine()
+                p1.chek_missile_lounchers_pods()
+                p1.move_drops()
+                p1.is_destroyed()    
                 
-       
-
-
-            enemies_to_remove = []
-            bullets_to_remove = []
-            missiles_to_remove=[]
-
-
-            for enemy in self.enemy_list:
-                if enemy.destroyed:
-                    enemies_to_remove.append(enemy)
-                if enemy.check_collision(p1.bullets):
-                    chanse=random.randint(1,5)
-                    if chanse==1:
-                        drop=Item(enemy.get_centerx(),enemy.y,'gift')
-                        p1.drops.append(drop)
-                    enemies_to_remove.append(enemy)
-                if enemy.move_dir=='left':
-                    if (enemy.x)<-300:
-                        enemy.destroyed=True
-                        enemies_to_remove.append(enemy)
-                 
-                elif enemy.move_dir=='right':
-                    if (enemy.x)>width+300:
-                        enemy.destroyed=True
-                        enemies_to_remove.append(enemy)
-
-                if enemy.y>580:
-                    enemy.destroyed=True
-                    enemies_to_remove.append(enemy)
-
-                        
-             
-
-            for bullet in p1.bullets:
-                if bullet.out_of_range():
-                    bullets_to_remove.append(bullet)
     
-                elif bullet.hitted:
-                    bullets_to_remove.append(bullet)
-
-
-
-            for missile in  p1.missiles:
-                if missile.y<=-10:
-                    missiles_to_remove.append(missile)
-                elif missile.hit_target():
-                    missiles_to_remove.append(missile)
-                    enemies_to_remove.append(missile.target)
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_SPACE]:
+                    if not p1.forced:
+                        p1.shoot()
+                elif keys[pygame.K_f]:
+                    if not p1.forced:
+                        p1.fire_missile()
                     
+                enemies_to_remove = []
+                bullets_to_remove = []
+                missiles_to_remove=[]
 
-
-            if len(enemies_to_remove)>0:
-                for enemy in enemies_to_remove:
-                    enemy.destroyed=True
-                    self.enemy_list.remove(enemy)
+                for enemy in self.enemy_list:
+                    if enemy.destroyed:
+                        enemies_to_remove.append(enemy)
+                    if enemy.check_collision(p1.bullets):
+                        chanse=random.randint(1,5)
+                        if chanse==1:
+                            drop=Item(enemy.get_centerx(),enemy.y,'gift')
+                            p1.drops.append(drop)
+                        enemies_to_remove.append(enemy)
+                    if enemy.move_dir=='left':
+                        if (enemy.x)<-300:
+                            enemy.destroyed=True
+                            enemies_to_remove.append(enemy)
                     
+                    elif enemy.move_dir=='right':
+                        if (enemy.x)>width+300:
+                            enemy.destroyed=True
+                            enemies_to_remove.append(enemy)
 
-            for bullet in bullets_to_remove:
-                p1.bullets.remove(bullet)
-
-            for missile in missiles_to_remove:
-                p1.missiles.remove(missile)
-
+                    if enemy.y>580:
+                        enemy.destroyed=True
+                        enemies_to_remove.append(enemy)
 
             
 
-            
+                for bullet in p1.bullets:
+                    if bullet.out_of_range():
+                        bullets_to_remove.append(bullet)
+        
+                    elif bullet.hitted:
+                        bullets_to_remove.append(bullet)
 
-            loop_once=0
-            for enemy in self.enemy_list:
-                if enemy.destroyed==True:
-                    enemies_to_remove.append(enemy)
 
-                enemy.move_enemy()
-                enemy.update_enemy()
-                enemy.attack(p1)
-                if loop_once==0:
-                    
-                    enemy.move_bombs()
-                    enemy.draw_bombs()
-                    loop_once+=1
-                
+                for missile in  p1.missiles:
+                    if missile.y<=-10:
+                        missiles_to_remove.append(missile)
+                    elif missile.hit_target():
+                        missiles_to_remove.append(missile)
+                        enemies_to_remove.append(missile.target)
                         
 
-            p1.update_bullets()
+                if len(enemies_to_remove)>0:
+                    for enemy in enemies_to_remove:
+                        enemy.destroyed=True
+                        self.enemy_list.remove(enemy)
+                        
+                for bullet in bullets_to_remove:
+                    p1.bullets.remove(bullet)
+
+                for missile in missiles_to_remove:
+                    p1.missiles.remove(missile)
+
+                loop_once=0
+                for enemy in self.enemy_list:
+                    if enemy.destroyed==True:
+                        enemies_to_remove.append(enemy)
+
+                    enemy.move_enemy()
+                    enemy.update_enemy()
+                    enemy.attack(p1)
+                    if loop_once==0:
+                        
+                        enemy.move_bombs()
+                        enemy.draw_bombs()
+                        loop_once+=1
+                            
+
+                p1.update_bullets()
+
+                if p1.destroyed:
+                    self.reward_screen=True
+
+            elif (self.reward_screen):
+                self.reward_screen_view()
+               
 
 
     
 
 
-                
-
-            
-            #print(self.enemy_list)
-            #print(en)
-            #print(pl)
-            #print(Enemy.get_angle_between_rects(pl,en))
-
+        
+        
         elif (self.paues):
 
-            pygame.draw.rect(self.frame_surface,self.border_color, self.frame_surface.get_rect(), self.border_width)
+            pygame.draw.rect(self.rewards_surface,self.border_color, self.frame_surface.get_rect(), self.border_width)
             screen.blit(self.frame_surface, self.frame_position)
 
 
@@ -1374,6 +1413,9 @@ class FreePlayState(GameState):
             self.frame_surface.blit(resume_button_text,resume_button_text_rect)
             self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
             self.frame_surface.blit(exit_button_text,exit_button_text_rect)
+
+
+    
 
         
             
