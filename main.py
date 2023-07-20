@@ -16,11 +16,35 @@ score=0
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
 
 
+
 pygame.mixer.init()
 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
 
 
+class Item:
+    def __init__(self,x,y,tag):
+        self.x=x
+        self.y=y
+        self.tag=tag
 
+    width=20
+    height=20
+    vely=1
+
+
+    def check_claim(self):
+        pass
+    
+
+    def move_item(self):
+        self.y+=self.vely
+
+    def get_rect(self):
+        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        return  rect
+
+    def draw(self):
+        pygame.draw.rect(screen, pygame.Color('gold'), (self.x, self.y, self.width, self.height))
 
 class Missile:
     width=5
@@ -28,16 +52,20 @@ class Missile:
     vel_x=2
     vel_y=-4
 
-    def __init__(self,x,y,target):
+    def __init__(self,x,y,target,owner):
         self.x=x
         self.y=y
         self.target=target
+        self.owner=owner
+
 
     def hit_target(self):
         if not (self.target.destroyed):
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
                 self.target.destroyed=True
+                drop=Item(self.target.get_centerx(),self.target.y,'gift')
+                self.owner.drops.append(drop)
                 return True
                 
             else:
@@ -203,6 +231,7 @@ class Player():
         self.attacked_targets=[]
         self.enemies_in_radar=[]
         self.tracked=[]
+        self.drops=[]
         self.selected=0
         self.bullets_count=1200
         self.magazine=180
@@ -279,8 +308,6 @@ class Player():
                     self.magazine=180
                     self.bullets_count-=180
 
-            print(self.bullets_count)
-            print(self.magazine)
    
 
 
@@ -445,12 +472,20 @@ class Player():
                 missile_start_x=self.x
                 missile_start_y=self.y
                 self.ready_to_fire_missiles-=1
-                missile=Missile(missile_start_x, missile_start_y,locked)
+                missile=Missile(missile_start_x, missile_start_y,locked,p1)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
                 locked.locked=True
                 self.attacked_targets.append(locked)
                 self.pods_reload_start_time=self.last_fire_time
+
+    def move_drops(self):
+        for drop in self.drops:
+            drop.move_item()
+            drop.draw()
+
+
+        
 
 
 
@@ -560,6 +595,7 @@ class Enemy:
         self.tag=tag
         self.guided_bomb=guided_bomb
         self.kamikaze=False
+        
     bombs=[]
 
 
@@ -686,7 +722,7 @@ class Enemy:
             self.destroyed=True
             self.effect()
             target.health-=80
-            print("GGG")
+
       
 
         
@@ -703,6 +739,7 @@ class Enemy:
                 self.side_move()
             else:
                 self.kamikaze_move(p1)
+ 
     
 
 
@@ -852,6 +889,8 @@ class MenuState(GameState):
      
 
 class FreePlayState(GameState):
+    droped_items=[]
+    gifts=[]
     mouse_button_pressed=False
     paues=False
     pause_frame_color = ('silver')
@@ -1020,11 +1059,11 @@ class FreePlayState(GameState):
 
         def respawn_enemy():
             respawn_chance = random.random()
-            if respawn_chance <= 0.0:  
+            if respawn_chance <= 0.4:  
                 return 'strike_aircraft'
-            elif respawn_chance <= 0.0:  
+            elif respawn_chance <= 0.6:  
                 return 'fighter_aircraft'
-            elif respawn_chance <= 0.0:  
+            elif respawn_chance <= 0.8:  
                 return 'bomber'
             elif respawn_chance <= 1.0:  
                 return 'kamikaze_drone'
@@ -1129,7 +1168,7 @@ class FreePlayState(GameState):
 
     def draw(self):
         
-
+        
         if not (self.paues):
             clock.tick(60)
             screen.fill('aqua')
@@ -1144,11 +1183,14 @@ class FreePlayState(GameState):
             p1.update_missiles()
             p1.chek_magazine()
             p1.chek_missile_lounchers_pods()
+            p1.move_drops()
+
+
             
             
 
  
-            self.generate_enemies(1)
+            self.generate_enemies(3)
             
             
             keys = pygame.key.get_pressed()
@@ -1169,6 +1211,8 @@ class FreePlayState(GameState):
                 if enemy.destroyed:
                     enemies_to_remove.append(enemy)
                 if enemy.check_collision(p1.bullets):
+                    drop=Item(enemy.get_centerx(),enemy.y,'gift')
+                    p1.drops.append(drop)
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
                     if (enemy.x)<-300:
@@ -1238,11 +1282,16 @@ class FreePlayState(GameState):
                 
                         
 
-
-
             p1.update_bullets()
 
-            print(self.enemy_list)
+
+    
+
+
+                
+
+            
+            #print(self.enemy_list)
             #print(en)
             #print(pl)
             #print(Enemy.get_angle_between_rects(pl,en))
