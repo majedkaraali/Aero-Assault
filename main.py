@@ -561,7 +561,7 @@ class Bomb:
         target_y=self.target.y
         x_dis=self.x-target_x
         x_dis=abs(x_dis)
-        self.vely=1.5
+        self.vely=0.5
         y_dis=abs(self.y-target_y)
         reach_time=y_dis//self.vely
 
@@ -570,8 +570,10 @@ class Bomb:
         else:
             velx=2
 
-        if velx>=2.2:
-            velx=2.2
+        if velx>1:
+            velx=1
+            if self.vely>0:
+                self.vely-=0.3
 
         if self.x<target_x:
             self.x+=velx
@@ -1073,13 +1075,13 @@ class FreePlayState(GameState):
 
     def respawn_fighter(self,move_dircton,y):
         if move_dircton==1:
-                x_spawns=[-500,-300,-200,-100,-400]
+                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
                 x=random.choice(x_spawns)-40
                 mdir='right'
                 vel=2
 
         else:
-            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
             x=random.choice(x_spawns)+40
             mdir='left'
             vel=-2
@@ -1090,13 +1092,13 @@ class FreePlayState(GameState):
     
     def respawn_strike(self,move_dircton,y):
         if move_dircton==1:
-                x_spawns=[-500,-300,-200,-100,-400]
+                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
                 x=random.choice(x_spawns)-40
                 mdir='right'
                 vel=2
 
         else:
-            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
             x=random.choice(x_spawns)+40
             mdir='left'
             vel=-2
@@ -1106,13 +1108,13 @@ class FreePlayState(GameState):
 
     def respawn_bomber(self,move_dircton,y):
         if move_dircton==1:
-                x_spawns=[-500,-300,-200,-100,-400]
+                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
                 x=random.choice(x_spawns)-40
                 mdir='right'
                 vel=2
 
         else:
-            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
             x=random.choice(x_spawns)+40
             mdir='left'
             vel=-2
@@ -1123,13 +1125,13 @@ class FreePlayState(GameState):
 
     def respawn_drone(self,move_dircton,y):
         if move_dircton==1:
-                x_spawns=[-500,-300,-200,-100,-400]
+                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
                 x=random.choice(x_spawns)-40
                 mdir='right'
                 vel=2
 
         else:
-            x_spawns=[width+500,width+300,width+200,width+100,width+400]
+            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
             x=random.choice(x_spawns)+40
             mdir='left'
             vel=-2
