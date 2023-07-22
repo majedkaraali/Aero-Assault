@@ -32,13 +32,6 @@ pygame.init()
 pygame.mixer.init()
 
 
-def get_player():
-    return free_play_state.get_player()
-def get_enemies():
-
-    return free_play_state.get_enemies()
-
-
 
 class GameState:
 
@@ -179,9 +172,10 @@ class FreePlayState(GameState):
                             enemy.clear_bombs()
                         self.enemy_list.clear()
 
-
                     elif self.exit_btn_rect.collidepoint(adjusted_mouse_pos):
                         self.running = False
+
+
        
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -200,11 +194,13 @@ class FreePlayState(GameState):
                         player.next_lock()
                         tab_pressed = True
                         
-
                 if keys[pygame.K_r]:
                     player.reload_start_time=pygame.time.get_ticks()
                     player.droped_ammo+=player.magazine
                     player.magazine=0
+
+
+
  
             elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_TAB:
@@ -251,14 +247,11 @@ class FreePlayState(GameState):
         startic_surface.fill(pygame.Color('lightgreen'))
         border = 1
         position = (0, height-30)
-
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
         screen.blit(startic_surface, position)
         score_value =str(score)
-
         score_text = font.render("Score: "+score_value, True, ('black'))
         score_text_pos=(10,height-25)
-
         menu_text = font.render("menu", True, 'black')
         menu_text_pos=(width//2,height-25)
         pause_menurect=menu_text.get_rect()
@@ -267,7 +260,6 @@ class FreePlayState(GameState):
             magazine='---'
         else:
             magazine=str(player.magazine)
-
         bullets=str(player.ammo)
 
         if player.reloading_pods:
@@ -276,15 +268,11 @@ class FreePlayState(GameState):
             missiles=player.ready_to_fire_missiles
 
         storage=player.missiles_storage
-
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
         bullets_text_pos=(width-250,height-25)
-
         missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
         missiles_text_pos=(width-400,height-25)
-
         heath_value=player.health
-
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-100,height-25)
       
@@ -300,15 +288,20 @@ class FreePlayState(GameState):
     def draw(self):
         if not (self.paues) :
             if not self.reward_screen:
-                
                 clock.tick(60)
                 screen.fill('aqua')
+
                 self.ground()
                 self.statics()
+
+
+                #HANDLE PLAYER
                 if not player.forced:
                     player.move_player()
                     if len(self.enemy_list)<4:
                         self.generate_enemies(4)
+
+                        
                 player.update_player(screen)
                 player.move_bullets() 
                 player.update_bullets(screen)
@@ -321,7 +314,7 @@ class FreePlayState(GameState):
                 player.get_enemies=self.get_enemies() 
                 
                 
-    
+                #CLEAN BULLETS KEYS
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_SPACE]:
                     if not player.forced:
@@ -334,6 +327,9 @@ class FreePlayState(GameState):
                 bullets_to_remove = []
                 missiles_to_remove=[]
 
+
+
+                # HANDLE ENEMIES
                 for enemy in self.enemy_list:
                     if enemy.destroyed:
                         enemies_to_remove.append(enemy)
@@ -345,18 +341,17 @@ class FreePlayState(GameState):
                         if (enemy.x)<-300:
                             enemy.destroyed=True
                             enemies_to_remove.append(enemy)
-                    
                     elif enemy.move_dir=='right':
                         if (enemy.x)>width+300:
                             enemy.destroyed=True
                             enemies_to_remove.append(enemy)
-
                     if enemy.y>580:
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
 
-            
 
+            
+                # HANDLE BULLETS
                 for bullet in player.bullets:
                     if bullet.out_of_range():
                         bullets_to_remove.append(bullet)
@@ -365,6 +360,8 @@ class FreePlayState(GameState):
                         bullets_to_remove.append(bullet)
 
 
+
+                # HANDLE MISSILES
                 for missile in  player.missiles:
                     if missile.y<=-10:
                         missiles_to_remove.append(missile)
@@ -372,15 +369,18 @@ class FreePlayState(GameState):
                         missiles_to_remove.append(missile)
                         enemies_to_remove.append(missile.target)
                         
-
+                # CLEAN ENEMEIS
                 if len(enemies_to_remove)>0:
                     for enemy in enemies_to_remove:
                         enemy.destroyed=True
                         self.enemy_list.remove(enemy)
-                        
+
+
+                #CLEAN BULLETS
                 for bullet in bullets_to_remove:
                     player.bullets.remove(bullet)
 
+                #CLEAN MISSILES
                 for missile in missiles_to_remove:
                     player.missiles.remove(missile)
 
@@ -388,7 +388,6 @@ class FreePlayState(GameState):
                 for enemy in self.enemy_list:
                     if enemy.destroyed==True:
                         enemies_to_remove.append(enemy)
-
                     enemy.move_enemy(screen)
                     enemy.update_enemy(screen)
                     enemy.attack(player)
@@ -400,6 +399,7 @@ class FreePlayState(GameState):
 
                 if player.destroyed:
                     self.reward_screen=True
+
 
             elif (self.reward_screen):
                 self.reward_screen_view()
