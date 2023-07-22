@@ -286,6 +286,7 @@ class FreePlayState(GameState):
 
 
     def draw(self):
+        global score
         if not (self.paues) :
             if not self.reward_screen:
                 clock.tick(60)
@@ -331,12 +332,16 @@ class FreePlayState(GameState):
 
                 # HANDLE ENEMIES
                 for enemy in self.enemy_list:
+                    enemy.move_enemy(screen)
+                    enemy.update_enemy(screen)
                     if enemy.destroyed:
                         enemies_to_remove.append(enemy)
-                    if enemy.check_collision(player.bullets):
+                    if enemy.check_kill(player.bullets):
+                        score+=100
                         drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
                         player.drops.append(drop)
                         enemies_to_remove.append(enemy)
+
                     if enemy.move_dir=='left':
                         if (enemy.x)<-300:
                             enemy.destroyed=True
@@ -350,6 +355,8 @@ class FreePlayState(GameState):
                         enemies_to_remove.append(enemy)
 
 
+
+
             
                 # HANDLE BULLETS
                 for bullet in player.bullets:
@@ -357,6 +364,7 @@ class FreePlayState(GameState):
                         bullets_to_remove.append(bullet)
         
                     elif bullet.hitted:
+                        score+=20
                         bullets_to_remove.append(bullet)
 
 
@@ -366,6 +374,7 @@ class FreePlayState(GameState):
                     if missile.y<=-10:
                         missiles_to_remove.append(missile)
                     elif missile.hit_target():
+                        score+=200
                         missiles_to_remove.append(missile)
                         enemies_to_remove.append(missile.target)
                         
@@ -384,17 +393,12 @@ class FreePlayState(GameState):
                 for missile in missiles_to_remove:
                     player.missiles.remove(missile)
 
-                loop_once=0
+                #ATTACK PLAYER
                 for enemy in self.enemy_list:
-                    if enemy.destroyed==True:
-                        enemies_to_remove.append(enemy)
-                    enemy.move_enemy(screen)
-                    enemy.update_enemy(screen)
                     enemy.attack(player)
-                    if loop_once==0:
-                        enemy.move_bombs()
-                        enemy.draw_bombs(screen)
-                        loop_once+=1
+                    enemy.move_bombs()
+                    enemy.draw_bombs(screen)
+                    break
                             
 
                 if player.destroyed:

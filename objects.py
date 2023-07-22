@@ -238,13 +238,15 @@ class Player():
         self.tracked=[]
         self.drops=[]
         self.selected=0
-        self.ammo=1200
-        self.magazine=180
+        self.ammo=1680
+        self.magazine=240
+        self.magazine_size=240
         self.reloading=False
         self.moving=False
         self.droped_ammo=0
         self.missiles_storage=12
         self.ready_to_fire_missiles=4
+        self.pods_size=4
         self.reloading_pods=False
         self.out_of_missiles=False
         self.out_of_ammo=False
@@ -268,7 +270,7 @@ class Player():
     last_fire_time=0
     caluculate_rewards_deleay=2000
     reload_delay=3000
-    pods_reload_delay=7000
+    pods_reload_delay=4000
     reload_start_time=0
     pods_reload_start_time=0
     radar_range=0
@@ -327,12 +329,12 @@ class Player():
                 self.droped_ammo=0
             
             if self.ammo>0:
-                if self.ammo<180:
+                if self.ammo<self.magazine_size:
                     self.magazine=self.ammo
                     self.ammo=0
                 else:
-                    self.magazine=180
-                    self.ammo-=180
+                    self.magazine=self.magazine_size
+                    self.ammo-=self.magazine_size
 
    
 
@@ -340,9 +342,9 @@ class Player():
     def reload_pods(self):
         current_time = pygame.time.get_ticks()
         if self.pods_reload_start_time+self.pods_reload_delay<=current_time:
-            if self.missiles_storage>=4:
-                self.ready_to_fire_missiles=4
-                self.missiles_storage-=4
+            if self.missiles_storage>=self.pods_size:
+                self.ready_to_fire_missiles=self.pods_size
+                self.missiles_storage-=self.pods_size
      
 
 
@@ -838,7 +840,7 @@ class Enemy:
         else:
             return False
 
-    def check_collision(self, obje):
+    def check_kill(self, obje):
         for bullet in obje:
             if (self.x < bullet.x + bullet.width and
                 self.x + self.width > bullet.x and
@@ -848,7 +850,6 @@ class Enemy:
                 self.health-=15
                 if self.health<0:
                     self.destroyed=True
-
                     return True       
-                   
+                          
         return False
