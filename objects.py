@@ -780,7 +780,7 @@ class Enemy:
         if self.move_dir=='right':
             self.x+=self.vel
         elif self.move_dir=="left":
-            self.x+=self.vel
+            self.x-=self.vel
 
     def move_enemy(self,screen):
         if not self.destroyed:
@@ -851,5 +851,5 @@ class Enemy:
                 if self.health<0:
                     self.destroyed=True
                     return True       
-                          
+
         return False

@@ -21,7 +21,7 @@ class Generate_enemies:
                 x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
                 x=random.choice(x_spawns)+40
                 mdir='left'
-                vel=-2
+                vel=2
             
             enemy=objects.Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80,self.target)
             self.enemy_list.append(enemy)
@@ -38,7 +38,7 @@ class Generate_enemies:
                 x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
                 x=random.choice(x_spawns)+40
                 mdir='left'
-                vel=-2
+                vel=2
             
             enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100,self.target)
             self.enemy_list.append(enemy)
@@ -54,7 +54,7 @@ class Generate_enemies:
                 x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
                 x=random.choice(x_spawns)+40
                 mdir='left'
-                vel=-2
+                vel=2
             
             enemy=objects.Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130,self.target)
             self.enemy_list.append(enemy)
@@ -71,7 +71,7 @@ class Generate_enemies:
                 x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
                 x=random.choice(x_spawns)+40
                 mdir='left'
-                vel=-2
+                vel=2
             
             enemy=objects.Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30,self.target)
             self.enemy_list.append(enemy)

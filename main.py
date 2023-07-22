@@ -49,9 +49,9 @@ class GameState:
 
 class MenuState(GameState):
 
-    free_play_posit=pygame.Rect(20, 20, 200, 50)
-    missions_posit= pygame.Rect(20, 90, 200, 50)
-    exit_posit= pygame.Rect(20, 230, 200, 50)
+    free_play_position=pygame.Rect(20, 20, 200, 50)
+    missions_position= pygame.Rect(20, 90, 200, 50)
+    exit_position= pygame.Rect(20, 230, 200, 50)
 
     def __init__(self):
         super().__init__()
@@ -66,13 +66,13 @@ class MenuState(GameState):
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if self.free_play_posit.collidepoint(mouse_pos):
+                if self.free_play_position.collidepoint(mouse_pos):
                     current_state=free_play_state
                     _player()
-                elif self.missions_posit.collidepoint(mouse_pos):
+                elif self.missions_position.collidepoint(mouse_pos):
                     print("Clicked Missions button")
                     
-                elif self.exit_posit.collidepoint(mouse_pos):
+                elif self.exit_position.collidepoint(mouse_pos):
                     print("Clicked Exit button")
                     
 
@@ -343,13 +343,12 @@ class FreePlayState(GameState):
                         enemies_to_remove.append(enemy)
 
                     if enemy.move_dir=='left':
-                        if (enemy.x)<-300:
-                            enemy.destroyed=True
-                            enemies_to_remove.append(enemy)
+                        if (enemy.x)<5:
+                            enemy.move_dir='right'
                     elif enemy.move_dir=='right':
-                        if (enemy.x)>width+300:
-                            enemy.destroyed=True
-                            enemies_to_remove.append(enemy)
+                        if (enemy.x)>width-5-enemy.width:
+                            enemy.move_dir='left'
+
                     if enemy.y>580:
                         enemy.destroyed=True
                         enemies_to_remove.append(enemy)
