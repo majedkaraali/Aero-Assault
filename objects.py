@@ -1,5 +1,6 @@
 import pygame
 import random
+from main import screen
 
 pygame.init()
 
@@ -21,11 +22,11 @@ class Missile:
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
                 self.target.destroyed=True
-                chanse=random.randint(1,2)
-                if chanse==1:
-                    from main import Item
-                    drop=Item(self.target.get_centerx(),self.target.y,'gift')
-                    self.owner.drops.append(drop)
+               # chanse=random.randint(1,2)
+                #if chanse==1:
+                    
+                    #drop=Item(self.target.get_centerx(),self.target.y,'gift')
+                   # self.owner.drops.append(drop)
                 return True
                 
             else:
@@ -113,3 +114,5 @@ class Missile:
         from main import screen
 
         screen.blit(rotated_rect, (self.x - x_adjustment,self.y - y_adjustment))
+
+

@@ -3,7 +3,7 @@ import random
 from math import atan2, degrees, pi
 import math
 
-from objects import Missile
+import objects
 
 pygame.init()
 
@@ -406,7 +406,7 @@ class Player():
                 missile_start_x=self.x
                 missile_start_y=self.y
                 self.ready_to_fire_missiles-=1
-                missile=Missile(missile_start_x, missile_start_y,locked,p1)
+                missile=objects.Missile(missile_start_x, missile_start_y,locked,p1)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
                 locked.locked=True
@@ -673,7 +673,7 @@ class Enemy:
             self.destroyed=True
             self.effect()
             if 80 - target.health <0:
-                target.target.health=0
+                target.health=0
             else:
                 target.health-=80
 
@@ -1347,8 +1347,6 @@ menu_state = MenuState()
 free_play_state = FreePlayState()
 current_state = menu_state        
 def main():    
-          
-
     while current_state.running:
         
         events = pygame.event.get()
