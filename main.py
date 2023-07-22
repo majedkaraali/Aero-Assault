@@ -8,8 +8,8 @@ pygame.init()
 
 def _player():
         global player
-        player=objects.Player(400,height-70,[],[],'player',[])
-        player=objects.Player(400,height-70,[],[],player,[])
+        player=objects.Player(400,height-70,[],[],'Unnamed',[])
+
 
      
 
@@ -232,7 +232,7 @@ class FreePlayState(GameState):
 
         if self.mouse_button_pressed:
                 if not player.forced:
-                    player.shoot()
+                    player.shoot(screen)
 
 
     def respawn_fighter(self,move_dircton,y):
@@ -413,7 +413,6 @@ class FreePlayState(GameState):
 
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
         screen.blit(startic_surface, position)
-        from objects import score
         score_value =str(score)
 
         score_text = font.render("Score: "+score_value, True, ('black'))
@@ -472,14 +471,14 @@ class FreePlayState(GameState):
                 if not player.forced:
                     player.move_player()
                     self.generate_enemies(3)
-                player.update_player()
+                player.update_player(screen)
                 player.move_bullets() 
-                player.update_bullets()
+                player.update_bullets(screen)
                 player.move_missiles()
-                player.update_missiles()
+                player.update_missiles(screen)
                 player.chek_magazine()
                 player.chek_missile_lounchers_pods()
-                player.move_drops()
+                player.move_drops(screen,player)
                 player.is_destroyed()   
                 player.get_enemies=self.get_enemies() 
                 
@@ -491,7 +490,7 @@ class FreePlayState(GameState):
                         player.shoot()
                 elif keys[pygame.K_f]:
                     if not player.forced:
-                        player.fire_missile()
+                        player.fire_missile(player)
                     
                 enemies_to_remove = []
                 bullets_to_remove = []
@@ -553,16 +552,14 @@ class FreePlayState(GameState):
                     if enemy.destroyed==True:
                         enemies_to_remove.append(enemy)
 
-                    enemy.move_enemy()
-                    enemy.update_enemy()
+                    enemy.move_enemy(screen)
+                    enemy.update_enemy(screen)
                     enemy.attack(player)
                     if loop_once==0:
                         enemy.move_bombs()
-                        enemy.draw_bombs()
+                        enemy.draw_bombs(screen)
                         loop_once+=1
                             
-
-                player.update_bullets()
 
                 if player.destroyed:
                     self.reward_screen=True

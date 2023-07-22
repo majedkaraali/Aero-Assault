@@ -3,7 +3,7 @@ import random
 from math import atan2, degrees, pi
 import math
 
-from main import score,width,height,screen
+width,height=(1100,660)
 
 
 pygame.init()
@@ -22,7 +22,6 @@ class Missile:
 
 
     def hit_target(self):
-        global score
         if not (self.target.destroyed):
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
@@ -30,7 +29,6 @@ class Missile:
                 self.owner.drops.append(drop)
                 print(self.owner.drops,'oooooooo')
                 self.target.destroyed=True
-                score+=85
                 return True
                 
             else:
@@ -98,7 +96,7 @@ class Missile:
 
         #pygame.draw.rect(screen, ('red'), (self.path(), self.target.y, 5, 5)) # THis is collisin point
 
-    def draw_missile(self):
+    def draw_missile(self,screen):
         width = self.width
         height = self.height
         rect = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -136,7 +134,6 @@ class Item:
         return value
 
     def activate(self,player):
-        print(player)
         if self.drop_value()=='health':
             if player.health+50>100:
                 player.health=100
@@ -160,7 +157,7 @@ class Item:
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
         return  rect
 
-    def draw(self):
+    def draw(self,screen):
         
         pygame.draw.rect(screen, pygame.Color('gold'), (self.x, self.y, self.width, self.height))
 
@@ -191,8 +188,7 @@ class Bullet:
         #print(self.vel_x,self.vel_y)
 
 
-    def draw_bullet(self):
-        
+    def draw_bullet(self,screen):
         screen.blit(self.surface, (self.x, self.y))
 
     def shoot_at(self, target_x, target_y):
@@ -220,7 +216,7 @@ class Bullet:
         else:
             return False
 
-    def rotate_bullet(self, target_x, target_y):
+    def rotate_bullet(self,screen, target_x, target_y):
         dx = target_x - self.x
         dy = target_y - self.y
         angle = math.degrees(math.atan2(dy, dx)) + 90
@@ -233,7 +229,7 @@ class Bullet:
     
 class Player():
 
-    def __init__(self,x,y,bullets,missiles,player,get_enemies) :
+    def __init__(self,x,y,bullets,missiles,name,get_enemies) :
         self.x=x
         self.y=y
         self.bullets=bullets
@@ -257,8 +253,9 @@ class Player():
         self.destroyed=False
         self.forced=False
         self.forced_time = 0
-        self.player=player
+        self.name=name
         self.get_enemies=get_enemies
+        
 
     width=60
     height=33
@@ -275,7 +272,8 @@ class Player():
     pods_reload_delay=7000
     reload_start_time=0
     pods_reload_start_time=0
-    
+    radar_range=0
+    radar_max_left=0
     
     def get_rect(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
@@ -300,11 +298,11 @@ class Player():
         self.x += vel_x
         self.x = max(0, min(self.x, width - self.width))
         
-    def update_player(self):
-        global pl
+    def update_player(self,screen):
         
-        pl = pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
         self.radar()
+        pygame.draw.rect(screen, ('green'), (self.radar_max_left, 10, self.radar_range , 2))
 
             
 
@@ -403,16 +401,16 @@ class Player():
             return False
 
 
-    def shoot(self):
+    def shoot(self,screen):
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
             bullet2 = Bullet(20+self.x + self.width // 2 - Bullet.width // 2, self.y)
             bullet.shoot_at(target_x, target_y)
-            bullet.rotate_bullet(target_x,target_y)
+            bullet.rotate_bullet(screen,target_x,target_y)
             bullet2.shoot_at(target_x, target_y)
-            bullet2.rotate_bullet(target_x,target_y)
+            bullet2.rotate_bullet(screen,target_x,target_y)
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
@@ -428,21 +426,21 @@ class Player():
         for mis in self.missiles:
             mis.move_misile()
 
-    def update_bullets(self):
+    def update_bullets(self,screen):
         for bullet in self.bullets:
-            bullet.draw_bullet()
+            bullet.draw_bullet(screen)
 
-    def update_missiles(self):
+    def update_missiles(self,screen):
         for mis in self.missiles:
-            mis.draw_missile()
+            mis.draw_missile(screen)
 
     def radar(self):
         radar_range=900
         max_left=self.x-radar_range//2
         max_right=self.x+radar_range//2
         radar_angle=list(range(max_left,max_right))
-        
-        rd=  pygame.draw.rect(screen, ('green'), (max_left, 10, radar_range , 2))
+        self.radar_range=radar_range
+        self.radar_max_left=max_left
         self.enemies_in_radar=[]
         enemies=self.get_enemies
 
@@ -495,14 +493,14 @@ class Player():
             return False
     
  
-    def fire_missile(self):
+    def fire_missile(self,owner):
         if self.can_fire_missile():
             if self.auto_lock():
                 locked=self.auto_lock()
                 missile_start_x=self.x
                 missile_start_y=self.y
                 self.ready_to_fire_missiles-=1
-                missile=Missile(missile_start_x, missile_start_y,locked,self.player)
+                missile=Missile(missile_start_x, missile_start_y,locked,owner)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
                 locked.locked=True
@@ -511,19 +509,18 @@ class Player():
 
 
 
-    def move_drops(self):
+    def move_drops(self,screen,owner):
         for drop in self.drops:
             drop.move_item()
-            drop.draw()
+            drop.draw(screen)
             if self.get_rect().colliderect(drop.get_rect()):
-                drop.activate(self.player)
+                drop.activate(owner)
                 self.drops.remove(drop)
             if drop.expired():
                 if drop in self.drops:
                     self.drops.remove(drop)
 
-    def get_player(self):
-        return self.player
+ 
 
 class Bomb:
     def __init__(self,x,y,velx,vely,guided,target):
@@ -596,23 +593,23 @@ class Bomb:
         
 
         
-    def status(self):
+    def status(self,screen):
         
         if self.hit_player():
             self.explode_and_dmage()
-            self.effect()
+            self.effect(screen)
             self.exploded=True
             
         elif self.y > height-70:
-            self.effect()
+            self.effect(screen)
             self.exploded=True
 
-    def effect(self):
+    def effect(self,screen):
         
         pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
 
 
-    def draw(self):
+    def draw(self,screen):
         
         pygame.draw.rect(screen, pygame.Color('black'), (self.x, self.y, self.width, self.height))
 
@@ -651,16 +648,16 @@ class Enemy:
     def move_bombs(self):
         for bomb in self.bombs:
             bomb.move()
-            bomb.status()
             if bomb.exploded==True:
                 self.bombs.remove(bomb)
 
     def clear_bombs(self):
         self.bombs.clear()
 
-    def draw_bombs(self):
+    def draw_bombs(self,screen):
         for bomb in self.bombs:
-            bomb.draw()
+            bomb.draw(screen)
+            bomb.status(screen)
           
     
 
@@ -730,12 +727,12 @@ class Enemy:
     def set_x(self,x):
         self.x=x
 
-    def effect(self):
+    def effect(self,screen):
         
         pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
 
 
-    def kamikaze_move(self,target):
+    def kamikaze_move(self,target,screen):
         target_x=target.x
         target_y=target.y
         x_dis=self.x-target_x
@@ -759,16 +756,16 @@ class Enemy:
             
         self.y+=self.vely
 
-        self.check_hit_player(target)
+        self.check_hit_player(target,screen)
             
 
         
 
 
-    def check_hit_player(self,target):
+    def check_hit_player(self,target,screen):
         if self.get_rect().colliderect(target.get_rect()):
             self.destroyed=True
-            self.effect()
+            self.effect(screen)
             if target.health -80  <0:
                 target.health=0
             else:
@@ -784,12 +781,12 @@ class Enemy:
         elif self.move_dir=="left":
             self.x+=self.vel
 
-    def move_enemy(self):
+    def move_enemy(self,screen):
         if not self.destroyed:
             if not self.kamikaze:
                 self.side_move()
             else:
-                self.kamikaze_move(self.target)
+                self.kamikaze_move(self.target,screen)
  
     
 
@@ -815,7 +812,7 @@ class Enemy:
         return degs
 
 
-    def update_enemy(self):
+    def update_enemy(self,screen):
         
         target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         pygame.draw.rect(screen, self.color, target_rect)
@@ -843,19 +840,16 @@ class Enemy:
             return False
 
     def check_collision(self, obje):
-        global score
         for bullet in obje:
             if (self.x < bullet.x + bullet.width and
                 self.x + self.width > bullet.x and
                 self.y < bullet.y + bullet.height and
                 self.y + self.height > bullet.y):
                 bullet.hitted=True
-
                 self.health-=15
-                score+=5
                 if self.health<0:
                     self.destroyed=True
-                    score+=40
+
                     return True       
                    
         return False
