@@ -27,7 +27,6 @@ class Missile:
             if rect.colliderect(self.target.get_rect()):
                 drop=Item(self.target.get_centerx(),self.target.y,'gift')
                 self.owner.drops.append(drop)
-                print(self.owner.drops,'oooooooo')
                 self.target.destroyed=True
                 return True
                 
@@ -185,7 +184,7 @@ class Bullet:
         self.y += self.vel_y
         self.max_y+=self.vel_y
         self.max_x+=self.vel_x
-        #print(self.vel_x,self.vel_y)
+
 
 
     def draw_bullet(self,screen):
