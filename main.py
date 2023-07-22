@@ -40,7 +40,10 @@ class Item:
 
     def activate(self,player):
         if self.drop_value()=='health':
-            player.health+=50
+            if player.health+50>100:
+                player.healh=100
+            else:
+                player.health+=50
         elif self.drop_value()=='ammo':
             player.ammo+=180
         elif self.drop_value()=='missiles':
@@ -772,7 +775,10 @@ class Enemy:
         if self.get_rect().colliderect(target.get_rect()):
             self.destroyed=True
             self.effect()
-            target.health-=80
+            if 80 - target.health <0:
+                target.target.health=0
+            else:
+                target.health-=80
 
       
 

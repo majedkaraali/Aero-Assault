@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.locals import *
 from math import atan2, degrees, pi
+import math
 
 pygame.init()
 
@@ -11,11 +12,15 @@ height=640
 
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
-
 font = pygame.font.Font(None, 24)
-
-
 pygame.mixer.init()
+
+
+pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
+
+
+
+
 
 
 
@@ -31,22 +36,15 @@ class Missile:
         self.y=y
         self.target=target
 
-    
-   
     def hit_target(self):
         if not (self.target.destroyed):
             rect=pygame.Rect(self.x,self.y,self.width,self.height)
             if rect.colliderect(self.target.get_rect()):
                 self.target.destroyed=True
-                print(self.target,"DESTROYED")
                 return True
                 
             else:
                 return False
-            
-
-
-
 
     def get_rect(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
@@ -58,36 +56,31 @@ class Missile:
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
-        rich_target_time=y_dis//self.vel_y
-        rich_target_time=abs(rich_target_time)
+        reach_target_time=y_dis//self.vel_y
+        reach_target_time=abs(reach_target_time)
 
         if enemy_dir=="left":
-            cx=((self.target.x)-rich_target_time)
+            cx=((self.target.x)-reach_target_time)
            
         elif enemy_dir=="right":
-            cx=((self.target.x)+rich_target_time)+50
+            cx=((self.target.x)+reach_target_time)+50
         
-
+        self.target.tracked=True
         return cx
-
-
-    
 
     def turn_vel(self):
         eny=(self.target.y)-self.target.height//2
         y_dis=self.y-eny
         y_dis=abs(y_dis)
 
-        rich_target_time=y_dis//self.vel_y
-        rich_target_time=abs(rich_target_time)
+        reach_target_time=y_dis//self.vel_y
+        reach_target_time=abs(reach_target_time)
 
         x_path_dist=self.path()-self.x
         x_path_dist=abs(x_path_dist)
 
-
-
-        if rich_target_time and x_path_dist >0:
-            missiile_x_turn_vel=x_path_dist/rich_target_time
+        if reach_target_time and x_path_dist >0:
+            missiile_x_turn_vel=x_path_dist/reach_target_time
         else:
             missiile_x_turn_vel=2
 
@@ -97,14 +90,7 @@ class Missile:
         elif self.path()<self.x:
             self.x-=missiile_x_turn_vel-1
 
-
         return  missiile_x_turn_vel 
-
-
-
-            
-        
-   
 
     def move_misile(self):
 
@@ -113,11 +99,9 @@ class Missile:
         elif self.path()<self.x:
             self.x-=self.turn_vel()-1
 
-    
         self.y+=self.vel_y
 
         #pygame.draw.rect(screen, ('red'), (self.path(), self.target.y, 5, 5)) # THis is collisin point
-
 
     def draw_missile(self):
         width = self.width
@@ -133,10 +117,7 @@ class Missile:
         if (self.target.destroyed):
                 angle = 0
 
-
         rotated_rect = pygame.transform.rotate(rect, angle)
-
-      
         x_adjustment = (rotated_rect.get_width() - width) // 2
         y_adjustment = (rotated_rect.get_height() - height) // 2
 
@@ -147,17 +128,28 @@ class Missile:
 class Bullet:
     width = 3
     height = 7
-    vel_y = -10
+    speed = 10
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.vel_x = 0
+        self.vel_y = 0
 
     def move_bullet(self):
+        self.x += self.vel_x
         self.y += self.vel_y
 
     def draw_bullet(self):
         pygame.draw.rect(screen, ('black'), (self.x, self.y, self.width, self.height))
+
+    def shoot_at(self, target_x, target_y):
+        dx = target_x - self.x
+        dy = target_y - self.y
+        distance = math.sqrt(dx ** 2 + dy ** 2)
+        if distance != 0:
+            self.vel_x = (dx / distance) * self.speed
+            self.vel_y = (dy / distance) * self.speed
 
 
 class Player():
@@ -166,12 +158,10 @@ class Player():
         self.y=y
         self.bullets=bullets
         self.missiles=missiles
-        self.attacked_target=[]
-        
-    
-      
-        
-  
+        self.attacked_targets=[]
+        self.enemies_in_radar=[]
+        self.tracked=[]
+        self.selected=0
 
     width=50
     height=50
@@ -179,18 +169,16 @@ class Player():
     vel_x = 0
     vel_y = 0
     move_speed = 6
-    
-    
     shoot_delay = 100  
     last_shot_time = 0
-    fire_missie_delay=1000
+    fire_missie_delay=200
     last_fire_time=0
 
     def move_player(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             vel_x = -self.move_speed
-        elif keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_d]:
             vel_x = self.move_speed
         else:
             vel_x = 0
@@ -201,6 +189,7 @@ class Player():
     def update_player(self):
         global pl
         pl = pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
+        self.radar()
         
 
     def can_shoot(self):
@@ -214,7 +203,11 @@ class Player():
 
     def shoot(self):
         if self.can_shoot():
+
+
+            target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
+            bullet.shoot_at(target_x, target_y)
             self.bullets.append(bullet)
             self.last_shot_time = pygame.time.get_ticks()
 
@@ -235,55 +228,81 @@ class Player():
             mis.draw_missile()
 
     def radar(self):
-        radar_range=5000
+        radar_range=900
         max_left=self.x-radar_range//2
         max_right=self.x+radar_range//2
         radar_angle=list(range(max_left,max_right))
-        return radar_angle
-    
-    def lock_target(self):
+        rd=  pygame.draw.rect(screen, ('green'), (max_left, 10, radar_range , 2))
         enemies_list=free_play_state.get_enemies()
-        enemies_in_radar=[]
+        self.enemies_in_radar=[]
+
         for enemy in enemies_list:
-            if enemy.x in self.radar():
-                enemies_in_radar.append(enemy)
-      
-        print(enemies_in_radar)
-        if len(enemies_in_radar)>0:    
-            locked_target=enemies_in_radar[0]
-            return locked_target
+            if enemy.get_centerx() in radar_angle:
+                    #enemy.tracked=True
+                    self.enemies_in_radar.append(enemy)
+                    if enemy not in self.tracked :
+                            if enemy not in self.attacked_targets:
+                                self.tracked.append(enemy)
+
+        for target in self.tracked:
+            if target.destroyed==True:
+                self.tracked.remove(target)
+            elif target.get_centerx() not in radar_angle:
+                target.tracked=False
+                self.tracked.remove(target)
+            elif target in self.attacked_targets:
+                self.tracked.remove(target)
+            
         
+        locked=self.auto_lock()
+
+        if locked:
+            for target in self.tracked:
+                if target==locked:
+                    locked.tracked=True
+                else:
+                    target.tracked=False
+
+
+    def next_lock(self):
+        searched_enemies=self.tracked
+        enemies_count=len(searched_enemies)
+        if ((self.selected)+1)>=(enemies_count):
+            self.selected=0
+        else:
+            self.selected+=1
+        
+    def auto_lock(self):
+        searched_enemies=self.tracked
+        enemies_count=len(searched_enemies)
+        if enemies_count>0:
+            if self.selected>=enemies_count:
+                locked=searched_enemies[0]
+            else:
+                locked=searched_enemies[self.selected]
+            return locked
         
         else:
             return False
-        
-    def auto_next_target(self):
-        pass
-        
-
+    
+ 
+    
+    
     def fire_missile(self):
         if self.can_fire_missile():
-            if self.lock_target():
-                locked=self.lock_target()
+            if self.auto_lock():
+                locked=self.auto_lock()
                 missile_start_x=self.x
-              
                 missile_start_y=self.y
                
                 missile=Missile(missile_start_x, missile_start_y,locked)
                 self.missiles.append(missile)
                 self.last_fire_time = pygame.time.get_ticks()
-                print(locked,"LOCKED TARGET")
-                
-                
+                locked.locked=True
+                self.attacked_targets.append(locked)
 
-            else:
-                pass
-        
-      
 
-    
-        
-        
+
 
 
 class Enemy:
@@ -295,7 +314,13 @@ class Enemy:
         self.vel=vel
         self.move_dir=move_dir
         self.destroyed=False
-       
+        self.tracked=False
+        self.locked=False
+
+    def get_centerx(self):
+        center_x=self.x+(self.width//2)
+        return center_x
+
 
     def set_x(self,x):
         self.x=x
@@ -331,8 +356,21 @@ class Enemy:
 
 
     def update_enemy(self):
-        global en
-        en = pygame.draw.rect(screen, (29, 84, 158), (self.x, self.y, self.width, self.height))
+        target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        pygame.draw.rect(screen, "blue", target_rect)
+        text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
+
+
+        if self.locked:
+            pygame.draw.rect(screen, "blue", target_rect)
+            text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
+
+        elif self.tracked:
+            pygame.draw.rect(screen, "blue", target_rect)
+            text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
+        text_rect = text.get_rect(center=target_rect.center)
+        screen.blit(text, text_rect)
+
 
     def check_collision(self, obje):
         for bullet in obje:
@@ -433,6 +471,7 @@ class MenuState(GameState):
      
 
 class FreePlayState(GameState):
+    mouse_button_pressed=False
     paues=False
     pause_frame_color = ('silver')
     pause_surface_width=250
@@ -455,10 +494,12 @@ class FreePlayState(GameState):
         
     def handle_events(self, events):
         global current_state
+        tab_pressed = False
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.mouse_button_pressed=True
                 mouse_pos = pygame.mouse.get_pos()
                 adjusted_mouse_pos = (
                     mouse_pos[0] - self.frame_position[0],
@@ -478,38 +519,84 @@ class FreePlayState(GameState):
                 elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
                     print("Exit")
                     self.running = False
+                    print()
+       
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.mouse_button_pressed = False
+                
+            print(self.mouse_button_pressed)
 
-            elif event.type == pygame.KEYDOWN:
+            
+            
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     if self.paues:
                         self.paues = False
                     else:
                         self.paues = True
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_TAB] and not tab_pressed:
+                    p1.next_lock()
+                    tab_pressed = True
+
+            elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_TAB:
+                        tab_pressed = False
+
+        if self.mouse_button_pressed:
+                p1.shoot()
     
     def generate_enemies(self,num_of_enemies):
+        y_spawns=[3,33,60]
+        
         if len(self.enemy_list)<num_of_enemies:
             move_dircton=random.randint(0,1)
+            
             if move_dircton==1:
-                vel=2
-                x=random.randint(-350,-50)
+                x_spawns=[-500,-300,-200,-100,-400]
+                x=random.choice(x_spawns)-40
                 mdir='right'
+                vel=2
+
+
+
             else:
-                vel=-2
-                x=random.randint(width+50,width+350)
+                x_spawns=[width+500,width+300,width+200,width+100,width+400]
+                x=random.choice(x_spawns)+40
                 mdir='left'
-        
-            enemy=Enemy(x,10,80,25,vel,mdir)
+                vel=-2
+          
+                
+
+            y=random.choice(y_spawns)
+            enemy=Enemy(x,y,80,25,vel,mdir)
             self.enemy_list.append(enemy)
 
     def get_enemies(self):
         return self.enemy_list
+    
+    def ground(self):
+        surface_width = width
+        surface_height = 100
+        ground_surface = pygame.Surface((surface_width, surface_height))
+        ground_surface.fill(pygame.Color('green'))
+        border = 1
+        position = (0, height-surface_height)
+
+        pygame.draw.rect(ground_surface, pygame.Color('green'), ground_surface.get_rect(), border)
+        screen.blit(ground_surface, position)
+    
+
+
 
 
     def draw(self):
+        
 
         if not (self.paues):
             clock.tick(60)
             screen.fill('aqua')
+            self.ground()
 
             p1.move_player()
             p1.update_player()
@@ -517,9 +604,9 @@ class FreePlayState(GameState):
             p1.update_bullets()
             p1.move_missiles()
             p1.update_missiles()
-            
+
  
-            self.generate_enemies(2)
+            self.generate_enemies(4)
             
             
             keys = pygame.key.get_pressed()
@@ -527,6 +614,8 @@ class FreePlayState(GameState):
                 p1.shoot()
             elif keys[pygame.K_f]:
                 p1.fire_missile()
+                
+       
 
 
             enemies_to_remove = []
@@ -539,15 +628,15 @@ class FreePlayState(GameState):
                     enemies_to_remove.append(enemy)
                 if enemy.move_dir=='left':
                     if enemy.x<0:
+                        enemy.destroyed=True
                         enemies_to_remove.append(enemy)
                  
                 elif enemy.move_dir=='right':
                     if enemy.x>width:
+                        enemy.destroyed=True
                         enemies_to_remove.append(enemy)
+                        
                      
-
-
-
 
             for bullet in p1.bullets:
                 if bullet.y < 0:
@@ -563,15 +652,11 @@ class FreePlayState(GameState):
                     
 
 
-
-            
-
-            for enemy in self.enemy_list:
-                pass
-
             if len(enemies_to_remove)>0:
                 for enemy in enemies_to_remove:
+                    enemy.destroyed=True
                     self.enemy_list.remove(enemy)
+                    
 
             for bullet in bullets_to_remove:
                 p1.bullets.remove(bullet)
@@ -614,6 +699,7 @@ class FreePlayState(GameState):
             self.frame_surface.blit(resume_button_text,resume_button_text_rect)
             self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
             self.frame_surface.blit(exit_button_text,exit_button_text_rect)
+        
             
            
             
