@@ -3,27 +3,34 @@ import random
 from math import atan2, degrees, pi
 import math
 import objects
+from enemy_generator import Generate_enemies
 
-pygame.init()
-
-def _player():
-        global player
-        player=objects.Player(400,height-70,[],[],'Unnamed',[])
-
-
-     
 
 width=1100
 height=660
+score=0
 
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
-score=0
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
 
+
+
+def _player():
+        global player
+        player=objects.Player(400,height-70,[],[],'Unnamed',[])
+        return player
+
+
+ens=Generate_enemies(_player())
+
+
+
+pygame.init()
+
 pygame.mixer.init()
-pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
+
 
 def get_player():
     return free_play_state.get_player()
@@ -78,24 +85,8 @@ class MenuState(GameState):
 
 
     def draw(self):
-        screen.fill('black')
-        free_play_button = pygame.draw.rect(screen, (0, 0, 255),self.free_play_posit)
-        free_play_text = font.render("Free Play", True, (255, 255, 255))
-        free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
-        screen.blit(free_play_text, free_play_text_rect)
-
-
-        missions_button = pygame.draw.rect(screen, (0, 255, 0),self.missions_posit)
-        missions_text = font.render("Missions", True, (255, 255, 255))
-        missions_text_rect = missions_text.get_rect(center=missions_button.center)
-        screen.blit(missions_text, missions_text_rect)
-
-
-
-        exit_button = pygame.draw.rect(screen, (255, 0, 0),self.exit_posit)
-        exit_text = font.render("Exit", True, (255, 255, 255))
-        exit_text_rect = exit_text.get_rect(center=exit_button.center)
-        screen.blit(exit_text, exit_text_rect)
+        from screens import main_menu_screen
+        main_menu_screen(screen,menu_state)
             
        
      
@@ -105,7 +96,10 @@ class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
     reward_screen=False
+    enemy_list=ens.all_time_enemies(4)
 
+
+    #PAUSE SURFACE
     pause_frame_color = ('silver')
     rerawrds_frame_color=('silver')
     pause_surface_width=250
@@ -113,45 +107,33 @@ class FreePlayState(GameState):
     frame_position = ((width//2)-(pause_surface_width//2),(height//2)-(pause_surface_height//2))
     frame_surface = pygame.Surface((pause_surface_width,pause_surface_height))
     frame_surface.fill(pause_frame_color)
-
     border_width = 1
     border_color = (0, 0, 0)
 
-
-    
+    #REWARD SURFACE
     rwd_surface_width = width//2
     rwd_surface_height = height//2
     reward_scr_position =  ((width//2)-(rwd_surface_width//2),(height//2)-(rwd_surface_height//2))
     rewards_surface = pygame.Surface((rwd_surface_width, rwd_surface_height))
     rewards_surface.fill(rerawrds_frame_color)
 
-
+    # RECTS
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
-
-
-    
     score_rect=pygame.Rect(35, height-15, 100, 20)
     menu_rect=pygame.Rect((width//2), height-15, 100, 66)
     missile_count_rect=pygame.Rect(width-50, height-15, 50, 66)
     bullet_count_rect=pygame.Rect(width-150, height-15, 50, 66)
     scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
-
     main_menu_btn_rect=pygame.Rect((rwd_surface_width//2)-150,rwd_surface_height-70,100,20)
     exit_btn_rect=pygame.Rect((rwd_surface_width//2)+100,rwd_surface_height-70,70,20)
-
-
-
-
-    enemy_list=[]
-    
 
     def __init__(self):
         super().__init__()
         self.running=True
         self.force_reload=False
-        self.generate_player()
+
         
         
     def handle_events(self, events):
@@ -235,160 +217,20 @@ class FreePlayState(GameState):
                     player.shoot(screen)
 
 
-    def respawn_fighter(self,move_dircton,y):
-        if move_dircton==1:
-                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
-                x=random.choice(x_spawns)-40
-                mdir='right'
-                vel=2
-
-        else:
-            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
-            x=random.choice(x_spawns)+40
-            mdir='left'
-            vel=-2
-           
-        enemy=objects.Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80,player)
-        self.enemy_list.append(enemy)
-
     
-    def respawn_strike(self,move_dircton,y):
-        if move_dircton==1:
-                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
-                x=random.choice(x_spawns)-40
-                mdir='right'
-                vel=2
-
-        else:
-            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
-            x=random.choice(x_spawns)+40
-            mdir='left'
-            vel=-2
-           
-        enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100,player)
-        self.enemy_list.append(enemy)
-
-    def respawn_bomber(self,move_dircton,y):
-        if move_dircton==1:
-                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
-                x=random.choice(x_spawns)-40
-                mdir='right'
-                vel=2
-
-        else:
-            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
-            x=random.choice(x_spawns)+40
-            mdir='left'
-            vel=-2
-           
-        enemy=objects.Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130,player)
-        self.enemy_list.append(enemy)
-
-
-    def respawn_drone(self,move_dircton,y):
-        if move_dircton==1:
-                x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
-                x=random.choice(x_spawns)-40
-                mdir='right'
-                vel=2
-
-        else:
-            x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
-            x=random.choice(x_spawns)+40
-            mdir='left'
-            vel=-2
-           
-        enemy=objects.Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30,player)
-        self.enemy_list.append(enemy)
-
-
     
     def generate_enemies(self,num_of_enemies):
-
-        def respawn_enemy():
-            respawn_chance = random.random()
-            if respawn_chance <= 0.4:  
-                return 'strike_aircraft'
-            elif respawn_chance <= 0.6:  
-                return 'fighter_aircraft'
-            elif respawn_chance <= 0.8:  
-                return 'bomber'
-            elif respawn_chance <= 1.0:  
-                return 'kamikaze_drone'
-            else:
-                return None  
-
-    
-        
-        if len(self.enemy_list)<num_of_enemies:
-            respawned_enemy = respawn_enemy()
-            move_dircton=random.randint(0,1)
-            y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
-            y=random.choice(y_spawns)
-            
-            if respawned_enemy=='fighter_aircraft':
-                self.respawn_fighter(move_dircton,y)
-            
-            elif respawned_enemy=='strike_aircraft':
-                self.respawn_strike(move_dircton,y)
-     
-
-            elif respawned_enemy=="bomber":
-                self.respawn_bomber(move_dircton,y)
-               
-            
-            elif respawned_enemy=="kamikaze_drone":
-                self.respawn_drone(move_dircton,y)
-
+        ens.all_time_enemies(num_of_enemies)
            
-
-            
 
     def get_enemies(self):
         return self.enemy_list
         
-    def generate_player(self):
-        global player
-        
-        #player=objects.Player(400,height-70,[],[],'self.player')
-
 
     def reward_screen_view(self):
-        pygame.draw.rect(self.rewards_surface,self.border_color, self.rewards_surface.get_rect(), self.border_width)
-        screen.blit(self.rewards_surface, self.reward_scr_position)
-        self.rewards_surface.fill('silver')
+       from screens import reward_screen_view
+       reward_screen_view(screen,free_play_state)
 
-
-        
-        main_menu_text = font.render("Main Menu", True, (255, 255, 255))
-        main_menu_text_rect=main_menu_text.get_rect(center=self.main_menu_btn_rect.center)
-
-        
-        exit_text = font.render("Exit ", True, (255, 255, 255))
-        exit_text_rect=exit_text.get_rect(center=self.exit_btn_rect.center)
-
-
-        scor_text= font.render("Score: 0", True, (255, 255, 255))
-        score_pos=((self.rwd_surface_width//2)-scor_text.get_width()//2,80)
-
-        high_score= font.render("High Score: 0", True, (255, 255, 255))
-        high_score_pos=((self.rwd_surface_width//2)-high_score.get_width()//2,120)
-
-
-        died_text= font.render(" YOU HAVE BEEN DESTROYED ! ", True, (255, 255, 255))
-        died_text_pos=((self.rwd_surface_width//2)-(died_text.get_width()//2),20)
-
-
-        self.rewards_surface.blit(main_menu_text,main_menu_text_rect)
-        self.rewards_surface.blit(exit_text,exit_text_rect)
-        self.rewards_surface.blit(died_text,died_text_pos)
-        self.rewards_surface.blit(scor_text,score_pos)
-        self.rewards_surface.blit(high_score,high_score_pos)
-
-
-
-        
-   
 
     
     def ground(self):
@@ -398,7 +240,6 @@ class FreePlayState(GameState):
         ground_surface.fill(pygame.Color('green'))
         border = 1
         position = (0, height-surface_height)
-
         pygame.draw.rect(ground_surface, pygame.Color('green'), ground_surface.get_rect(), border)
         screen.blit(ground_surface, position)
 
@@ -454,13 +295,9 @@ class FreePlayState(GameState):
         screen.blit(heatl_text, heatl_text_pos)
 
 
-           
-
 
 
     def draw(self):
-        
-        
         if not (self.paues) :
             if not self.reward_screen:
                 
@@ -470,7 +307,8 @@ class FreePlayState(GameState):
                 self.statics()
                 if not player.forced:
                     player.move_player()
-                    self.generate_enemies(3)
+                    if len(self.enemy_list)<4:
+                        self.generate_enemies(4)
                 player.update_player(screen)
                 player.move_bullets() 
                 player.update_bullets(screen)
@@ -502,7 +340,6 @@ class FreePlayState(GameState):
                     if enemy.check_collision(player.bullets):
                         drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
                         player.drops.append(drop)
-                        print(player.drops,'mmmmm')
                         enemies_to_remove.append(enemy)
                     if enemy.move_dir=='left':
                         if (enemy.x)<-300:
@@ -569,28 +406,8 @@ class FreePlayState(GameState):
                
 
         elif (self.paues):
-
-            pygame.draw.rect(self.rewards_surface,self.border_color, self.frame_surface.get_rect(), self.border_width)
-            screen.blit(self.frame_surface, self.frame_position)
-
-
-            resume_button = pygame.draw.rect(self.frame_surface, (0, 0, 255),self.resume_button_rect)
-            resume_button_text = font.render("Resume", True, (255, 255, 255))
-            resume_button_text_rect = resume_button_text.get_rect(center=resume_button.center)
-           
-
-            mainmenu_button=pygame.draw.rect(self.frame_surface,(0, 0, 255),self.main_menu_button_rect)
-            mainmenu_button_text=font.render("Main menu", True, (255, 255, 255))
-            mainmenu_button_text_rect=mainmenu_button_text.get_rect(center=mainmenu_button.center)
-
-            exit_button=pygame.draw.rect(self.frame_surface,(0, 0, 255),self.exit_button_rect)
-            exit_button_text=font.render("Exit", True, (255, 255, 255))
-            exit_button_text_rect=exit_button_text.get_rect(center=exit_button.center)
-
-
-            self.frame_surface.blit(resume_button_text,resume_button_text_rect)
-            self.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
-            self.frame_surface.blit(exit_button_text,exit_button_text_rect)
+            from screens import pause_screen
+            pause_screen(screen,free_play_state)
 
 
     
@@ -600,27 +417,20 @@ class FreePlayState(GameState):
            
 menu_state = MenuState()
 free_play_state = FreePlayState()
-current_state = menu_state        
+current_state = menu_state   
+
 def main():    
     while current_state.running:
-        
         events = pygame.event.get()
-
-
         for event in events:
             if event.type == pygame.QUIT:
                 current_state.running = False
-
-        
         
         next_state = current_state.handle_events(events)
         current_state.update()
         current_state.draw()
         pygame.display.flip()
 
-
-
-        
 
     pygame.quit()
 if __name__=='__main__':

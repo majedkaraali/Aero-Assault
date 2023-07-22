@@ -3,7 +3,7 @@ import random,objects
 width,height=(1100,660)
 
 
-class Generator:
+class Generate_enemies:
     enemy_list=[]
     def __init__(self,target):
             self.target=target
@@ -78,8 +78,7 @@ class Generator:
 
 
         
-    def generate_enemies(self,num_of_enemies):
-
+    def all_time_enemies(self,num_of_enemies):
             def respawn_enemy():
                 respawn_chance = random.random()
                 if respawn_chance <= 0.4:  
@@ -95,7 +94,7 @@ class Generator:
 
         
             
-            if len(self.enemy_list)<num_of_enemies:
+            while len(self.enemy_list)<num_of_enemies:
                 respawned_enemy = respawn_enemy()
                 move_dircton=random.randint(0,1)
                 y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
@@ -115,9 +114,9 @@ class Generator:
                 elif respawned_enemy=="kamikaze_drone":
                     self.respawn_drone(move_dircton,y)
 
+            return self.enemy_list
+
             
 
-                
-
     def get_enemies(self):
-            return self.enemy_list
+        return self.enemy_list
