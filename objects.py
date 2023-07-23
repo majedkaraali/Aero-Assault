@@ -268,7 +268,7 @@ class Player():
     player_alive=True
     vel_x = 0
     vel_y = 0
-    move_speed = 6
+    move_speed = 3
     shoot_delay = 100  
     last_shot_time = 0
     fire_missie_delay=200
@@ -426,8 +426,8 @@ class Player():
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.x + self.width // 2 - Bullet.width // 2, self.y)
-            bullet2 = Bullet(20+self.x + self.width // 2 - Bullet.width // 2, self.y)
+            bullet = Bullet(self.x  - Bullet.width // 2, self.y-7)
+            bullet2 = Bullet(2+self.x  - Bullet.width // 2, self.y-7)
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet(screen,target_x,target_y)
             bullet2.shoot_at(target_x, target_y)
