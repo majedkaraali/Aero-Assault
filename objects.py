@@ -256,10 +256,15 @@ class Player():
         self.forced_time = 0
         self.name=name
         self.get_enemies=get_enemies
-        
+        self.image=pygame.image.load('spaa-gepard.png')
+        self.rect=self.image.get_rect()
+        self.canon=pygame.image.load('canon.png')
+        self.canon_rect=self.image.get_rect()
+    
+    
 
-    width=60
-    height=33
+    width=100
+    height=40
     player_alive=True
     vel_x = 0
     vel_y = 0
@@ -300,10 +305,25 @@ class Player():
         self.x = max(0, min(self.x, width - self.width))
         
     def update_player(self,screen):
+        self.rect.center = (self.x, self.y)
+        screen.blit(self.image, self.rect)
+
+
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
         
-        pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
+       
+        rotated_image = pygame.transform.rotate(self.canon, -angle)
+        rotated_rect = rotated_image.get_rect()
+        rotated_rect.center = (self.x, self.y-2)
+
+
+        
+        screen.blit(rotated_image, rotated_rect)
         self.radar()
         pygame.draw.rect(screen, ('green'), (self.radar_max_left, 10, self.radar_range , 2))
+        #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
 
             
 

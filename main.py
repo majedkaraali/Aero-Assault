@@ -19,7 +19,7 @@ enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
 
 def _player():
         global player
-        player=objects.Player(400,height-70,[],[],'Unnamed',[])
+        player=objects.Player(400,height-80,[],[],'Unnamed',[])
         return player
 
 
@@ -231,7 +231,7 @@ class FreePlayState(GameState):
     
     def ground(self):
         surface_width = width
-        surface_height = 80
+        surface_height = 100
         ground_surface = pygame.Surface((surface_width, surface_height))
         ground_surface.fill(pygame.Color('green'))
         border = 1
