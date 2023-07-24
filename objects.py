@@ -755,8 +755,8 @@ class Enemy:
             
           
 
-            if  self.get_centerx()>0 and self.get_centerx()<width-10:
-                if reach_x in target_attak_range:
+
+            if reach_x in target_attak_range:
                     if self.tag=='kamikaze':
                         self.kamikaze=True
                     if self.can_bomb():
