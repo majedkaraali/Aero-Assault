@@ -174,8 +174,8 @@ class Bullet:
         self.moved_x=0
         self.moved_y=0
         self.hitted=False
-        self.image=pygame.image.load("bullet.png")
-        self.effect=pygame.image.load("efct.png")
+        self.image=pygame.image.load("src/img/bullet.png")
+        self.effect=pygame.image.load("src/img/efct.png")
         self.effect_rect=self.effect.get_rect()
         self.rect=self.image.get_rect()
         
@@ -289,9 +289,9 @@ class Player:
         self.forced_time = 0
         self.name=name
         self.get_enemies=get_enemies
-        self.image=pygame.image.load('spaa-gepard.png')
+        self.image=pygame.image.load('src/img/spaa-gepard.png')
         self.rect=self.image.get_rect()
-        self.canon=pygame.image.load('canon.png')
+        self.canon=pygame.image.load('src/img/canon.png')
         self.canon_rect=self.image.get_rect()
     
     
@@ -594,7 +594,7 @@ class Bomb:
         self.dmage=50
         self.exploded=False
         self.angle=angle
-        self.image=pygame.image.load('bomb5.png')
+        self.image=pygame.image.load('src/img/bomb5.png')
         self.rect=self.image.get_rect()
 
     def get_rect(self):
@@ -702,8 +702,8 @@ class Enemy:
         self.kamikaze=False
         self.target=target
         self.charg=self.bomb_count
-        self.f16l=pygame.image.load('su27left.png').convert_alpha()
-        self.f16r=pygame.image.load('su27right.png').convert_alpha()
+        self.f16l=pygame.image.load('src/img/su27left.png').convert_alpha()
+        self.f16r=pygame.image.load('src/img/su27right.png').convert_alpha()
         self.f16l_rect=self.f16l.get_rect()
         self.f16r_rect=self.f16r.get_rect()
 
