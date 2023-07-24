@@ -210,7 +210,7 @@ class FreePlayState(GameState):
 
         if self.mouse_button_pressed:
                 if not player.forced:
-                    player.shoot(screen)
+                    player.shoot()
 
 
     
@@ -290,7 +290,7 @@ class FreePlayState(GameState):
         if not (self.paues) :
             if not self.reward_screen:
                 clock.tick(60)
-                screen.fill('aqua')
+                screen.fill('lightblue')
 
                 self.ground()
                 self.statics()
@@ -298,14 +298,13 @@ class FreePlayState(GameState):
 
                 #HANDLE PLAYER
                 if not player.forced:
+                    
                     player.move_player()
                     if len(self.enemy_list)<4:
                         self.generate_enemies(4)
-
-                        
+                player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 
-                player.update_bullets(screen)
                 player.move_missiles()
                 player.update_missiles(screen)
                 player.chek_magazine()
@@ -313,6 +312,7 @@ class FreePlayState(GameState):
                 player.move_drops(screen,player)
                 player.is_destroyed()   
                 player.get_enemies=self.get_enemies() 
+                
                 
                 
                 #CLEAN BULLETS KEYS

@@ -176,7 +176,10 @@ class Bullet:
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
         self.hitted=False
-        
+        self.image=pygame.image.load("bullet.png")
+        self.rect=self.image.get_rect()
+        #self.rotated_surface=0
+        self.angel=0
        
 
     def move_bullet(self):
@@ -188,7 +191,14 @@ class Bullet:
 
 
     def draw_bullet(self,screen):
-        screen.blit(self.surface, (self.x, self.y))
+      
+        rotated_image = pygame.transform.rotate(self.image, -self.angle)
+        rotated_rect = rotated_image.get_rect()
+        rotated_rect.center = (self.x, self.y)
+
+        screen.blit(rotated_image, rotated_rect)
+
+        
 
     def shoot_at(self, target_x, target_y):
         dx = target_x - self.x
@@ -215,16 +225,11 @@ class Bullet:
         else:
             return False
 
-    def rotate_bullet(self,screen, target_x, target_y):
-        dx = target_x - self.x
-        dy = target_y - self.y
-        angle = math.degrees(math.atan2(dy, dx)) + 90
+    def rotate_bullet(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))+90
 
-        rotated_surface = pygame.transform.rotate(self.surface, angle)
-        x_adjustment = (rotated_surface.get_width() - self.width) // 2
-        y_adjustment = (rotated_surface.get_height() - self.height) // 2
-        
-        screen.blit(rotated_surface, (self.x - x_adjustment, self.y - y_adjustment))
+        print(self.angle)
     
 class Player():
 
@@ -422,16 +427,16 @@ class Player():
             return False
 
 
-    def shoot(self,screen):
+    def shoot(self):
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
             bullet = Bullet(self.x  - Bullet.width // 2, self.y-7)
             bullet2 = Bullet(2+self.x  - Bullet.width // 2, self.y-7)
             bullet.shoot_at(target_x, target_y)
-            bullet.rotate_bullet(screen,target_x,target_y)
+            bullet.rotate_bullet()
             bullet2.shoot_at(target_x, target_y)
-            bullet2.rotate_bullet(screen,target_x,target_y)
+            bullet2.rotate_bullet()
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
