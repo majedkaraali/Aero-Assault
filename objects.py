@@ -162,8 +162,6 @@ class Item:
 
 
 class Bullet:
-    width = 3
-    height = 4
     speed = 10
 
     def __init__(self, x, y):
@@ -173,22 +171,32 @@ class Bullet:
         self.vel_y = 0
         self.max_y=0
         self.max_x=0
-        self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
+        self.moved_x=0
+        self.moved_y=0
         self.hitted=False
         self.image=pygame.image.load("bullet.png")
         self.effect=pygame.image.load("efct.png")
         self.effect_rect=self.effect.get_rect()
         self.rect=self.image.get_rect()
-        #self.rotated_surface=0
+        
         self.angel=0
        
+    def get_width(self):
+        return self.image.get_width()
+    def get_height(self):
+        return self.image.get_height()
+        
 
     def move_bullet(self):
         self.x += self.vel_x
         self.y += self.vel_y
         self.max_y+=self.vel_y
         self.max_x+=self.vel_x
+
+        self.moved_x+=abs(self.vel_x)
+        self.moved_y+=abs(self.vel_y)
+
+
 
     def draw_effect(self,screen):
 
@@ -197,7 +205,7 @@ class Bullet:
         rotated_rect.center = (self.x, self.y)
 
         screen.blit(rotated_effect, rotated_rect)
-        print("aa")
+
 
 
     def draw_bullet(self,screen):
@@ -206,7 +214,13 @@ class Bullet:
         rotated_rect = rotated_image.get_rect()
         rotated_rect.center = (self.x, self.y)
 
-        screen.blit(rotated_image, rotated_rect)
+        self.moved_y=abs(self.moved_y)
+        self.moved_x=abs(self.moved_x)
+        xy=self.moved_y+self.moved_x
+        #print(self.moved_x)
+
+        if xy>65 :
+            screen.blit(rotated_image, rotated_rect)
 
         
 
@@ -301,8 +315,13 @@ class Player():
     radar_max_left=0
     
     def get_rect(self):
-        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        rect=self.image.get_rect()
         return  rect
+    
+    def get_width(self):
+        return self.image.get_width()
+    def get_height(self):
+        return self.image.get_height()
 
     def get_centerx(self):
         center_x=self.x+(self.width//2)
@@ -324,7 +343,7 @@ class Player():
         self.x = max(0, min(self.x, width - self.width))
         
     def update_player(self,screen):
-        self.rect.center = (self.x, self.y)
+        self.rect.topleft = (self.x, self.y)
         screen.blit(self.image, self.rect)
 
 
@@ -335,13 +354,14 @@ class Player():
        
         rotated_image = pygame.transform.rotate(self.canon, -angle)
         rotated_rect = rotated_image.get_rect()
-        rotated_rect.center = (self.x, self.y-2)
+        rotated_rect.center = (self.x+57, self.y+30)
 
 
         
         screen.blit(rotated_image, rotated_rect)
         self.radar()
         pygame.draw.rect(screen, ('green'), (self.radar_max_left, 10, self.radar_range , 2))
+        #print(self.get_rect())
         #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
 
             
@@ -445,16 +465,16 @@ class Player():
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.x  - Bullet.width // 2, self.y-7)
-            bullet2 = Bullet(2+self.x  - Bullet.width // 2, self.y-7)
+            bullet = Bullet(self.x+62  - 6 // 2, self.y+33)
+            #bullet2 = Bullet(self.x+60  - 3 // 2, self.y+30)
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
             bullet.draw_effect(screen)
-            bullet2.shoot_at(target_x, target_y)
-            bullet2.rotate_bullet()
-            bullet2.draw_effect(screen)
+            #bullet2.shoot_at(target_x, target_y)
+            #bullet2.rotate_bullet()
+           # bullet2.draw_effect(screen)
             self.bullets.append(bullet)
-            self.bullets.append(bullet2)
+            #self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
             
@@ -883,9 +903,9 @@ class Enemy:
 
     def check_kill(self, obje):
         for bullet in obje:
-            if (self.x < bullet.x + bullet.width and
+            if (self.x < bullet.x + bullet.get_width() and
                 self.x + self.width > bullet.x and
-                self.y < bullet.y + bullet.height and
+                self.y < bullet.y + bullet.get_height() and
                 self.y + self.height > bullet.y):
                 bullet.hitted=True
                 self.health-=15
