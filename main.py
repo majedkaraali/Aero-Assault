@@ -210,7 +210,7 @@ class FreePlayState(GameState):
 
         if self.mouse_button_pressed:
                 if not player.forced:
-                    player.shoot()
+                    player.shoot(screen)
 
 
     
@@ -290,7 +290,7 @@ class FreePlayState(GameState):
         if not (self.paues) :
             if not self.reward_screen:
                 clock.tick(60)
-                screen.fill('lightblue')
+                screen.fill('cyan2')
 
                 self.ground()
                 self.statics()

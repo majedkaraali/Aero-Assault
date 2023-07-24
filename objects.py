@@ -177,6 +177,8 @@ class Bullet:
         self.rect=pygame.draw.rect(self.surface, pygame.Color('black'), (0, 0, self.width, self.height))
         self.hitted=False
         self.image=pygame.image.load("bullet.png")
+        self.effect=pygame.image.load("efct.png")
+        self.effect_rect=self.effect.get_rect()
         self.rect=self.image.get_rect()
         #self.rotated_surface=0
         self.angel=0
@@ -188,6 +190,14 @@ class Bullet:
         self.max_y+=self.vel_y
         self.max_x+=self.vel_x
 
+    def draw_effect(self,screen):
+
+        rotated_effect = pygame.transform.rotate(self.effect, -self.angle)
+        rotated_rect = rotated_effect.get_rect()
+        rotated_rect.center = (self.x, self.y)
+
+        screen.blit(rotated_effect, rotated_rect)
+        print("aa")
 
 
     def draw_bullet(self,screen):
@@ -227,9 +237,13 @@ class Bullet:
 
     def rotate_bullet(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))+90
+        self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
+        #self.angel=abs(self.angel)
+        
 
-        print(self.angle)
+        
+
+       
     
 class Player():
 
@@ -427,7 +441,7 @@ class Player():
             return False
 
 
-    def shoot(self):
+    def shoot(self,screen):
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
@@ -435,8 +449,10 @@ class Player():
             bullet2 = Bullet(2+self.x  - Bullet.width // 2, self.y-7)
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
+            bullet.draw_effect(screen)
             bullet2.shoot_at(target_x, target_y)
             bullet2.rotate_bullet()
+            bullet2.draw_effect(screen)
             self.bullets.append(bullet)
             self.bullets.append(bullet2)
             self.last_shot_time = pygame.time.get_ticks()
