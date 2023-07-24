@@ -217,9 +217,9 @@ class Bullet:
         self.moved_y=abs(self.moved_y)
         self.moved_x=abs(self.moved_x)
         xy=self.moved_y+self.moved_x
-        #print(self.moved_x)
 
-        if xy>65 :
+
+        if xy>100 :
             screen.blit(rotated_image, rotated_rect)
 
         
@@ -465,16 +465,14 @@ class Player():
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.x+62  - 6 // 2, self.y+33)
-            #bullet2 = Bullet(self.x+60  - 3 // 2, self.y+30)
+            bullet = Bullet(self.x+62  - 6 // 2, self.y+34)
+
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
             bullet.draw_effect(screen)
-            #bullet2.shoot_at(target_x, target_y)
-            #bullet2.rotate_bullet()
-           # bullet2.draw_effect(screen)
+
             self.bullets.append(bullet)
-            #self.bullets.append(bullet2)
+
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
             
