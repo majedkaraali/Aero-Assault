@@ -259,7 +259,7 @@ class Bullet:
 
        
     
-class Player():
+class Player:
 
     def __init__(self,x,y,bullets,missiles,name,get_enemies) :
         self.x=x
@@ -315,8 +315,7 @@ class Player():
     radar_max_left=0
     
     def get_rect(self):
-        rect=self.image.get_rect()
-        return  rect
+        return  self.rect
     
     def get_width(self):
         return self.image.get_width()
@@ -361,8 +360,8 @@ class Player():
         screen.blit(rotated_image, rotated_rect)
         self.radar()
         pygame.draw.rect(screen, ('green'), (self.radar_max_left, 10, self.radar_range , 2))
-        #print(self.get_rect())
-        #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height))
+        
+        #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.get_width(), self.get_height()))
 
             
 
@@ -583,7 +582,7 @@ class Player():
  
 
 class Bomb:
-    def __init__(self,x,y,velx,vely,guided,target):
+    def __init__(self,x,y,velx,vely,guided,target,angle):
         self.x=x
         self.y=y
         self.width=4
@@ -594,16 +593,18 @@ class Bomb:
         self.target=target
         self.dmage=50
         self.exploded=False
-        self.image=pygame.image.load('bomb3.png')
+        self.angle=angle
+        self.image=pygame.image.load('bomb5.png')
         self.rect=self.image.get_rect()
 
     def get_rect(self):
         return  self.rect
     
     def draw(self,screen):
-        
-        self.rect.center=(self.x,self.y)
-        screen.blit(self.image,self.rect)
+        rotated_image = pygame.transform.rotate(self.image, self.angle)
+        rotated_rect = rotated_image.get_rect()
+        rotated_rect.center = (self.x, self.y)
+        screen.blit(rotated_image,rotated_rect)
 
     def move(self):
         if self.guided:
@@ -667,7 +668,7 @@ class Bomb:
             self.effect(screen)
             self.exploded=True
             
-        elif self.y > height-70:
+        elif self.y > height-30:
             self.effect(screen)
             self.exploded=True
 
@@ -700,6 +701,13 @@ class Enemy:
         self.guided_bomb=guided_bomb
         self.kamikaze=False
         self.target=target
+        self.charg=self.bomb_count
+        self.f16l=pygame.image.load('su27left.png').convert_alpha()
+        self.f16r=pygame.image.load('su27right.png').convert_alpha()
+        self.f16l_rect=self.f16l.get_rect()
+        self.f16r_rect=self.f16r.get_rect()
+
+
         
     bombs=[]
 
@@ -757,20 +765,18 @@ class Enemy:
             else:
                 reach_x=self.x-reach_time//x_vel
             
-            #x=len(target_attak_range)-1
-            #print(reach_x,"###",target_attak_range[0],target_attak_range[x])
+     
 
             if reach_x in target_attak_range:
                     if self.tag=='kamikaze':
                         self.kamikaze=True
                     if self.can_bomb():
-                        print("BOMB")
                         if not guided:
                             if self.bomb_count>0:
                                 if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,target)
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,target,135)
                                 else:
-                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,target)
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,target,45)
                                 self.bombs.append(bomb)
                                 self.last_bomb_time = pygame.time.get_ticks()
                                 self.bomb_count-=1
@@ -779,9 +785,9 @@ class Enemy:
                         else:
                             if self.guided_bomb>0:
                                 if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,target)
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,target,0)
                                 else:
-                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,target)
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,target,0)
 
                                 self.bombs.append(bomb)
                                 self.last_bomb_time = pygame.time.get_ticks()
@@ -843,8 +849,13 @@ class Enemy:
     def side_move(self):
         if self.move_dir=='right':
             self.x+=self.vel
+         
         elif self.move_dir=="left":
             self.x-=self.vel
+    
+    def recharge(self):
+        self.bomb_count=self.charg
+            
 
     def move_enemy(self,screen):
         if not self.destroyed:
@@ -879,20 +890,27 @@ class Enemy:
 
     def update_enemy(self,screen):
         
-        target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(screen, self.color, target_rect)
-        text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
+        #target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        #pygame.draw.rect(screen, self.color, target_rect)
+        #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
 
+        #if self.locked:
+           # pygame.draw.rect(screen, self.color, target_rect)
+            #text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
 
-        if self.locked:
-            pygame.draw.rect(screen, self.color, target_rect)
-            text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
+       # elif self.tracked:
+           # pygame.draw.rect(screen, self.color, target_rect)
+           # text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
+        #text_rect = text.get_rect(center=target_rect.center)
+        #screen.blit(text, text_rect)
 
-        elif self.tracked:
-            pygame.draw.rect(screen, self.color, target_rect)
-            text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
-        text_rect = text.get_rect(center=target_rect.center)
-        screen.blit(text, text_rect)
+        self.f16l_rect.topleft=(self.x,self.y)
+        self.f16r_rect.topleft=(self.x,self.y)
+
+        if self.move_dir=="left":
+            screen.blit(self.f16l,self.f16l_rect)
+        else:
+            screen.blit(self.f16r,self.f16r_rect)
 
     
 

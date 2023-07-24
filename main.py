@@ -19,7 +19,7 @@ enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
 
 def _player():
         global player
-        player=objects.Player(400,height-120,[],[],'Unnamed',[])
+        player=objects.Player(400,height-107,[],[],'Unnamed',[])
         return player
 
 
@@ -89,7 +89,7 @@ class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
     reward_screen=False
-    enemy_list=ens.all_time_enemies(4)
+    enemy_list=ens.all_time_enemies(1)
 
 
     #PAUSE SURFACE
@@ -345,9 +345,11 @@ class FreePlayState(GameState):
                     if enemy.move_dir=='left':
                         if (enemy.x)<5:
                             enemy.move_dir='right'
+                            enemy.recharge()
                     elif enemy.move_dir=='right':
                         if (enemy.x)>width-5-enemy.width:
                             enemy.move_dir='left'
+                            enemy.recharge()
 
                     if enemy.y>580:
                         enemy.destroyed=True
