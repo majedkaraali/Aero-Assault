@@ -19,7 +19,7 @@ enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
 
 def _player():
         global player
-        player=objects.Player(400,height-100,[],[],'Unnamed',[])
+        player=objects.Player(400,height-120,[],[],'Unnamed',[])
         return player
 
 
@@ -300,8 +300,8 @@ class FreePlayState(GameState):
                 if not player.forced:
                     
                     player.move_player()
-                    if len(self.enemy_list)<4:
-                        self.generate_enemies(4)
+                    if len(self.enemy_list)<1:
+                        self.generate_enemies(1)
                 player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 

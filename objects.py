@@ -594,9 +594,16 @@ class Bomb:
         self.target=target
         self.dmage=50
         self.exploded=False
+        self.image=pygame.image.load('bomb3.png')
+        self.rect=self.image.get_rect()
+
     def get_rect(self):
-        rect=pygame.Rect(self.x,self.y,self.width,self.height)
-        return  rect
+        return  self.rect
+    
+    def draw(self,screen):
+        
+        self.rect.center=(self.x,self.y)
+        screen.blit(self.image,self.rect)
 
     def move(self):
         if self.guided:
@@ -669,9 +676,6 @@ class Bomb:
         pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
 
 
-    def draw(self,screen):
-        
-        pygame.draw.rect(screen, pygame.Color('black'), (self.x, self.y, self.width, self.height))
 
 
 class Enemy:
@@ -753,13 +757,14 @@ class Enemy:
             else:
                 reach_x=self.x-reach_time//x_vel
             
-          
-
+            #x=len(target_attak_range)-1
+            #print(reach_x,"###",target_attak_range[0],target_attak_range[x])
 
             if reach_x in target_attak_range:
                     if self.tag=='kamikaze':
                         self.kamikaze=True
                     if self.can_bomb():
+                        print("BOMB")
                         if not guided:
                             if self.bomb_count>0:
                                 if self.move_dir=='right':
