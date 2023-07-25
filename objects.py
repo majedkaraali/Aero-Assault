@@ -163,7 +163,6 @@ class Item:
 
 class Bullet:
     speed = 10
-
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -175,10 +174,7 @@ class Bullet:
         self.moved_y=0
         self.hitted=False
         self.image=pygame.image.load("src/img/bullet.png")
-        self.effect=pygame.image.load("src/img/efct.png")
-        self.effect_rect=self.effect.get_rect()
         self.rect=self.image.get_rect()
-        
         self.angel=0
        
     def get_width(self):
@@ -238,7 +234,7 @@ class Bullet:
         x_y=abs(self.max_x)+abs(self.max_y)
 
 
-        if x_y>700:
+        if x_y>650:
             return True
 
         if abs(self.max_y)>370:
@@ -252,7 +248,7 @@ class Bullet:
     def rotate_bullet(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
-        #self.angel=abs(self.angel)
+       
         
 
         
@@ -268,7 +264,6 @@ class Player:
         self.missiles=missiles
         self.name=name
         self.get_enemies=get_enemies
-
 
     attacked_targets=[]
     enemies_in_radar=[]
@@ -293,20 +288,18 @@ class Player:
     forced_time = 0
     image=pygame.image.load('src/img/spaa-gepard.png')
     rect=image.get_rect()
-    canon=pygame.image.load('src/img/canon.png')
-    canon_rect=image.get_rect()
+    barrel=pygame.image.load('src/img/barrel.png')
+    barrel_rect=image.get_rect()
     
     
 
     width=100
     height=40
     player_alive=True
-    vel_x = 0
-    vel_y = 0
-    move_speed = 3
+    move_speed = 2
     shoot_delay = 100  
     last_shot_time = 0
-    fire_missie_delay=200
+    fire_missie_delay=300
     last_fire_time=0
     caluculate_rewards_deleay=2000
     reload_delay=3000
@@ -318,6 +311,7 @@ class Player:
     radar_min_height=300
     
     def get_rect(self):
+        self.rect.topleft=(self.x,self.y)
         return  self.rect
     
     def get_width(self):
@@ -348,13 +342,10 @@ class Player:
         self.rect.topleft = (self.x, self.y)
         screen.blit(self.image, self.rect)
 
-
-
         mouse_x, mouse_y = pygame.mouse.get_pos()
         angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
-        
        
-        rotated_image = pygame.transform.rotate(self.canon, -angle)
+        rotated_image = pygame.transform.rotate(self.barrel, -angle)
         rotated_rect = rotated_image.get_rect()
         rotated_rect.center = (self.x+57, self.y+30)
 
@@ -366,6 +357,7 @@ class Player:
         pygame.draw.rect(screen, ('darkgreen'), (5, 10, 2, self.radar_min_height))
         
         #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.get_width(), self.get_height()))
+        #pygame.draw.rect(screen,('black'),self.get_rect())
 
             
 
@@ -472,7 +464,7 @@ class Player:
 
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
-            bullet.draw_effect(screen)
+  
 
             self.bullets.append(bullet)
 
@@ -602,13 +594,19 @@ class Bomb:
         self.rect=self.image.get_rect()
 
     def get_rect(self):
+
         return  self.rect
     
     def draw(self,screen):
         rotated_image = pygame.transform.rotate(self.image, self.angle)
         rotated_rect = rotated_image.get_rect()
-        rotated_rect.center = (self.x, self.y)
+        self.rect.topleft=(self.x,self.y)
+        rotated_rect.topleft = (self.x, self.y)
         screen.blit(rotated_image,rotated_rect)
+
+        pygame.draw.rect(screen,('black'),self.get_rect())
+        pygame.draw.rect(screen,('black'),self.target.get_rect())
+        
 
     def move(self):
         if self.guided:
@@ -655,6 +653,7 @@ class Bomb:
     def hit_player(self):
         if self.get_rect().colliderect(self.target.get_rect()):
             return True
+      
         
     def explode_and_dmage(self):
         if not self.exploded:
