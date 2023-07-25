@@ -3,27 +3,28 @@ import random
 from math import atan2, degrees, pi
 import math
 
+debug=False
+
 width,height=(1100,660)
 
 
-pygame.init()
 
 class Missile:
-    width=5
-    height=17
     vel_x=2
     vel_y=-4
+    
 
     def __init__(self,x,y,target,owner):
         self.x=x
         self.y=y
         self.target=target
         self.owner=owner
-
+        self.image=pygame.image.load('src/img/missile3.png')
+        self.rect=self.image.get_rect()
 
     def hit_target(self):
         if not (self.target.destroyed):
-            rect=pygame.Rect(self.x,self.y,self.width,self.height)
+            rect=self.get_rect()
             if rect.colliderect(self.target.get_rect()):
                 drop=Item(self.target.get_centerx(),self.target.y,'gift')
                 self.owner.drops.append(drop)
@@ -34,7 +35,8 @@ class Missile:
                 return False
 
     def get_rect(self):
-        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        rect=self.rect
+        rect.topleft=(self.x,self.y)
         return  rect
     
     
@@ -96,25 +98,25 @@ class Missile:
         #pygame.draw.rect(screen, ('red'), (self.path(), self.target.y, 5, 5)) # THis is collisin point
 
     def draw_missile(self,screen):
-        width = self.width
-        height = self.height
-        rect = pygame.Surface((width, height), pygame.SRCALPHA)
-        pygame.draw.rect(rect, pygame.Color('blue'), (0, 0, width, height))
-
+    
+        rect = self.rect.topleft=(self.x,self.y)
+       
         if self.target.move_dir=="left":
-            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+90
+            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+30
         else:
-            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+45
+            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())
 
         if (self.target.destroyed):
                 angle = 0
 
-        rotated_rect = pygame.transform.rotate(rect, angle)
-        x_adjustment = (rotated_rect.get_width() - width) // 2
-        y_adjustment = (rotated_rect.get_height() - height) // 2
+        rotated_image = pygame.transform.rotate(self.image, angle)
         
+    
+        # x_adjustment = (rotated_rect.get_width() - width) // 2
+        # y_adjustment = (rotated_rect.get_height() - height) // 2
+        # screen.blit(rotated_rect, (self.x - x_adjustment,self.y - y_adjustment))
 
-        screen.blit(rotated_rect, (self.x - x_adjustment,self.y - y_adjustment))
+        screen.blit(rotated_image,rect)
 
 class Item:
     def __init__(self,x,y,tag):
@@ -356,8 +358,8 @@ class Player:
         pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 2))
         pygame.draw.rect(screen, ('darkgreen'), (5, 10, 2, self.radar_min_height))
         
-        #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.get_width(), self.get_height()))
-        #pygame.draw.rect(screen,('black'),self.get_rect())
+        if debug:
+            pygame.draw.rect(screen,('black'),self.get_rect())
 
             
 
@@ -604,8 +606,9 @@ class Bomb:
         rotated_rect.topleft = (self.x, self.y)
         screen.blit(rotated_image,rotated_rect)
 
-        pygame.draw.rect(screen,('black'),self.get_rect())
-        pygame.draw.rect(screen,('black'),self.target.get_rect())
+        if debug:
+            pygame.draw.rect(screen,('black'),self.get_rect())
+        
         
 
     def move(self):
@@ -892,10 +895,11 @@ class Enemy:
 
     def update_enemy(self,screen):
         
-        target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(screen, self.color, target_rect)
-        #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
 
+        if debug:
+            pygame.draw.rect(screen,('black'),self.get_rect())
+
+        #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
         #if self.locked:
            # pygame.draw.rect(screen, self.color, target_rect)
             #text = pygame.font.SysFont(None, 24).render("x", True, ('red'))

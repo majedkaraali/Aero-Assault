@@ -5,6 +5,9 @@ import math
 import objects
 from enemy_generator import Generate_enemies
 
+pygame.init()
+
+pygame.mixer.init()
 
 width=1100
 height=660
@@ -27,9 +30,7 @@ ens=Generate_enemies(_player())
 
 
 
-pygame.init()
 
-pygame.mixer.init()
 
 
 
