@@ -89,7 +89,7 @@ class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
     reward_screen=False
-    enemy_list=ens.all_time_enemies(1)
+    enemy_list=ens.all_time_enemies(4)
 
 
     #PAUSE SURFACE
@@ -300,8 +300,8 @@ class FreePlayState(GameState):
                 if not player.forced:
                     
                     player.move_player()
-                    if len(self.enemy_list)<1:
-                        self.generate_enemies(1)
+                    if len(self.enemy_list)<4:
+                        self.generate_enemies(4)
                 player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 

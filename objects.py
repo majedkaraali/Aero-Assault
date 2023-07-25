@@ -680,7 +680,7 @@ class Bomb:
 
 
 class Enemy:
-    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag,health,target):
+    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag,health,target,sprites):
         self.x=x
         self.y=y
         self.width=width
@@ -702,10 +702,10 @@ class Enemy:
         self.kamikaze=False
         self.target=target
         self.charg=self.bomb_count
-        self.f16l=pygame.image.load('src/img/su27left.png').convert_alpha()
-        self.f16r=pygame.image.load('src/img/su27right.png').convert_alpha()
-        self.f16l_rect=self.f16l.get_rect()
-        self.f16r_rect=self.f16r.get_rect()
+        self.left_sprite=sprites[0]
+        self.right_sprite=sprites[1]
+        self.left_sprite_rect=self.left_sprite.get_rect()
+        self.right_sprite_rect=self.right_sprite.get_rect()
 
 
         
@@ -904,13 +904,13 @@ class Enemy:
         #text_rect = text.get_rect(center=target_rect.center)
         #screen.blit(text, text_rect)
 
-        self.f16l_rect.topleft=(self.x,self.y)
-        self.f16r_rect.topleft=(self.x,self.y)
+        self.left_sprite_rect.topleft=(self.x,self.y)
+        self.right_sprite_rect.topleft=(self.x,self.y)
 
         if self.move_dir=="left":
-            screen.blit(self.f16l,self.f16l_rect)
+            screen.blit(self.left_sprite,self.left_sprite_rect)
         else:
-            screen.blit(self.f16r,self.f16r_rect)
+            screen.blit(self.right_sprite,self.right_sprite_rect)
 
     
 

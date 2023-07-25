@@ -1,5 +1,5 @@
 import random,objects
-from plane_loader import *
+import plane_loader
 
 width,height=(1100,660)
 
@@ -23,8 +23,9 @@ class Generate_enemies:
                 x=random.choice(x_spawns)+40
                 mdir='left'
                 vel=2
-            
-            enemy=objects.Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80,self.target)
+
+            sprites=plane_loader.random_fighter()
+            enemy=objects.Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
 
         
@@ -42,18 +43,12 @@ class Generate_enemies:
                 mdir='left'
                 vel=2
 
-            random_sprite=random.randint(1,3)
-            print(random_sprite,"SSS")
-            if random_sprite==1:
-                    left_sprite=su25_left
-                    rigt_sprite=su25_right
-            elif random_sprite==2:
-                  left_sprite=su25_left2
-                 # rigt_sprite=su
+            
                   
             
-            
-            enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100,self.target)
+            sprites=plane_loader.random_strike()
+         
+            enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100,self.target,sprites)
             self.enemy_list.append(enemy)
 
     def respawn_bomber(self,move_dircton,y):
@@ -68,8 +63,8 @@ class Generate_enemies:
                 x=random.choice(x_spawns)+40
                 mdir='left'
                 vel=2
-            
-            enemy=objects.Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130,self.target)
+            sprites=plane_loader.random_bomber()
+            enemy=objects.Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
@@ -85,8 +80,9 @@ class Generate_enemies:
                 x=random.choice(x_spawns)+40
                 mdir='left'
                 vel=2
-            
-            enemy=objects.Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30,self.target)
+
+            sprites=plane_loader.random_drone()
+            enemy=objects.Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
@@ -94,11 +90,11 @@ class Generate_enemies:
     def all_time_enemies(self,num_of_enemies):
             def respawn_enemy():
                 respawn_chance = random.random()
-                if respawn_chance <= 0.4:  
+                if respawn_chance <= 0.0:  
                     return 'strike_aircraft'
-                elif respawn_chance <= 0.6:  
+                elif respawn_chance <= 0.5:  
                     return 'fighter_aircraft'
-                elif respawn_chance <= 0.8:  
+                elif respawn_chance <= 0.95:  
                     return 'bomber'
                 elif respawn_chance <= 1.0:  
                     return 'kamikaze_drone'
