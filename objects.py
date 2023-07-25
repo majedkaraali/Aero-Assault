@@ -266,33 +266,35 @@ class Player:
         self.y=y
         self.bullets=bullets
         self.missiles=missiles
-        self.attacked_targets=[]
-        self.enemies_in_radar=[]
-        self.tracked=[]
-        self.drops=[]
-        self.selected=0
-        self.ammo=1680
-        self.magazine=240
-        self.magazine_size=240
-        self.reloading=False
-        self.moving=False
-        self.droped_ammo=0
-        self.missiles_storage=12
-        self.ready_to_fire_missiles=4
-        self.pods_size=4
-        self.reloading_pods=False
-        self.out_of_missiles=False
-        self.out_of_ammo=False
-        self.health=100
-        self.destroyed=False
-        self.forced=False
-        self.forced_time = 0
         self.name=name
         self.get_enemies=get_enemies
-        self.image=pygame.image.load('src/img/spaa-gepard.png')
-        self.rect=self.image.get_rect()
-        self.canon=pygame.image.load('src/img/canon.png')
-        self.canon_rect=self.image.get_rect()
+
+
+    attacked_targets=[]
+    enemies_in_radar=[]
+    tracked=[]
+    drops=[]
+    selected=0
+    ammo=1680
+    magazine=240
+    magazine_size=240
+    reloading=False
+    moving=False
+    droped_ammo=0
+    missiles_storage=12
+    ready_to_fire_missiles=4
+    pods_size=4
+    reloading_pods=False
+    out_of_missiles=False
+    out_of_ammo=False
+    health=100
+    destroyed=False
+    forced=False
+    forced_time = 0
+    image=pygame.image.load('src/img/spaa-gepard.png')
+    rect=image.get_rect()
+    canon=pygame.image.load('src/img/canon.png')
+    canon_rect=image.get_rect()
     
     
 
@@ -313,6 +315,7 @@ class Player:
     pods_reload_start_time=0
     radar_range=0
     radar_max_left=0
+    radar_min_height=300
     
     def get_rect(self):
         return  self.rect
@@ -359,7 +362,8 @@ class Player:
         
         screen.blit(rotated_image, rotated_rect)
         self.radar()
-        pygame.draw.rect(screen, ('green'), (self.radar_max_left, 10, self.radar_range , 2))
+        pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 2))
+        pygame.draw.rect(screen, ('darkgreen'), (5, 10, 2, self.radar_min_height))
         
         #pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.get_width(), self.get_height()))
 
@@ -504,7 +508,7 @@ class Player:
         enemies=self.get_enemies
 
         for enemy in enemies:
-            if enemy.get_centerx() in radar_angle and enemy.y < 300:
+            if enemy.get_centerx() in radar_angle and enemy.y < self.radar_min_height:
                     self.enemies_in_radar.append(enemy)
                     if enemy not in self.tracked :
                             if enemy not in self.attacked_targets:
@@ -869,8 +873,7 @@ class Enemy:
 
 
     def get_rect(self):
-        rect=pygame.Rect(self.x,self.y,self.width,self.height)
-        return  rect
+        return  self.right_sprite_rect
     
     def get_angle_between_rects(self,rect1, rect2):
 
@@ -890,8 +893,8 @@ class Enemy:
 
     def update_enemy(self,screen):
         
-        #target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        #pygame.draw.rect(screen, self.color, target_rect)
+        target_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        pygame.draw.rect(screen, self.color, target_rect)
         #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
 
         #if self.locked:
