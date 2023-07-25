@@ -1,4 +1,5 @@
 import random,objects
+from plane_loader import *
 
 width,height=(1100,660)
 
@@ -33,12 +34,24 @@ class Generate_enemies:
                     x=random.choice(x_spawns)-40
                     mdir='right'
                     vel=2
+                    
 
             else:
                 x_spawns=[width+700,width+650,width+600,width+550,width+500,width+450,width+400,width+350,width+300,width+250,width+200]
                 x=random.choice(x_spawns)+40
                 mdir='left'
                 vel=2
+
+            random_sprite=random.randint(1,3)
+            print(random_sprite,"SSS")
+            if random_sprite==1:
+                    left_sprite=su25_left
+                    rigt_sprite=su25_right
+            elif random_sprite==2:
+                  left_sprite=su25_left2
+                 # rigt_sprite=su
+                  
+            
             
             enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',200,'strike',100,self.target)
             self.enemy_list.append(enemy)
