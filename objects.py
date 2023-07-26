@@ -10,9 +10,6 @@ width,height=(1100,660)
 
 
 class Missile:
-    vel_x=2
-    vel_y=-4
-    
 
     def __init__(self,x,y,target,owner):
         self.x=x
@@ -21,6 +18,14 @@ class Missile:
         self.owner=owner
         self.image=pygame.image.load('src/img/missile3.png')
         self.rect=self.image.get_rect()
+        self.angle=0
+
+
+    max_velocity = 4
+    mx_x=2
+    velocity_on_angle=max_velocity/90
+
+
 
     def hit_target(self):
         if not (self.target.destroyed):
@@ -35,18 +40,36 @@ class Missile:
                 return False
 
     def get_rect(self):
+
         rect=self.rect
         rect.topleft=(self.x,self.y)
         return  rect
+    def get_angle(self):
+        angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())
+        return angle
     
-    
-    def path(self):
+    def get_colid_point_angle(self):
+        v1_x=(self.colid_point_x())
+        v1_y=(self.colid_point_y())
+        v2_x=(self.x)
+        v2_y=(self.y)
+
+        dx = v1_x - v2_x 
+        dy = v1_y- v2_y 
+        rads = atan2(-dy,dx)
+        rads %= 2*pi
+        degs = degrees(rads)
+
+        return degs
+
+
+    def colid_point_x(self):
         enemy_dir=self.target.move_dir
         eny=(self.target.y)-self.target.height//2
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
-        reach_target_time=y_dis//self.vel_y
+        reach_target_time=y_dis//self.max_velocity
         reach_target_time=abs(reach_target_time)
 
         if enemy_dir=="left":
@@ -56,67 +79,58 @@ class Missile:
             cx=((self.target.get_centerx())+reach_target_time)
         
         self.target.tracked=True
+        cy=self.target.y
+
         return cx
+    
+    def colid_point_y(self):
+        return self.target.y
 
     def turn_vel(self):
-        eny=(self.target.y)-self.target.height//2
-        y_dis=self.y-eny
-        y_dis=abs(y_dis)
+        angle=self.get_colid_point_angle()
+       # angle=round(angle)
+        if angle>90:
+            fixed_angle=angle-90
+            velx=fixed_angle*self.velocity_on_angle
+            vely=self.max_velocity-velx
+            velx=-velx
 
-        reach_target_time=y_dis//self.vel_y
-        reach_target_time=abs(reach_target_time)
+        elif angle<=90:
+            vely=angle*self.velocity_on_angle
+            velx=self.max_velocity-vely
 
-        x_path_dist=self.path()-self.x
-        x_path_dist=abs(x_path_dist)
+        return velx,vely
 
-        if reach_target_time and x_path_dist >0:
-            missiile_x_turn_vel=x_path_dist/reach_target_time
-        else:
-            missiile_x_turn_vel=2
 
-        if missiile_x_turn_vel>=4:
-            if self.vel_y<-2:
-                self.vel_y+=1
- 
-
-        if self.path()>self.x:
-            self.x+=missiile_x_turn_vel+1
-        elif self.path()<self.x:
-            self.x-=missiile_x_turn_vel-1
-
-        return  missiile_x_turn_vel 
+        
 
     def move_misile(self):
+        self.get_colid_point_angle()
+        self.x+=self.turn_vel()[0]
+        self.y-=self.turn_vel()[1]
 
-        if self.path()>self.x:
-            self.x+=self.turn_vel()+1
-        elif self.path()<self.x:
-            self.x-=self.turn_vel()-1
 
-        self.y+=self.vel_y
-
-        #pygame.draw.rect(screen, ('red'), (self.path(), self.target.y, 5, 5)) # THis is collisin point
+        
 
     def draw_missile(self,screen):
+        
     
         rect = self.rect.topleft=(self.x,self.y)
        
         if self.target.move_dir=="left":
-            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())+30
+            angle = self.get_colid_point_angle()
         else:
-            angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())
+            angle = self.get_colid_point_angle()
 
         if (self.target.destroyed):
                 angle = 0
 
         rotated_image = pygame.transform.rotate(self.image, angle)
-        
-    
-        # x_adjustment = (rotated_rect.get_width() - width) // 2
-        # y_adjustment = (rotated_rect.get_height() - height) // 2
-        # screen.blit(rotated_rect, (self.x - x_adjustment,self.y - y_adjustment))
+
 
         screen.blit(rotated_image,rect)
+        if debug:
+            pygame.draw.rect(screen, ('red'), (self.colid_point_x(), self.target.y, 15, 15)) # THis is colid point
 
 class Item:
     def __init__(self,x,y,tag):
@@ -175,9 +189,11 @@ class Bullet:
         self.moved_x=0
         self.moved_y=0
         self.hitted=False
-        self.image=pygame.image.load("src/img/bullet.png")
-        self.rect=self.image.get_rect()
         self.angel=0
+
+    image=pygame.image.load("src/img/bullet.png")
+    rect=image.get_rect()
+    
        
     def get_width(self):
         return self.image.get_width()
@@ -210,7 +226,7 @@ class Bullet:
       
         rotated_image = pygame.transform.rotate(self.image, -self.angle)
         rotated_rect = rotated_image.get_rect()
-        rotated_rect.center = (self.x, self.y)
+        rotated_rect.topleft = (self.x, self.y)
 
         self.moved_y=abs(self.moved_y)
         self.moved_x=abs(self.moved_x)
@@ -311,6 +327,13 @@ class Player:
     radar_range=0
     radar_max_left=0
     radar_min_height=300
+
+    def clear(self):
+        self.attacked_targets.clear()
+        self.enemies_in_radar.clear()
+        self.tracked.clear()
+        self.drops.clear()
+        self.selected=0
     
     def get_rect(self):
         self.rect.topleft=(self.x,self.y)
@@ -462,7 +485,7 @@ class Player:
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.x+62  - 6 // 2, self.y+34)
+            bullet = Bullet(self.x+70  - 6 // 2, self.y+34)
 
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
@@ -592,7 +615,7 @@ class Bomb:
         self.dmage=50
         self.exploded=False
         self.angle=angle
-        self.image=pygame.image.load('src/img/bomb5.png')
+        self.image=pygame.image.load('src/img/bomb6.png')
         self.rect=self.image.get_rect()
 
     def get_rect(self):
@@ -900,12 +923,12 @@ class Enemy:
             pygame.draw.rect(screen,('black'),self.get_rect())
 
         #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
-        #if self.locked:
-           # pygame.draw.rect(screen, self.color, target_rect)
+        if self.locked:
+            pygame.draw.rect(screen,('red'), self.get_rect())
             #text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
 
-       # elif self.tracked:
-           # pygame.draw.rect(screen, self.color, target_rect)
+        elif self.tracked:
+            pygame.draw.rect(screen, ('green'), self.get_rect())
            # text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
         #text_rect = text.get_rect(center=target_rect.center)
         #screen.blit(text, text_rect)

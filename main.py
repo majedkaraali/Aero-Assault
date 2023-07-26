@@ -153,6 +153,9 @@ class FreePlayState(GameState):
                         current_state = menu_state 
                         self.paues = False
                         self.enemy_list.clear()
+                        player.missiles.clear()
+                        player.bullets.clear()
+                        player.clear()
                 
 
                     elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
@@ -172,6 +175,9 @@ class FreePlayState(GameState):
                         for enemy in self.enemy_list:
                             enemy.clear_bombs()
                         self.enemy_list.clear()
+                        player.missiles.clear()
+                        player.bullets.clear()
+                        player.clear()
 
                     elif self.exit_btn_rect.collidepoint(adjusted_mouse_pos):
                         self.running = False
