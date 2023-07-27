@@ -635,7 +635,7 @@ class Bomb:
         self.angle=angle
         self.image=pygame.image.load('src/img/bomb6.png')
         self.rect=self.image.get_rect()
-        self.agm=pygame.image.load('src/img/agm.png')
+        self.agm=pygame.image.load('src/img/agm2.png')
         self.agm_rect=self.agm.get_rect()
         self.max_velocity=2
         self.velocity_on_angle=self.max_velocity/90
@@ -793,7 +793,6 @@ class Enemy:
     def move_bombs(self):
         
         for bomb in self.bombs:
-            print(bomb.y)
             bomb.move()
             if bomb.exploded==True:
                 self.bombs.remove(bomb)
