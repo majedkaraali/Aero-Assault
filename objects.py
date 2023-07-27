@@ -309,7 +309,7 @@ class Player:
     barrel=pygame.image.load('src/img/barrel.png')
     barrel_rect=image.get_rect()
     last_known_position=(0,0)
-    last_known_position_update_delay=1500
+    last_known_position_update_delay=2200
     last_known_position_updated=False
     last_known_position_update_time = 0
     player_alive=True
@@ -696,18 +696,15 @@ class Bomb:
             vely=fixed_angle*self.velocity_on_angle
             velx=self.max_velocity-vely
             velx=-velx
-            vely=-vely
+            self.x+=velx
+            self.y+=vely
 
         elif angle >=270:
-             fixed_angle=angle-270
-             velx=fixed_angle*self.velocity_on_angle
-             vely=self.max_velocity-velx
-             vely=-vely
-
-        print(vely)
-   
-        self.x+=velx
-        self.y-=vely
+            fixed_angle=angle-270
+            velx=fixed_angle*self.velocity_on_angle
+            vely=self.max_velocity-velx
+            self.x+=velx
+            self.y+=vely
    
 
             
@@ -733,6 +730,7 @@ class Bomb:
                 self.target.health=0
             else:
                 self.target.health-=self.dmage
+            self.exploded=True
         
 
         
@@ -743,7 +741,7 @@ class Bomb:
             self.effect(screen)
             self.exploded=True
             
-        elif self.y > height-30:
+        elif self.y >= 567:
             self.effect(screen)
             self.exploded=True
 
@@ -793,7 +791,9 @@ class Enemy:
         return center_x
     
     def move_bombs(self):
+        
         for bomb in self.bombs:
+            print(bomb.y)
             bomb.move()
             if bomb.exploded==True:
                 self.bombs.remove(bomb)
