@@ -308,11 +308,10 @@ class Player:
     rect=image.get_rect()
     barrel=pygame.image.load('src/img/barrel.png')
     barrel_rect=image.get_rect()
-    
-    
-
-    width=100
-    height=40
+    last_known_position=(0,0)
+    last_known_position_update_delay=1500
+    last_known_position_updated=False
+    last_known_position_update_time = 0
     player_alive=True
     move_speed = 2
     shoot_delay = 100  
@@ -345,10 +344,14 @@ class Player:
         return self.image.get_height()
 
     def get_centerx(self):
-        center_x=self.x+(self.width//2)
+        center_x=self.x+(self.get_width()//2)
         return center_x
+    
+
+    
 
     def move_player(self):
+        self.update_last_known_position()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             vel_x = -self.move_speed
@@ -361,7 +364,7 @@ class Player:
             self.moving=False
         
         self.x += vel_x
-        self.x = max(0, min(self.x, width - self.width))
+        self.x = max(0, min(self.x, width - self.get_width()))
         
     def update_player(self,screen):
         self.rect.topleft = (self.x, self.y)
@@ -385,7 +388,22 @@ class Player:
             pygame.draw.rect(screen,('black'),self.get_rect())
 
             
+    def update_last_known_position(self):
+        current_time = pygame.time.get_ticks()
+        
+        if not self.last_known_position_updated:
 
+            self.last_known_position = (self.x, self.y)
+            self.last_known_position_update_time = current_time
+            self.last_known_position_updated = True
+        else:
+            if current_time >= self.last_known_position_update_time + self.last_known_position_update_delay:
+                self.last_known_position = (self.x, self.y)
+                self.last_known_position_update_time = current_time
+            
+            
+    def get_last_known_position(self):
+        return self.last_known_position
     
 
     def is_destroyed(self):
@@ -617,57 +635,85 @@ class Bomb:
         self.angle=angle
         self.image=pygame.image.load('src/img/bomb6.png')
         self.rect=self.image.get_rect()
+        self.agm=pygame.image.load('src/img/agm.png')
+        self.agm_rect=self.agm.get_rect()
+        self.max_velocity=2
+        self.velocity_on_angle=self.max_velocity/90
 
     def get_rect(self):
-
         return  self.rect
     
     def draw(self,screen):
-        rotated_image = pygame.transform.rotate(self.image, self.angle)
-        rotated_rect = rotated_image.get_rect()
-        self.rect.topleft=(self.x,self.y)
-        rotated_rect.topleft = (self.x, self.y)
-        screen.blit(rotated_image,rotated_rect)
+        if not self.guided:
+            rotated_image = pygame.transform.rotate(self.image, self.angle)
+            rotated_rect = rotated_image.get_rect()
+            self.rect.topleft=(self.x,self.y)
+            rotated_rect.topleft = (self.x, self.y)
+            screen.blit(rotated_image,rotated_rect)
+
+        else:
+            rotated_image = pygame.transform.rotate(self.agm, self.angle)
+            rotated_rect = rotated_image.get_rect()
+            self.rect.topleft=(self.x,self.y)
+            rotated_rect.topleft = (self.x, self.y)
+            screen.blit(rotated_image,rotated_rect)
+
 
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
+
+        
+    def get_angle(self):
+        xy=self.target.get_last_known_position()
+        v1_x=xy[0]
+        v1_y=xy[1]+15
+        v2_x=(self.x)
+        v2_y=(self.y)
+
+        dx = v1_x - v2_x 
+        dy = v1_y- v2_y 
+        rads = atan2(-dy,dx)
+        rads %= 2*pi
+        degs = degrees(rads)
+        self.angle=degs
+
+        return degs
         
         
 
     def move(self):
         if self.guided:
             self.dmage=75
-            self.width=6
-            self.height=10
             self.guide_move()
         else:
             self.dum_move()
 
     def guide_move(self):
-        target_x=self.target.get_centerx()
-        target_y=self.target.y
-        x_dis=self.x-target_x
-        x_dis=abs(x_dis)
-        self.vely=0.5
-        y_dis=abs(self.y-target_y)
-        reach_time=y_dis//self.vely
+        angle=self.get_angle()
 
-        if reach_time >0:
-            velx=x_dis/reach_time
-        else:
-            velx=2
+        if angle>=180 and angle <270:
+            fixed_angle=angle-180
+            vely=fixed_angle*self.velocity_on_angle
+            velx=self.max_velocity-vely
+            velx=-velx
+            vely=-vely
 
-        if velx>1:
-            velx=1
-            if self.vely>0:
-                self.vely-=0.3
+        elif angle >=270:
+             fixed_angle=angle-270
+             velx=fixed_angle*self.velocity_on_angle
+             vely=self.max_velocity-velx
+             vely=-vely
 
-        if self.x<target_x:
-            self.x+=velx
-        else:
-            self.x-=velx
+        print(vely)
+   
+        self.x+=velx
+        self.y-=vely
+   
 
-        self.y+=self.vely
+            
+
+
+
            
 
     def dum_move(self):
