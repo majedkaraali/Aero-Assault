@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
-background=pygame.image.load('src/img/background.png')
+background=pygame.image.load('src/img/background.png').convert_alpha()
 
 
 
@@ -128,11 +128,13 @@ class FreePlayState(GameState):
         super().__init__()
         self.running=True
         self.force_reload=False
+        
 
         
         
     def handle_events(self, events):
         global current_state
+        screen.blit(background,background.get_rect())
         tab_pressed = False
         for event in events:
             if event.type == pygame.QUIT:
@@ -298,7 +300,7 @@ class FreePlayState(GameState):
         if not (self.paues) :
             if not self.reward_screen:
                 clock.tick(60)
-                screen.blit(background,background.get_rect())
+                
 
               #  self.ground()
                 self.statics()

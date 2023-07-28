@@ -88,7 +88,7 @@ class Missile:
 
     def turn_vel(self):
         angle=self.get_colid_point_angle()
-       # angle=round(angle)
+        angle=round(angle)
         if angle>90:
             fixed_angle=angle-90
             velx=fixed_angle*self.velocity_on_angle
@@ -676,7 +676,7 @@ class Bomb:
 
     def guide_move(self):
         angle=self.get_angle()
-
+        angle=round(angle)
         if angle>=180 and angle <270:
             fixed_angle=angle-180
             vely=fixed_angle*self.velocity_on_angle
