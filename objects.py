@@ -65,7 +65,7 @@ class Missile:
 
     def colid_point_x(self):
         enemy_dir=self.target.move_dir
-        eny=(self.target.y)-self.target.height//2
+        eny=(self.target.y)-self.target.get_width()//2
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
@@ -184,8 +184,6 @@ class Bullet:
         self.y = y
         self.vel_x = 0
         self.vel_y = 0
-        self.max_y=0
-        self.max_x=0
         self.moved_x=0
         self.moved_y=0
         self.hitted=False
@@ -204,8 +202,6 @@ class Bullet:
     def move_bullet(self):
         self.x += self.vel_x
         self.y += self.vel_y
-        self.max_y+=self.vel_y
-        self.max_x+=self.vel_x
 
         self.moved_x+=abs(self.vel_x)
         self.moved_y+=abs(self.vel_y)
@@ -249,17 +245,10 @@ class Bullet:
 
     def out_of_range(self):
 
-        x_y=abs(self.max_x)+abs(self.max_y)
 
-
-        if x_y>650:
+        if abs(self.moved_y)>500:
             return True
 
-        if abs(self.max_y)>370:
-            return True
-        if abs(self.max_x)>550:
-        
-            return True
         else:
             return False
 
@@ -268,9 +257,6 @@ class Bullet:
         self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
        
         
-
-        
-
        
     
 class Player:
@@ -309,7 +295,7 @@ class Player:
     barrel=pygame.image.load('src/img/barrel.png')
     barrel_rect=image.get_rect()
     last_known_position=(0,0)
-    last_known_position_update_delay=2200
+    last_known_position_update_delay=2000
     last_known_position_updated=False
     last_known_position_update_time = 0
     player_alive=True
@@ -753,11 +739,9 @@ class Bomb:
 
 
 class Enemy:
-    def __init__(self,x,y,width,height,vel,move_dir,bomb_count,guided_bomb,color,shooting_range,tag,health,target,sprites):
+    def __init__(self,x,y,vel,move_dir,bomb_count,guided_bomb,shooting_range,tag,health,target,sprites):
         self.x=x
         self.y=y
-        self.width=width
-        self.height=height
         self.vel=vel
         self.move_dir=move_dir
         self.destroyed=False
@@ -768,28 +752,37 @@ class Enemy:
         self.bomb_count=bomb_count
         self.health=health
         self.damaged=False
-        self.color=color
         self.shooting_range=shooting_range
         self.tag=tag
         self.guided_bomb=guided_bomb
         self.kamikaze=False
         self.target=target
         self.charg=self.bomb_count
-        self.left_sprite=sprites[0]
-        self.right_sprite=sprites[1]
+        self.left_sprite=  sprites[0]
+        self.right_sprite= sprites[1]
         self.left_sprite_rect=self.left_sprite.get_rect()
         self.right_sprite_rect=self.right_sprite.get_rect()
+
+    lock_sprite=pygame.image.load('src/img/lock8.png')
+    lock_sprite_rect=lock_sprite.get_rect()
+    track_sprite=pygame.image.load('src/img/track.png')
+    track_sprite_rect=track_sprite.get_rect()
+    lock_sprite_width=lock_sprite.get_width()
 
 
         
     bombs=[]
 
-
+    def get_center_y(self):
+        return self.left_sprite.get_height()//2
 
     def get_centerx(self):
-        center_x=self.x+(self.width//2)
+        center_x=self.x+(self.get_width()//2)
         return center_x
-    
+    def get_width(self):
+        return self.left_sprite.get_width()
+    def get_height(self):
+        return self.left_sprite.get_height()   
     def move_bombs(self):
         
         for bomb in self.bombs:
@@ -804,8 +797,7 @@ class Enemy:
         for bomb in self.bombs:
             bomb.draw(screen)
             bomb.status(screen)
-          
-    
+
 
 
     def can_bomb(self):
@@ -967,17 +959,6 @@ class Enemy:
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
 
-        #text = pygame.font.SysFont(None, 24).render("", True, (0, 0, 0))
-        if self.locked:
-            pygame.draw.rect(screen,('red'), self.get_rect())
-            #text = pygame.font.SysFont(None, 24).render("x", True, ('red'))
-
-        elif self.tracked:
-            pygame.draw.rect(screen, ('green'), self.get_rect())
-           # text = pygame.font.SysFont(None, 24).render("O", True, ('green'))
-        #text_rect = text.get_rect(center=target_rect.center)
-        #screen.blit(text, text_rect)
-
         self.left_sprite_rect.topleft=(self.x,self.y)
         self.right_sprite_rect.topleft=(self.x,self.y)
 
@@ -985,6 +966,15 @@ class Enemy:
             screen.blit(self.left_sprite,self.left_sprite_rect)
         else:
             screen.blit(self.right_sprite,self.right_sprite_rect)
+
+        if self.locked:
+            rect_center=self.track_sprite_rect.topleft=(self.get_centerx()-15,self.y-3)
+            screen.blit(self.track_sprite,rect_center)
+
+
+        elif self.tracked:
+            rect_center=self.lock_sprite_rect.topleft=(self.get_centerx()-15,self.y-3)
+            screen.blit(self.lock_sprite,rect_center)
 
     
 
@@ -999,9 +989,9 @@ class Enemy:
     def check_kill(self, obje):
         for bullet in obje:
             if (self.x < bullet.x + bullet.get_width() and
-                self.x + self.width > bullet.x and
+                self.x + self.get_width() > bullet.x and
                 self.y < bullet.y + bullet.get_height() and
-                self.y + self.height > bullet.y):
+                self.y + self.get_height() > bullet.y):
                 bullet.hitted=True
                 self.health-=15
                 if self.health<0:

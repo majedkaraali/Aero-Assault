@@ -25,7 +25,7 @@ class Generate_enemies:
                 vel=2
 
             sprites=plane_loader.random_fighter()
-            enemy=objects.Enemy(x,y,80,25,vel,mdir,3,0,'blue',50,'fighter',80,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,mdir,3,0,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
 
         
@@ -48,7 +48,7 @@ class Generate_enemies:
             
             sprites=plane_loader.random_strike()
          
-            enemy=objects.Enemy(x,y,80,25,vel,mdir,6,1,'darkgreen',400,'strike',100,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,mdir,6,1,400,'strike',100,self.target,sprites)
             self.enemy_list.append(enemy)
 
     def respawn_bomber(self,move_dircton,y):
@@ -64,7 +64,7 @@ class Generate_enemies:
                 mdir='left'
                 vel=2
             sprites=plane_loader.random_bomber()
-            enemy=objects.Enemy(x,y,110,25,vel,mdir,10,0,'brown',120,'bomber',130,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,mdir,10,0,120,'bomber',130,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
@@ -82,7 +82,7 @@ class Generate_enemies:
                 vel=2
 
             sprites=plane_loader.random_drone()
-            enemy=objects.Enemy(x,y,40,20,vel,mdir,0,0,'white',400,'kamikaze',30,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,mdir,0,0,400,'kamikaze',30,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
@@ -90,13 +90,13 @@ class Generate_enemies:
     def all_time_enemies(self,num_of_enemies):
             def respawn_enemy():
                 respawn_chance = random.random()
-                if respawn_chance <= 1.0:  
+                if respawn_chance <= 0.3:  
                     return 'strike_aircraft'
-                elif respawn_chance <= 0.0:  
+                elif respawn_chance <= 0.5:  
                     return 'fighter_aircraft'
-                elif respawn_chance <= 0.0:  
+                elif respawn_chance <= 0.8:  
                     return 'bomber'
-                elif respawn_chance <= 0.0:  
+                elif respawn_chance <= 1.0:  
                     return 'kamikaze_drone'
                 else:
                     return None  

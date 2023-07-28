@@ -90,7 +90,7 @@ class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
     reward_screen=False
-    enemy_list=ens.all_time_enemies(1)
+    enemy_list=ens.all_time_enemies(8)
 
 
     #PAUSE SURFACE
@@ -307,8 +307,8 @@ class FreePlayState(GameState):
                 if not player.forced:
                     
                     player.move_player()
-                    if len(self.enemy_list)<1:
-                        self.generate_enemies(1)
+                    if len(self.enemy_list)<8:
+                        self.generate_enemies(8)
                 player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 
@@ -354,7 +354,7 @@ class FreePlayState(GameState):
                             enemy.move_dir='right'
                             enemy.recharge()
                     elif enemy.move_dir=='right':
-                        if (enemy.x)>width-5-enemy.width:
+                        if (enemy.x)>width-5-enemy.get_width():
                             enemy.move_dir='left'
                             enemy.recharge()
 
