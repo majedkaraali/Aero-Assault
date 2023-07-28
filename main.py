@@ -17,6 +17,7 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
+background=pygame.image.load('src/img/background.png')
 
 
 
@@ -297,9 +298,9 @@ class FreePlayState(GameState):
         if not (self.paues) :
             if not self.reward_screen:
                 clock.tick(60)
-                screen.fill('cyan2')
+                screen.blit(background,background.get_rect())
 
-                self.ground()
+              #  self.ground()
                 self.statics()
 
 
@@ -442,6 +443,7 @@ def main():
         current_state.update()
         current_state.draw()
         pygame.display.flip()
+        print(clock.get_fps())
 
 
     pygame.quit()
