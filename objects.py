@@ -166,7 +166,6 @@ class Item:
         return image
 
     def activate(self,player):
-        print(self.value)
         if self.value=='repair':
             if player.health+50>100:
                 player.health=100
@@ -307,9 +306,9 @@ class Player:
     destroyed=False
     forced=False
     forced_time = 0
-    image=pygame.image.load('src/img/spaa-gepard.png')
+    image=pygame.image.load('src/img/spaa-gepard3.png')
     rect=image.get_rect()
-    barrel=pygame.image.load('src/img/barrel.png')
+    barrel=pygame.image.load('src/img/barrel2.png')
     barrel_rect=image.get_rect()
     last_known_position=(0,0)
     last_known_position_update_delay=2000
@@ -326,7 +325,7 @@ class Player:
     pods_reload_delay=4000
     reload_start_time=0
     pods_reload_start_time=0
-    radar_range=0
+    radar_range=900
     radar_max_left=0
     radar_min_height=300
 
@@ -512,10 +511,10 @@ class Player:
             bullet.rotate_bullet()
             self.bullets.append(bullet)
 
-            bullet2 = Bullet(self.x+70 // 2, self.y+32)
-            bullet2.shoot_at(target_x, target_y)
-            bullet2.rotate_bullet()
-            self.bullets.append(bullet2)
+            # bullet2 = Bullet(self.x+70  // 2, self.y+32)
+            # bullet2.shoot_at(target_x, target_y)
+            # bullet2.rotate_bullet()
+            # self.bullets.append(bullet2)
 
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
@@ -539,11 +538,9 @@ class Player:
             mis.draw_missile(screen)
 
     def radar(self):
-        radar_range=900
-        max_left=self.x-radar_range//2
-        max_right=self.x+radar_range//2
+        max_left=self.x-self.radar_range//2
+        max_right=self.x+self.radar_range//2
         radar_angle=list(range(max_left,max_right))
-        self.radar_range=radar_range
         self.radar_max_left=max_left
         self.enemies_in_radar=[]
         enemies=self.get_enemies
@@ -639,7 +636,7 @@ class Bomb:
         self.dmage=50
         self.exploded=False
         self.angle=angle
-        self.image=pygame.image.load('src/img/bomb6.png')
+        self.image=pygame.image.load('src/img/bomb7.png')
         self.rect=self.image.get_rect()
         self.agm=pygame.image.load('src/img/agm2.png')
         self.agm_rect=self.agm.get_rect()

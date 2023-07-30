@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
-background=pygame.image.load('src/img/background8.png').convert_alpha()
+background=pygame.image.load('src/img/background9.png').convert_alpha()
 statics=pygame.image.load('src/img/statics.png').convert_alpha()
 
 
