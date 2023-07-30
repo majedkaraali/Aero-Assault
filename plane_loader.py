@@ -53,8 +53,8 @@ drone_list=['drone']
 
 def get_random_plane_image(plane_list):
     plane_name = random.choice(plane_list)
-    left_image = pygame.image.load(f'src/img/Air/{plane_name}-left.png')
-    right_image = pygame.image.load(f'src/img/Air/{plane_name}-right.png')
+    left_image = pygame.image.load(f'src/img/Air/{plane_name}-left.png').convert_alpha()
+    right_image = pygame.image.load(f'src/img/Air/{plane_name}-right.png').convert_alpha()
 
     selected_image = left_image, right_image
 

@@ -17,7 +17,8 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
-background=pygame.image.load('src/img/background.png').convert_alpha()
+background=pygame.image.load('src/img/background8.png').convert_alpha()
+statics=pygame.image.load('src/img/statics.png').convert_alpha()
 
 
 
@@ -91,7 +92,7 @@ class FreePlayState(GameState):
     mouse_button_pressed=False
     paues=False
     reward_screen=False
-    enemy_list=ens.all_time_enemies(8)
+    enemy_list=ens.all_time_enemies(3)
 
 
     #PAUSE SURFACE
@@ -254,16 +255,19 @@ class FreePlayState(GameState):
         surface_width = width
         surface_height = 30
         startic_surface = pygame.Surface((surface_width, surface_height))
-        startic_surface.fill(pygame.Color('lightgreen'))
+        
         border = 1
         position = (0, height-30)
+        statics_rect=statics.get_rect()
+        statics_rect.topleft=(0,630)
+        screen.blit(statics,statics_rect)
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
-        screen.blit(startic_surface, position)
+     
         score_value =str(score)
         score_text = font.render("Score: "+score_value, True, ('black'))
-        score_text_pos=(10,height-25)
-        menu_text = font.render("menu", True, 'black')
-        menu_text_pos=(width//2,height-25)
+        score_text_pos=(10,height-23)
+        menu_text = font.render("MENU", True, 'black')
+        menu_text_pos=(width//2,height-23)
         pause_menurect=menu_text.get_rect()
 
         if player.reloading:
@@ -279,12 +283,12 @@ class FreePlayState(GameState):
 
         storage=player.missiles_storage
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
-        bullets_text_pos=(width-250,height-25)
+        bullets_text_pos=(width-250,height-23)
         missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
-        missiles_text_pos=(width-400,height-25)
+        missiles_text_pos=(width-400,height-23)
         heath_value=player.health
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
-        heatl_text_pos=(width-100,height-25)
+        heatl_text_pos=(width-100,height-23)
       
         screen.blit(score_text,score_text_pos)
         screen.blit(menu_text, menu_text_pos)
@@ -310,8 +314,8 @@ class FreePlayState(GameState):
                 if not player.forced:
                     
                     player.move_player()
-                    if len(self.enemy_list)<8:
-                        self.generate_enemies(8)
+                    if len(self.enemy_list)<3:
+                        self.generate_enemies(3)
                 player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 
@@ -445,7 +449,7 @@ def main():
         current_state.update()
         current_state.draw()
         pygame.display.flip()
-        print(clock.get_fps())
+       #dadda print(clock.get_fps())
 
 
     pygame.quit()

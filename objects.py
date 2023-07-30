@@ -7,7 +7,7 @@ debug=False
 
 width,height=(1100,660)
 
-
+# pygame.init() # just for loading the images i will remove it
 
 class Missile:
 
@@ -65,7 +65,7 @@ class Missile:
 
     def colid_point_x(self):
         enemy_dir=self.target.move_dir
-        eny=(self.target.y)-self.target.get_width()//2
+        eny=self.colid_point_y()-self.target.get_width()//2
         y_dis=self.y-eny
         y_dis=abs(y_dis)
         
@@ -79,12 +79,14 @@ class Missile:
             cx=((self.target.get_centerx())+reach_target_time)
         
         self.target.tracked=True
-        cy=self.target.y
 
         return cx
     
     def colid_point_y(self):
-        return self.target.y
+        if  not self.target.destroyed:
+            return self.target.y
+        else:
+            return self.target.y-500
 
     def turn_vel(self):
         angle=self.get_colid_point_angle()
@@ -122,8 +124,6 @@ class Missile:
         else:
             angle = self.get_colid_point_angle()
 
-        if (self.target.destroyed):
-                angle = 0
 
         rotated_image = pygame.transform.rotate(self.image, angle)
 
@@ -134,34 +134,47 @@ class Missile:
 
 class Item:
     
+    
     def __init__(self,x,y,tag):
         self.x=x
         self.y=y
         self.tag=tag
-        ammo_image=pygame.image.load('src/img/drop-ammo.png')
-        self.drop_image=ammo_image
+        self.drop_image=self.drop_image()
         self.drop_rect=self.drop_image.get_rect()
+        
 
     width=20
     height=20
     vely=1
 
 
-    def drop_value(self):
-        value_list=['ammo','ammo','ammo']
+  
+    
+    def drop_image(self):
+        value_list=['repair','repair','ammo','ammo','ammo','missiles']
         value=random.choice(value_list)
-        return value
-
+        if value=="repair":
+            image=pygame.image.load('src/img/drop-repair.png').convert_alpha()
+            self.value=value
+        elif value=="ammo":
+            image=pygame.image.load('src/img/drop-ammo.png').convert_alpha()
+            self.value=value
+        elif value=="missiles":
+            image=pygame.image.load('src/img/drop-missile.png').convert_alpha()
+            self.value=value
+        
+        return image
 
     def activate(self,player):
-        if self.drop_value()=='health':
+        print(self.value)
+        if self.value=='repair':
             if player.health+50>100:
                 player.health=100
             else:
                 player.health+=50
-        elif self.drop_value()=='ammo':
+        elif self.value=='ammo':
             player.ammo+=180
-        elif self.drop_value()=='missiles':
+        elif self.value=='missiles':
             player.missiles_storage+=4
 
     def expired(self):
@@ -173,7 +186,6 @@ class Item:
     def move_item(self):
         self.drop_rect.topleft=(self.x,self.y)
         self.y+=self.vely
-
     def get_rect(self):
         rect=pygame.Rect(self.x,self.y,self.width,self.height)
         return  rect
@@ -498,9 +510,12 @@ class Player:
 
             bullet.shoot_at(target_x, target_y)
             bullet.rotate_bullet()
-  
-
             self.bullets.append(bullet)
+
+            bullet2 = Bullet(self.x+70 // 2, self.y+32)
+            bullet2.shoot_at(target_x, target_y)
+            bullet2.rotate_bullet()
+            self.bullets.append(bullet2)
 
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
@@ -871,7 +886,7 @@ class Enemy:
 
     def effect(self,screen):
         
-        pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
+        pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.get_width()+5, self.get_height()+5))
 
 
     def kamikaze_move(self,target,screen):
