@@ -133,10 +133,14 @@ class Missile:
             pygame.draw.rect(screen, ('red'), (self.colid_point_x(), self.target.y, 15, 15)) # THis is colid point
 
 class Item:
+    
     def __init__(self,x,y,tag):
         self.x=x
         self.y=y
         self.tag=tag
+        ammo_image=pygame.image.load('src/img/drop-ammo.png')
+        self.drop_image=ammo_image
+        self.drop_rect=self.drop_image.get_rect()
 
     width=20
     height=20
@@ -144,9 +148,10 @@ class Item:
 
 
     def drop_value(self):
-        value_list=['health','ammo','missiles']
+        value_list=['ammo','ammo','ammo']
         value=random.choice(value_list)
         return value
+
 
     def activate(self,player):
         if self.drop_value()=='health':
@@ -166,6 +171,7 @@ class Item:
 
 
     def move_item(self):
+        self.drop_rect.topleft=(self.x,self.y)
         self.y+=self.vely
 
     def get_rect(self):
@@ -173,8 +179,7 @@ class Item:
         return  rect
 
     def draw(self,screen):
-        
-        pygame.draw.rect(screen, pygame.Color('gold'), (self.x, self.y, self.width, self.height))
+        screen.blit(self.drop_image,self.drop_rect)
 
 
 class Bullet:
