@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-
+gui=pygame.image.load('src/img/gui.png').convert_alpha()
 font = pygame.font.Font(None, 24)
 
 def pause_screen(screen,state):
@@ -63,11 +63,11 @@ def reward_screen_view(screen,state):
 
 
 def main_menu_screen(screen,state):
-    screen.fill('black')
+    #screen.fill('black')
     free_play_button = pygame.draw.rect(screen, (0, 0, 255),state.free_play_position)
     free_play_text = font.render("Free Play", True, (255, 255, 255))
     free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
-    screen.blit(free_play_text, free_play_text_rect)
+    screen.blit(gui, (0,0))
 
 
     missions_button = pygame.draw.rect(screen, (0, 255, 0),state.missions_position)

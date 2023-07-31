@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 enemy_types=['fighter','strike_aircraft','bomber','kamikaze_drone']
-background=pygame.image.load('src/img/background9.png').convert_alpha()
+background=pygame.image.load('src/img/background1.png').convert_alpha()
 statics=pygame.image.load('src/img/statics.png').convert_alpha()
 
 
@@ -70,7 +70,7 @@ class MenuState(GameState):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if self.free_play_position.collidepoint(mouse_pos):
-                    current_state=free_play_state
+                    current_state=normal_playe_state
                     _player()
                 elif self.missions_position.collidepoint(mouse_pos):
                     print("Clicked Missions button")
@@ -87,7 +87,7 @@ class MenuState(GameState):
        
      
 
-class FreePlayState(GameState):
+class NormalPlayeState(GameState):
    
     mouse_button_pressed=False
     paues=False
@@ -236,7 +236,7 @@ class FreePlayState(GameState):
 
     def reward_screen_view(self):
        from screens import reward_screen_view
-       reward_screen_view(screen,free_play_state)
+       reward_screen_view(screen,normal_playe_state)
 
 
     
@@ -426,7 +426,7 @@ class FreePlayState(GameState):
 
         elif (self.paues):
             from screens import pause_screen
-            pause_screen(screen,free_play_state)
+            pause_screen(screen,normal_playe_state)
 
 
     
@@ -435,7 +435,7 @@ class FreePlayState(GameState):
             
            
 menu_state = MenuState()
-free_play_state = FreePlayState()
+normal_playe_state = NormalPlayeState()
 current_state = menu_state   
 
 def main():    
