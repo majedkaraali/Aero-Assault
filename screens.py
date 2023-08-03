@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-gui=pygame.image.load('src/img/gui.png').convert_alpha()
+gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
 font = pygame.font.Font(None, 24)
 
 def pause_screen(screen,state):

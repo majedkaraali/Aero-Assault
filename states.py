@@ -1,7 +1,7 @@
 import pygame
 from enemy_generator import Generate_enemies
 import objects
-
+import os
 pygame.init()
 
 pygame.mixer.init()
@@ -15,13 +15,13 @@ def _player():
 
 ens=Generate_enemies(_player())
 
+font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
+font_size = 19 
+font = pygame.font.Font(font_path, font_size)
 
-score=0
 
-
-font = pygame.font.Font(None, 24)
 background=pygame.image.load('src/img/background1.png').convert_alpha()
-statics=pygame.image.load('src/img/statics.png').convert_alpha()
+statics=pygame.image.load('src/img/statics2.png').convert_alpha()
 
 class GameState:
 
@@ -52,6 +52,8 @@ class MenuState(GameState):
     missions_position= pygame.Rect(20, 90, 200, 50)
     exit_position= pygame.Rect(20, 230, 200, 50)
 
+    ######### GUI
+
     def __init__(self):
         super().__init__()
         
@@ -66,11 +68,7 @@ class MenuState(GameState):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if self.free_play_position.collidepoint(mouse_pos):
-                   ## self.running=False
-   
                     state=normal_play_state
-
-                  ##  state.running=True
                     _player()
                 elif self.missions_position.collidepoint(mouse_pos):
                     print("Clicked Missions button")
@@ -93,9 +91,9 @@ class NormalPlayeState(GameState):
     paues=False
     reward_screen=False
     enemy_list=ens.all_time_enemies(3)
+    score=0
 
-
-    #PAUSE SURFACE
+    #PAUSE SURFACE  #GUI
     pause_frame_color = ('silver')
     rerawrds_frame_color=('silver')
     pause_surface_width=250
@@ -106,14 +104,14 @@ class NormalPlayeState(GameState):
     border_width = 1
     border_color = (0, 0, 0)
 
-    #REWARD SURFACE
+    #REWARD SURFACE GUI
     rwd_surface_width = width//2
     rwd_surface_height = height//2
     reward_scr_position =  ((width//2)-(rwd_surface_width//2),(height//2)-(rwd_surface_height//2))
     rewards_surface = pygame.Surface((rwd_surface_width, rwd_surface_height))
     rewards_surface.fill(rerawrds_frame_color)
 
-    # RECTS
+    # RECTS   GUI
     resume_button_rect=pygame.Rect(75, 20, 100, 20)
     main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
     exit_button_rect=pygame.Rect(75, 100, 100, 20)
@@ -262,11 +260,11 @@ class NormalPlayeState(GameState):
         screen.blit(statics,statics_rect)
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
      
-        score_value =str(score)
+        score_value =str(self.score)
         score_text = font.render("Score: "+score_value, True, ('black'))
-        score_text_pos=(10,height-23)
+        score_text_pos=(10,height-25)
         menu_text = font.render("MENU", True, 'black')
-        menu_text_pos=(width//2,height-23)
+        menu_text_pos=((width//2)-20,height-25)
         pause_menurect=menu_text.get_rect()
 
         if player.reloading:
@@ -282,15 +280,15 @@ class NormalPlayeState(GameState):
 
         storage=player.missiles_storage
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
-        bullets_text_pos=(width-250,height-23)
+        bullets_text_pos=(width-375,height-25)
         missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
-        missiles_text_pos=(width-400,height-23)
+        missiles_text_pos=(width-550,height-25)
         heath_value=player.health
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
-        heatl_text_pos=(width-100,height-23)
+        heatl_text_pos=(width-170,height-25)
       
         screen.blit(score_text,score_text_pos)
-        screen.blit(menu_text, menu_text_pos)
+     #   screen.blit(menu_text, menu_text_pos)
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
@@ -299,7 +297,6 @@ class NormalPlayeState(GameState):
 
 
     def draw(self,screen):
-        global score
         screen.blit(background,background.get_rect())
         if not (self.paues) :
 
@@ -348,7 +345,7 @@ class NormalPlayeState(GameState):
                     if enemy.destroyed:
                         enemies_to_remove.append(enemy)
                     if enemy.check_kill(player.bullets):
-                        score+=100
+                        self.score+=100
                         drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
                         player.drops.append(drop)
                         enemies_to_remove.append(enemy)
@@ -376,7 +373,7 @@ class NormalPlayeState(GameState):
                         bullets_to_remove.append(bullet)
         
                     elif bullet.hitted:
-                        score+=20
+                        self.score+=20
                         bullets_to_remove.append(bullet)
 
 
@@ -386,7 +383,7 @@ class NormalPlayeState(GameState):
                     if missile.y<=-10:
                         missiles_to_remove.append(missile)
                     elif missile.hit_target():
-                        score+=200
+                        self.score+=200
                         missiles_to_remove.append(missile)
                         enemies_to_remove.append(missile.target)
                         
@@ -429,7 +426,6 @@ class NormalPlayeState(GameState):
     
 
         
-           
 menu_state = MenuState()
 normal_play_state = NormalPlayeState()
 state2=state_2()
