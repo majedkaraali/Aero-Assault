@@ -1,6 +1,7 @@
 import pygame
+from GUI import Button
 pygame.init()
-
+width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
 font = pygame.font.Font(None, 24)
 
@@ -62,8 +63,27 @@ def reward_screen_view(screen,state):
         state.rewards_surface.blit(high_score,high_score_pos)
 
 
-def main_menu_screen(screen):
-    #screen.fill('black')
-    screen.blit(gui, (0,0))
+
+
+class Main_menu_window():
+
+    def __init__(self):
+        self.buttons=[]
+        self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
+        self.play_button=Button(width//2,180,"Play")
+        self.options_button=Button(width//2,260,"Options")
+        self.Credits_button=Button(width//2,340,"Credits")
+        self.Exit_button=Button(width//2,420,"Exit")
+        self.buttons.extend([self.play_button, self.options_button, self.Credits_button,self.Exit_button])
+
+    def draw(self,screen):
+      screen.blit(gui, (0,0))
+      for button in self.buttons:
+          button.place(screen)
+    
+    def get_buttons(self):
+        return self.buttons
+ 
+    
 
 

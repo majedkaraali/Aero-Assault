@@ -2,6 +2,9 @@ import pygame
 from enemy_generator import Generate_enemies
 import objects
 import os
+
+from windows import Main_menu_window
+
 pygame.init()
 
 pygame.mixer.init()
@@ -12,7 +15,7 @@ def _player():
         player=objects.Player(400,height-107,[],[],'Unnamed',[])
         return player
 
-
+main_menu=Main_menu_window()
 ens=Generate_enemies(_player())
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
@@ -26,7 +29,7 @@ statics=pygame.image.load('src/img/statics2.png').convert_alpha()
 btn1_image=pygame.image.load('src/img/GUI/button1.png').convert_alpha()
 btn2_image=pygame.image.load('src/img/GUI/button2.png').convert_alpha()
 
-
+#btn1_image = pygame.transform.scale(btn1_image, (50, 100))
 
 button1=btn1_image
 button2=btn1_image
@@ -63,16 +66,12 @@ class state_2(GameState):
     
 class MenuState(GameState):
 
-    btn1_rect.topleft=(20, 20)
-    btn2_rect.topleft=(20, 90)
-    #exit_position= pygame.Rect(20, 230, 200, 50)
-
-    ######### GUI
-
     def __init__(self):
         super().__init__()
-        
         self.running=True
+        self.buttons=main_menu.get_buttons()
+ 
+ 
 
         
     def handle_events(self, events):
@@ -81,23 +80,19 @@ class MenuState(GameState):
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if self.free_play_position.collidepoint(mouse_pos):
-                    state=normal_play_state
-                    _player()
-                elif self.missions_position.collidepoint(mouse_pos):
-                    print("Clicked Missions button")
-                    
-                elif self.exit_position.collidepoint(mouse_pos):
-                    print("Clicked Exit button")
+                for button in self.buttons:
+                    if button.holding:
+                        if button.text=='Play':
+                            state=normal_play_state
+                            _player()
+
+            
                     
 
 
     def draw(self,screen):
-        screen.blit(button1,btn1_rect)
-        screen.blit(button2,btn2_rect)
-        #from screens import main_menu_screen
-       # main_menu_screen(screen)
+        main_menu.draw(screen)
+
             
        
      
@@ -249,7 +244,7 @@ class NormalPlayeState(GameState):
         
 
     def reward_screen_view(self,screen):
-       from screens import reward_screen_view
+       from windows import reward_screen_view
        reward_screen_view(screen,normal_play_state)
 
 
@@ -436,7 +431,7 @@ class NormalPlayeState(GameState):
                
 
         elif (self.paues):
-            from screens import pause_screen
+            from windows import pause_screen
             pause_screen(screen,normal_play_state)
 
 
