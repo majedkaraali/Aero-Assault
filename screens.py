@@ -64,10 +64,16 @@ def reward_screen_view(screen,state):
 
 def main_menu_screen(screen,state):
     #screen.fill('black')
+    screen.blit(gui, (0,0))
+
     free_play_button = pygame.draw.rect(screen, (0, 0, 255),state.free_play_position)
     free_play_text = font.render("Free Play", True, (255, 255, 255))
     free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
-    screen.blit(gui, (0,0))
+    screen.blit(free_play_text, free_play_text_rect)
+
+    
+
+    
 
 
     missions_button = pygame.draw.rect(screen, (0, 255, 0),state.missions_position)

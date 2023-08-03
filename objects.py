@@ -501,7 +501,7 @@ class Player:
             return False
 
 
-    def shoot(self,screen):
+    def shoot(self):
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
