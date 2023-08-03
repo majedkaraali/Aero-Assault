@@ -26,8 +26,16 @@ statics=pygame.image.load('src/img/statics2.png').convert_alpha()
 btn1_image=pygame.image.load('src/img/GUI/button1.png').convert_alpha()
 btn2_image=pygame.image.load('src/img/GUI/button2.png').convert_alpha()
 
-btn1_rect=btn1_image.get_rect()
-btn2_rect=btn2_image.get_rect()
+
+
+button1=btn1_image
+button2=btn1_image
+button3=btn1_image
+
+
+btn1_rect=button1.get_rect()
+btn2_rect=button2.get_rect()
+btn3_rect=button3.get_rect()
 
 class GameState:
 
@@ -55,9 +63,9 @@ class state_2(GameState):
     
 class MenuState(GameState):
 
-    free_play_position=pygame.Rect(20, 20, 200, 50)
-    missions_position= pygame.Rect(20, 90, 200, 50)
-    exit_position= pygame.Rect(20, 230, 200, 50)
+    btn1_rect.topleft=(20, 20)
+    btn2_rect.topleft=(20, 90)
+    #exit_position= pygame.Rect(20, 230, 200, 50)
 
     ######### GUI
 
@@ -86,8 +94,10 @@ class MenuState(GameState):
 
 
     def draw(self,screen):
-        from screens import main_menu_screen
-        main_menu_screen(screen,menu_state)
+        screen.blit(button1,btn1_rect)
+        screen.blit(button2,btn2_rect)
+        #from screens import main_menu_screen
+       # main_menu_screen(screen)
             
        
      

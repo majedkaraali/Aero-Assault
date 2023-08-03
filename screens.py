@@ -62,28 +62,8 @@ def reward_screen_view(screen,state):
         state.rewards_surface.blit(high_score,high_score_pos)
 
 
-def main_menu_screen(screen,state):
+def main_menu_screen(screen):
     #screen.fill('black')
     screen.blit(gui, (0,0))
 
-    free_play_button = pygame.draw.rect(screen, (0, 0, 255),state.free_play_position)
-    free_play_text = font.render("Free Play", True, (255, 255, 255))
-    free_play_text_rect = free_play_text.get_rect(center=free_play_button.center)
-    screen.blit(free_play_text, free_play_text_rect)
 
-    
-
-    
-
-
-    missions_button = pygame.draw.rect(screen, (0, 255, 0),state.missions_position)
-    missions_text = font.render("Missions", True, (255, 255, 255))
-    missions_text_rect = missions_text.get_rect(center=missions_button.center)
-    screen.blit(missions_text, missions_text_rect)
-
-
-
-    exit_button = pygame.draw.rect(screen, (255, 0, 0),state.exit_position)
-    exit_text = font.render("Exit", True, (255, 255, 255))
-    exit_text_rect = exit_text.get_rect(center=exit_button.center)
-    screen.blit(exit_text, exit_text_rect)
