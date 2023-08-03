@@ -23,6 +23,12 @@ font = pygame.font.Font(font_path, font_size)
 background=pygame.image.load('src/img/background1.png').convert_alpha()
 statics=pygame.image.load('src/img/statics2.png').convert_alpha()
 
+btn1_image=pygame.image.load('src/img/GUI/button1.png').convert_alpha()
+btn2_image=pygame.image.load('src/img/GUI/button2.png').convert_alpha()
+
+btn1_rect=btn1_image.get_rect()
+btn2_rect=btn2_image.get_rect()
+
 class GameState:
 
     def __init__(self):
@@ -48,6 +54,7 @@ class state_2(GameState):
         pass
     
 class MenuState(GameState):
+
     free_play_position=pygame.Rect(20, 20, 200, 50)
     missions_position= pygame.Rect(20, 90, 200, 50)
     exit_position= pygame.Rect(20, 230, 200, 50)
