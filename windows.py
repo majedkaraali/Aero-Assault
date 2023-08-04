@@ -77,12 +77,14 @@ class Main_menu_window():
         self.buttons.extend([self.play_button, self.options_button, self.Credits_button,self.Exit_button])
 
     def draw(self,screen):
-      screen.blit(gui, (0,0))
+      screen.blit(self.image, (0,0))
       for button in self.buttons:
           button.place(screen)
     
     def get_buttons(self):
         return self.buttons
+    
+  
  
     
 
