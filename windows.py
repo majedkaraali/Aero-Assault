@@ -1,5 +1,5 @@
 import pygame
-from GUI import Button,Frame
+from GUI import Button,Frame,Levels_Frame
 pygame.init()
 width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
@@ -94,6 +94,13 @@ class Game_modes_window(Screen):
     def get_frames(self):
         return []
 
+    def levels_frame(self,levels):
+        levels_frame=Levels_Frame(300,125,715,390,3,5)
+        for level in levels:
+            levels_frame.add_level(level)
+
+        self.selected_frame=levels_frame
+
 
     def survival_frame(self):
         survival_frame=Frame(300,125,715,390)
@@ -117,7 +124,7 @@ class Game_modes_window(Screen):
     def draw_frames(self,screen):
         if self.selected_frame:
             self.selected_frame.draw(screen)
-            self.selected_frame.draw_buttons(screen)
+           # self.selected_frame.draw_buttons(screen)
 
     def clear_selection(self):
         self.selected_frame=False

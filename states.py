@@ -4,6 +4,7 @@ import objects
 import os
 from GUI import Button,Frame
 from windows import Main_menu_screen,Game_modes_window
+from levels import levels
 
 pygame.init()
 
@@ -96,7 +97,8 @@ class MenuState(GameState):
                                 #state=survival_play_state
                                 #_player()
                             elif button.text=="Levels":
-                                pass
+                                game_mode_window.levels_frame(levels)
+                               # print(levels)
 
                             elif button.text=="Apex Challenge":
                                 game_mode_window.apex_frame()

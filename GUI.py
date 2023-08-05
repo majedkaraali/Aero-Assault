@@ -65,6 +65,7 @@ class Frame:
     def get_rect(self):
         rect = self.image.get_rect()
         rect.topleft = (self.x, self.y)
+    
         return rect
 
     def render_text(self):
@@ -105,4 +106,74 @@ class Frame:
     def draw_buttons(self,screen):
         for button in self.buttons:
             button.place(screen)
+
+
+
+
+class Levels_Frame:
+    def __init__(self, x, y, width, height, rows, cols):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.rows = rows
+        self.cols = cols
+        self.image = pygame.image.load('src/img/GUI/LabelFrame.png').convert_alpha()
+        self.level_image=pygame.image.load('src/img/GUI/level.png').convert_alpha()
+        self.locked_image=pygame.image.load('src/img/GUI/level_locked2.png').convert_alpha()
+        self.hold_image=pygame.image.load('src/img/GUI/level_hold.png').convert_alpha()
+        self.levels = [] 
+        self.image_width = 650 // cols
+        self.image_height = 250 // rows
+        self.holding=False
+
+    def add_level(self, level):
+        self.levels.append(level)
+
+    def get_rect(self):
+        return self.level_image.get_rect()
+    
+
+    def chek_hold(self):
+        mouse=pygame.mouse.get_pos()
+        if self.get_rect().collidepoint(mouse):
+            self.holding=True
+        else:
+            self.holding=False
+
+    def draw(self, screen):
+        self.chek_hold()
+        screen.blit(self.image, (self.x, self.y))
+
+
+
+        for row in range(self.rows):
+            for col in range(self.cols):
+                index = row * self.cols + col
+                if index < len(self.levels):
+                    
+                   
+                    
+
+                    if self.holding:
+                        image=self.hold_image
+                        text_surface = font.render(self.levels[index].get_number(), True, (0, 0, 0))
+                    else:
+                        image =(self.level_image)
+                        text_surface = font.render(self.levels[index].get_number(), True, (255, 255, 255))
+
+                        
+                    text_rect = text_surface.get_rect()
+                    text_rect.center=(self.x + col * self.image_width+20 + self.image_width // 2,
+                                    self.y + row * self.image_height+33 + self.image_height // 2)
+                    
+
+                    if not self.levels[index].locked:
+                       screen.blit(image, (self.x + col * self.image_width+40, self.y + row * self.image_height+40))
+                       screen.blit(text_surface, text_rect)
+                       
+                    else:
+                        screen.blit(self.locked_image, (self.x + col * self.image_width+40, self.y + row * self.image_height+40))
+                    
+
 
