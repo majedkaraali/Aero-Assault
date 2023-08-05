@@ -3,7 +3,7 @@ from enemy_generator import Generate_enemies
 import objects
 import os
 
-from windows import Main_menu_window
+from windows import Main_menu_screen,Game_modes_window
 
 pygame.init()
 
@@ -15,7 +15,9 @@ def _player():
         player=objects.Player(400,height-107,[],[],'Unnamed',[])
         return player
 
-main_menu=Main_menu_window()
+main_menu=Main_menu_screen()
+game_mode_window=Game_modes_window()
+
 ens=Generate_enemies(_player())
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
@@ -26,19 +28,6 @@ font = pygame.font.Font(font_path, font_size)
 background=pygame.image.load('src/img/background1.png').convert_alpha()
 statics=pygame.image.load('src/img/statics2.png').convert_alpha()
 
-btn1_image=pygame.image.load('src/img/GUI/button1.png').convert_alpha()
-btn2_image=pygame.image.load('src/img/GUI/button2.png').convert_alpha()
-
-#btn1_image = pygame.transform.scale(btn1_image, (50, 100))
-
-button1=btn1_image
-button2=btn1_image
-button3=btn1_image
-
-
-btn1_rect=button1.get_rect()
-btn2_rect=button2.get_rect()
-btn3_rect=button3.get_rect()
 
 class GameState:
 
@@ -69,9 +58,8 @@ class MenuState(GameState):
     def __init__(self):
         super().__init__()
         self.running=True
-        self.buttons=main_menu.get_buttons()
- 
- 
+        self.screen=main_menu
+        self.buttons=self.screen.get_buttons()
 
         
     def handle_events(self, events):
@@ -79,25 +67,44 @@ class MenuState(GameState):
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                for button in self.buttons:
-                    if button.holding:
-                        if button.text=='Play':
-                            state=normal_play_state
-                            _player()
+                if self.screen==main_menu:
+                    
+                    for button in self.buttons:
+                        if button.holding:
+                            if button.text=='Play':
+                                self.screen=game_mode_window
+                                self.buttons=self.screen.get_buttons()
+
+
+                elif self.screen==game_mode_window:
+                    for button in self.buttons:
+                        if button.holding:
+                            
+                            if button.text=='Back':
+                                self.screen=main_menu
+                                self.buttons=self.screen.get_buttons()
+
+                            
+
+    
+
+                           # state=survival_pay_state
+                            #_player()
 
             
                     
 
 
     def draw(self,screen):
-        main_menu.draw(screen)
+        self.screen.draw(screen)
 
             
        
      
 
-class NormalPlayeState(GameState):
+class SurvivalPlayState(GameState):
 #   
     mouse_button_pressed=False
     paues=False
@@ -245,7 +252,7 @@ class NormalPlayeState(GameState):
 
     def reward_screen_view(self,screen):
        from windows import reward_screen_view
-       reward_screen_view(screen,normal_play_state)
+       reward_screen_view(screen,survival_pay_state)
 
 
     
@@ -432,14 +439,14 @@ class NormalPlayeState(GameState):
 
         elif (self.paues):
             from windows import pause_screen
-            pause_screen(screen,normal_play_state)
+            pause_screen(screen,survival_pay_state)
 
 
     
 
         
 menu_state = MenuState()
-normal_play_state = NormalPlayeState()
+survival_pay_state = SurvivalPlayState()
 state2=state_2()
 state=menu_state
 

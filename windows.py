@@ -62,11 +62,36 @@ def reward_screen_view(screen,state):
         state.rewards_surface.blit(scor_text,score_pos)
         state.rewards_surface.blit(high_score,high_score_pos)
 
+class Screen():
+    def draw(self,screen):
+        pass
+    def get_buttons(self):
+        pass
+
+
+class Game_modes_window(Screen):
+    def __init__(self):
+        self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
+        self.buttons=[]
+        self.levels_buttoon=Button(150,150,"Levels")
+        self.survival_buttonn=Button(150,220,"Survival")
+        self.apex_button=Button(150,290,"Apex Challenge")
+        self.back_button=Button(150,400,"Back")
+        self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
+
+    def draw(self,screen):
+      screen.blit(self.image, (0,0))
+      for button in self.buttons:
+          button.place(screen)
+    
+    def get_buttons(self):
+        return self.buttons
 
 
 
-class Main_menu_window():
 
+
+class Main_menu_screen(Screen):
     def __init__(self):
         self.buttons=[]
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
@@ -75,6 +100,7 @@ class Main_menu_window():
         self.Credits_button=Button(width//2,340,"Credits")
         self.Exit_button=Button(width//2,420,"Exit")
         self.buttons.extend([self.play_button, self.options_button, self.Credits_button,self.Exit_button])
+        self.window=0
 
     def draw(self,screen):
       screen.blit(self.image, (0,0))
