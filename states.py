@@ -86,12 +86,16 @@ class MenuState(GameState):
                                 self.screen=main_menu
                                 self.buttons=self.screen.get_buttons()
 
-                            
-
-    
-
-                           # state=survival_pay_state
+                            elif button.text=="Survival":
+                                # game_mode_window . draw survival frame
+                                pass
+                            #state=survival_play_state
                             #_player()
+                            elif button.text=="Levels":
+                                pass
+
+                            elif button.text=="Apex Challenge":
+                                pass
 
             
                     
@@ -104,7 +108,7 @@ class MenuState(GameState):
        
      
 
-class SurvivalPlayState(GameState):
+class Survival(GameState):
 #   
     mouse_button_pressed=False
     paues=False
@@ -252,7 +256,7 @@ class SurvivalPlayState(GameState):
 
     def reward_screen_view(self,screen):
        from windows import reward_screen_view
-       reward_screen_view(screen,survival_pay_state)
+       reward_screen_view(screen,survival_play_state)
 
 
     
@@ -439,14 +443,14 @@ class SurvivalPlayState(GameState):
 
         elif (self.paues):
             from windows import pause_screen
-            pause_screen(screen,survival_pay_state)
+            pause_screen(screen,survival_play_state)
 
 
     
 
         
 menu_state = MenuState()
-survival_pay_state = SurvivalPlayState()
+survival_play_state = Survival()
 state2=state_2()
 state=menu_state
 
