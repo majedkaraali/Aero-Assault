@@ -1,5 +1,5 @@
 import pygame
-from GUI import Button
+from GUI import Button,Frame
 pygame.init()
 width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
@@ -67,6 +67,8 @@ class Screen():
         pass
     def get_buttons(self):
         pass
+    def draw_frames(self,screen):
+        pass
 
 
 class Game_modes_window(Screen):
@@ -78,6 +80,8 @@ class Game_modes_window(Screen):
         self.apex_button=Button(150,290,"Apex Challenge")
         self.back_button=Button(150,400,"Back")
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
+        self.selected_frame=False
+
 
     def draw(self,screen):
       screen.blit(self.image, (0,0))
@@ -86,7 +90,39 @@ class Game_modes_window(Screen):
     
     def get_buttons(self):
         return self.buttons
+    
+    def get_frames(self):
+        return []
 
+
+    def survival_frame(self):
+        survival_frame=Frame(300,125,715,390)
+        survival_frame.write("Try to engage all enemies and get the best score you can.")
+        self.selected_frame=survival_frame
+        self.selected_frame=survival_frame
+        play_button=Button(survival_frame.width,survival_frame.height+100,'Play')
+        survival_frame.buttons.append(play_button)
+
+
+
+    def apex_frame(self):
+        apex_frame=Frame(300,125,715,390)
+        apex_frame.write("Coming soon...")
+        self.selected_frame=apex_frame
+        play_button=Button(apex_frame.width,apex_frame.height+100,'Play')
+        apex_frame.buttons.append(play_button)
+
+
+
+    def draw_frames(self,screen):
+        if self.selected_frame:
+            self.selected_frame.draw(screen)
+            self.selected_frame.draw_buttons(screen)
+
+    def clear_selection(self):
+        self.selected_frame=False
+
+    
 
 
 
@@ -94,6 +130,7 @@ class Game_modes_window(Screen):
 class Main_menu_screen(Screen):
     def __init__(self):
         self.buttons=[]
+        self.frames=[]
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
         self.play_button=Button(width//2,180,"Play")
         self.options_button=Button(width//2,260,"Options")
@@ -109,6 +146,10 @@ class Main_menu_screen(Screen):
     
     def get_buttons(self):
         return self.buttons
+    
+    def get_frames(self):
+        return self.frames
+    
     
   
  

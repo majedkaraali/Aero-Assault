@@ -2,7 +2,7 @@ import pygame
 from enemy_generator import Generate_enemies
 import objects
 import os
-
+from GUI import Button,Frame
 from windows import Main_menu_screen,Game_modes_window
 
 pygame.init()
@@ -59,7 +59,9 @@ class MenuState(GameState):
         super().__init__()
         self.running=True
         self.screen=main_menu
+    
         self.buttons=self.screen.get_buttons()
+      #  self.frame=self.screen.get_frames()
 
         
     def handle_events(self, events):
@@ -83,19 +85,21 @@ class MenuState(GameState):
                         if button.holding:
                             
                             if button.text=='Back':
+                                self.screen.selected_frame=False
                                 self.screen=main_menu
                                 self.buttons=self.screen.get_buttons()
+            
+
 
                             elif button.text=="Survival":
-                                # game_mode_window . draw survival frame
-                                pass
-                            #state=survival_play_state
-                            #_player()
+                                game_mode_window.survival_frame()
+                                #state=survival_play_state
+                                #_player()
                             elif button.text=="Levels":
                                 pass
 
                             elif button.text=="Apex Challenge":
-                                pass
+                                game_mode_window.apex_frame()
 
             
                     
@@ -103,6 +107,11 @@ class MenuState(GameState):
 
     def draw(self,screen):
         self.screen.draw(screen)
+        self.screen.draw_frames(screen)
+        
+
+
+ 
 
             
        
