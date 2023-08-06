@@ -7,7 +7,6 @@ debug=False
 
 width,height=(1100,660)
 
-# pygame.init() # just for loading the images i will remove it
 
 class Missile:
 

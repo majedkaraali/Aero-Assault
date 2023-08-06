@@ -69,6 +69,8 @@ class Screen():
         pass
     def draw_frames(self,screen):
         pass
+    def handle_buttons(self):
+        pass
 
 
 class Game_modes_window(Screen):
@@ -81,6 +83,7 @@ class Game_modes_window(Screen):
         self.back_button=Button(150,400,"Back")
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
         self.selected_frame=False
+        self.selected_button=None
 
 
     def draw(self,screen):
@@ -99,7 +102,13 @@ class Game_modes_window(Screen):
         for level in levels:
             levels_frame.add_level(level)
 
+        
+        
+        selected_level=levels_frame.selected_button
+        print(selected_level)
+
         self.selected_frame=levels_frame
+    
 
 
     def survival_frame(self):
@@ -109,6 +118,7 @@ class Game_modes_window(Screen):
         self.selected_frame=survival_frame
         play_button=Button(survival_frame.width,survival_frame.height+100,'Play')
         survival_frame.buttons.append(play_button)
+        
 
 
 
@@ -124,7 +134,22 @@ class Game_modes_window(Screen):
     def draw_frames(self,screen):
         if self.selected_frame:
             self.selected_frame.draw(screen)
-           # self.selected_frame.draw_buttons(screen)
+            self.selected_frame.draw_buttons(screen)
+
+
+    def handle_buttons(self):
+        self.selected_button=None
+        if self.selected_frame:
+            frame_buttons=self.selected_frame.get_buttons()
+            for button in frame_buttons :
+                if button.holding:
+                    self.selected_button=button
+    
+        
+        if self.selected_button:
+            print(self.selected_button.get_text())
+   
+         
 
     def clear_selection(self):
         self.selected_frame=False

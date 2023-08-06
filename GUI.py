@@ -10,31 +10,54 @@ class Button():
         self.x = x
         self.y = y
         self.text = text
-        self.image = pygame.image.load('src/img/GUI/button1.png').convert_alpha()
+        
+        self.image = pygame.image.load('src/img/GUI/button.png').convert_alpha()
+        self.holding_image=pygame.image.load('src/img/GUI/button_holding.png').convert_alpha()
+        self.current_image=self.image
         self.holding=False
+        self.custum_rect=False
+
+
+    def get_text(self):
+        return self.text
+    
+    def conifig_button(self,image,holding_image,custum_rect):
+        self.image=image
+        self.holding_image=holding_image
+        self.custum_rect=custum_rect
 
     def scale(self, w, h):
         self.image = pygame.transform.scale(self.image, (w, h))
 
     def get_rect(self):
         rect = self.image.get_rect()
-        rect.center = (self.x, self.y)
-        return rect
+
+        if not self.custum_rect: 
+            rect.center = (self.x, self.y)
+            return rect
+        else:
+            rect.center=self.custum_rect
+            return rect
 
     def render_text(self,holding):
+     
         if holding:
+            self.current_image=self.holding_image
             button_text = font.render(self.text, True, (255, 255, 255))
         else:
             button_text = font.render(self.text, True, (0, 0, 0))
+            self.current_image=self.image
 
         button_text_rect = button_text.get_rect()
         button_text_rect.center = self.get_rect().center
         return button_text, button_text_rect  
 
     def place(self, screen):
+   
         self.chek_hold()
         button_text, button_text_rect = self.render_text(self.holding)
-        screen.blit(self.image, self.get_rect())
+
+        screen.blit(self.current_image, self.get_rect())
         screen.blit(button_text, button_text_rect)
 
     def get_width(self):
@@ -43,6 +66,7 @@ class Button():
 
     def chek_hold(self):
         mouse=pygame.mouse.get_pos()
+        
         if self.get_rect().collidepoint(mouse):
             self.holding=True
         else:
@@ -97,15 +121,18 @@ class Frame:
         return rendered_lines, text_rects
 
     def draw(self, screen):
-
         rendered_lines, text_rects = self.render_text()
         screen.blit(self.image, self.get_rect())
 
         for line, text_rect in zip(rendered_lines, text_rects):
             screen.blit(line, text_rect)
+
     def draw_buttons(self,screen):
         for button in self.buttons:
             button.place(screen)
+
+    def get_buttons(self):
+        return self.buttons
 
 
 
@@ -125,14 +152,17 @@ class Levels_Frame:
         self.levels = [] 
         self.image_width = 600 // cols
         self.image_height = 225 // rows
-        self.level_images_rects=[]
+        self.buttons=[]
+        
+        self.selected_button=None
 
     def add_level(self, level):
         self.levels.append(level)
+    def get_buttons(self):
+        return self.buttons
 
     def get_rect(self,index):
-     
-        rect = self.level_images_rects[index]
+        rect = self.buttons[index].get_rect()
         return rect
     
     
@@ -147,9 +177,7 @@ class Levels_Frame:
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
-
-
-
+        self.buttons=[]
         for row in range(self.rows):
             for col in range(self.cols):
                 index = row * self.cols + col
@@ -161,29 +189,34 @@ class Levels_Frame:
                     image=self.level_image
                     imag_rect=image.get_rect()
                     imag_rect.center=(center_rect)
-                    self.level_images_rects.append(imag_rect)   
-                    text_surface = font.render(self.levels[index].get_number(), True, (255, 255, 255))
+                       
 
-
-
-                    if  self.chek_hold(imag_rect):
-                        image=self.hold_image
-                        text_surface = font.render(self.levels[index].get_number(), True, (0, 0, 0))
-               
-             
-                    
-                   
-                    text_rect = text_surface.get_rect()
-                    text_rect.center=(center_rect)
+                    level_button=Button(0,0,self.levels[index].get_number())
+                    level_button.conifig_button(self.level_image,self.hold_image,center_rect)
                     
 
                     if not self.levels[index].locked:
-                        screen.blit(image, imag_rect)
-                        screen.blit(text_surface, text_rect)
+                        level_button.conifig_button(self.level_image,self.hold_image,center_rect)
+                
                        
                     else:
-                        screen.blit(self.locked_image, imag_rect)
+                        level_button.conifig_button(self.locked_image,self.locked_image,center_rect)
+                  
+
+           
+                    self.buttons.append(level_button)
+             
+
+                    
+                    
                         
                     
+    def draw_buttons(self,screen):
+        for button in self.buttons:
+            button.place(screen)
 
+
+
+
+        
 

@@ -68,6 +68,7 @@ class MenuState(GameState):
     def handle_events(self, events):
         global current_state,state
         for event in events:
+
             if event.type == pygame.QUIT:
                 self.running = False
 
@@ -102,15 +103,17 @@ class MenuState(GameState):
 
                             elif button.text=="Apex Challenge":
                                 game_mode_window.apex_frame()
+        
 
             
                     
-
+    def handle_buttons(self):
+        print(self.buttons)
 
     def draw(self,screen):
         self.screen.draw(screen)
         self.screen.draw_frames(screen)
-        
+        self.screen.handle_buttons()        
 
 
  
