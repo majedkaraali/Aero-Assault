@@ -4,12 +4,15 @@ class Level:
     def __init__(self):
         Level.levels_cont+=1
        # self.icon=pygame.
-        self.descreption=""
+        self.description="engage 5 fighter jets"
         self.number=0
     
 
     def get_number(self):
         return str(self.number)
+    
+    def get_description(self):
+        return self.description
 
 
 
@@ -17,6 +20,7 @@ class Level_1(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 1"
+        self.description='engage 5 fighter jets'
         self.number=1
         self.locked=False
 
