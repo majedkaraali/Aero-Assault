@@ -81,9 +81,13 @@ class Game_modes_window(Screen):
         self.survival_buttonn=Button(150,220,"Survival")
         self.apex_button=Button(150,290,"Apex Challenge")
         self.back_button=Button(150,400,"Return")
+        self.apex_play_button=None
+        self.survival_play_button=None
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
+  
         self.selected_frame=False
         self.holding_button=None
+        self.holding_play=False
         
 
 
@@ -124,9 +128,9 @@ class Game_modes_window(Screen):
         survival_frame.write("Try to engage all enemies and get the best score you can.")
         self.selected_frame=survival_frame
         self.selected_frame=survival_frame
-        play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play')
-       
-        survival_frame.buttons.append(play_button)
+        survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play')
+        self.survival_play_button=survival_play_button
+        survival_frame.buttons.append(survival_play_button)
         
         
 
@@ -136,8 +140,10 @@ class Game_modes_window(Screen):
         apex_frame=Frame(300,125,715,390)
         apex_frame.write("Coming soon...")
         self.selected_frame=apex_frame
-        play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play')
-        apex_frame.buttons.append(play_button)
+        apex_play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play')
+        self.apex_play_button=apex_play_button
+        apex_frame.buttons.append(apex_play_button)
+        
 
 
 
@@ -164,8 +170,7 @@ class Game_modes_window(Screen):
       
     
         
-    def selected_game_mode(self):
-        pass
+ 
    
          
 

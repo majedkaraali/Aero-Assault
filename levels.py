@@ -30,63 +30,63 @@ class Level_2(Level):
         self.name="Level 2"
         self.description='Level 2'
         self.number=2
-        self.locked=False
+        self.locked=True
 
 class Level_3(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=3
-        self.locked=False
+        self.locked=True
 
 class Level_4(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=4
-        self.locked=False
+        self.locked=True
 
 class Level_5(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=5
-        self.locked=False
+        self.locked=True
 
 class Level_6(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=6
-        self.locked=False
+        self.locked=True
 
 class Level_7(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=7
-        self.locked=False
+        self.locked=True
 
 class Level_8(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=8
-        self.locked=False
+        self.locked=True
 
 class Level_9(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=9
-        self.locked=False
+        self.locked=True
 
 class Level_10(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=10
-        self.locked=False
+        self.locked=True
 
 levels=[]
 a=Level_1()

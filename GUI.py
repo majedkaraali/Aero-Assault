@@ -200,6 +200,7 @@ class Levels_Frame:
                 
                        
                     else:
+                        level_button=Button(0,0,'')
                         level_button.conifig_button(self.locked_image,self.locked_image,center_rect)
                   
 
