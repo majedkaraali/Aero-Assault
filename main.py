@@ -40,7 +40,7 @@ def main():
         current_state.update()
         current_state.draw(screen)
         pygame.display.flip()
-      #  print(clock.get_fps())
+
 
     pygame.quit()
 if __name__=='__main__':

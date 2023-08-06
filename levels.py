@@ -4,7 +4,7 @@ class Level:
     def __init__(self):
         Level.levels_cont+=1
        # self.icon=pygame.
-        self.description="engage 5 fighter jets"
+        self.description="DD"
         self.number=0
     
 
@@ -20,7 +20,7 @@ class Level_1(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 1"
-        self.description='engage 5 fighter jets'
+        self.description='Level 1'
         self.number=1
         self.locked=False
 
@@ -28,6 +28,7 @@ class Level_2(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 2"
+        self.description='Level 2'
         self.number=2
         self.locked=False
 

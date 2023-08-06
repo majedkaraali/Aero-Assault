@@ -80,10 +80,11 @@ class Game_modes_window(Screen):
         self.levels_buttoon=Button(150,150,"Levels")
         self.survival_buttonn=Button(150,220,"Survival")
         self.apex_button=Button(150,290,"Apex Challenge")
-        self.back_button=Button(150,400,"Back")
+        self.back_button=Button(150,400,"Return")
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
         self.selected_frame=False
-        self.selected_button=None
+        self.holding_button=None
+        
 
 
     def draw(self,screen):
@@ -102,13 +103,20 @@ class Game_modes_window(Screen):
         for level in levels:
             levels_frame.add_level(level)
 
-        
-        
-        selected_level=levels_frame.selected_button
-        print(selected_level)
+    
 
         self.selected_frame=levels_frame
     
+
+    def level_description_frame(self,index,levels):
+        description=Frame(300,125,715,390)
+        description.write(levels[index-1].get_description())
+        self.selected_frame=description
+        play_button=Button(description.width-100,description.height+100,'Play')
+        back_button=Button(description.width+200,description.height+100,'Back')
+        description.buttons.append(back_button)
+        description.buttons.append(play_button)
+
 
 
     def survival_frame(self):
@@ -116,8 +124,10 @@ class Game_modes_window(Screen):
         survival_frame.write("Try to engage all enemies and get the best score you can.")
         self.selected_frame=survival_frame
         self.selected_frame=survival_frame
-        play_button=Button(survival_frame.width,survival_frame.height+100,'Play')
+        play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play')
+       
         survival_frame.buttons.append(play_button)
+        
         
 
 
@@ -126,7 +136,7 @@ class Game_modes_window(Screen):
         apex_frame=Frame(300,125,715,390)
         apex_frame.write("Coming soon...")
         self.selected_frame=apex_frame
-        play_button=Button(apex_frame.width,apex_frame.height+100,'Play')
+        play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play')
         apex_frame.buttons.append(play_button)
 
 
@@ -138,16 +148,24 @@ class Game_modes_window(Screen):
 
 
     def handle_buttons(self):
-        self.selected_button=None
+        self.holding_button=None
         if self.selected_frame:
             frame_buttons=self.selected_frame.get_buttons()
             for button in frame_buttons :
                 if button.holding:
-                    self.selected_button=button
+                    self.holding_button=button
+                 
+                    
+
+        for button in self.buttons:
+            if button.holding:
+                self.holding_button=button
+
+      
     
         
-        if self.selected_button:
-            print(self.selected_button.get_text())
+    def selected_game_mode(self):
+        pass
    
          
 
@@ -162,6 +180,7 @@ class Game_modes_window(Screen):
 class Main_menu_screen(Screen):
     def __init__(self):
         self.buttons=[]
+        self.holding_button=None
         self.frames=[]
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
         self.play_button=Button(width//2,180,"Play")
@@ -181,6 +200,13 @@ class Main_menu_screen(Screen):
     
     def get_frames(self):
         return self.frames
+    
+    def handle_buttons(self):
+        self.holding_button=None
+        for button in self.buttons:
+            if button.holding:
+                self.holding_button=button
+
     
     
   

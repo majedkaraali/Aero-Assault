@@ -60,55 +60,52 @@ class MenuState(GameState):
         super().__init__()
         self.running=True
         self.screen=main_menu
-    
         self.buttons=self.screen.get_buttons()
-      #  self.frame=self.screen.get_frames()
+    
 
         
     def handle_events(self, events):
         global current_state,state
         for event in events:
-
+            self.handle_buttons(event)
             if event.type == pygame.QUIT:
                 self.running = False
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.screen==main_menu:
-                    
-                    for button in self.buttons:
-                        if button.holding:
-                            if button.text=='Play':
-                                self.screen=game_mode_window
-                                self.buttons=self.screen.get_buttons()
+            
 
-
-                elif self.screen==game_mode_window:
-                    for button in self.buttons:
-                        if button.holding:
                             
-                            if button.text=='Back':
-                                self.screen.selected_frame=False
-                                self.screen=main_menu
-                                self.buttons=self.screen.get_buttons()
-            
-
-
-                            elif button.text=="Survival":
-                                game_mode_window.survival_frame()
-                                #state=survival_play_state
-                                #_player()
-                            elif button.text=="Levels":
-                                game_mode_window.levels_frame(levels)
-                               # print(levels)
-
-                            elif button.text=="Apex Challenge":
-                                game_mode_window.apex_frame()
-        
 
             
                     
-    def handle_buttons(self):
-        print(self.buttons)
+    def handle_buttons(self,event):
+        holding_button=self.screen.holding_button
+        if holding_button:
+            button_head=holding_button.get_text()
+            print(button_head)
+            
+            
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                # Menu buttons
+                if button_head=="Play":
+                    self.screen=game_mode_window
+
+                # gammodes buttons
+                if button_head=="Survival":
+                    self.screen.survival_frame()
+                elif button_head=="Apex Challenge":
+                    self.screen.apex_frame()
+                elif button_head =="Levels":
+                    self.screen.levels_frame(levels)
+
+                elif button_head=='Return':
+                    self.screen.selected_frame=False
+                    self.screen=main_menu
+
+                if button_head in ['1','2','3','4','5','6','7','8','9','10']:
+                    self.screen.level_description_frame(int(button_head),levels)
+                if button_head=="Back":
+                    self.screen.levels_frame(levels)
+            
 
     def draw(self,screen):
         self.screen.draw(screen)

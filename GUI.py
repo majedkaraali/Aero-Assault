@@ -73,8 +73,7 @@ class Button():
             self.holding=False
 
 class Frame:
-    def __init__(self, x, y, width, height,tag):
-        self.tag=tag
+    def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
         self.width = width -100
