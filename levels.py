@@ -3,9 +3,9 @@ class Level:
     levels_cont=0
     def __init__(self):
         Level.levels_cont+=1
-       # self.icon=pygame.
-        self.description="DD"
+        self.description="Level Play"
         self.number=0
+        self.waves=[]
     
 
     def get_number(self):
@@ -13,6 +13,9 @@ class Level:
     
     def get_description(self):
         return self.description
+    
+    def get_waves_number(self):
+        return len(self.waves)
 
 
 
@@ -23,10 +26,17 @@ class Level_1(Level):
         self.description='Level 1'
         self.number=1
         self.locked=False
-        self.enemies_wave=2
+        self.waves=[]
         self.wave_1=[2,0,0,0]
-        self.wave_2=[0,1,0,0]
+        self.wave_2=[0,0,0,4]
+        self.waves.extend([self.wave_1,self.wave_2])
 
+    def make_wave(self,wave_number):
+        wave=self.waves[wave_number-1]
+        return wave
+    
+    def get_waves_number(self):
+        return len(self.waves)
     
 
 
@@ -111,10 +121,8 @@ j=Level_10()
 # n=Level_3()
 # o=Level_3()
 
-levels.append(a)
-levels.append(b)
-levels.append(c)
-levels.extend([d,e,f,g,h,i,j])
+
+levels.extend([a,b,c,d,e,f,g,h,i,j])
  
 def get_levels():
     print(levels)
