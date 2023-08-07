@@ -1,37 +1,31 @@
-def render_text(text):
-        words = text.split()
-        # lines = []
-        # current_line = ""
-        # line_spacing = 5 
+import pygame
 
-        for word in words:
-              print(word)
-        #     test_line = current_line + " " + word if current_line else word
-        #   #  test_size = self.font.size(test_line)
-        #     if test_size[0] <= self.width:
-        #         current_line = test_line
-        #     else:
-        #         lines.append(current_line)
-        #         current_line = word
-        # lines.append(current_line)
+# Initialize Pygame
+pygame.init()
 
-        # rendered_lines = [self.font.render(line, True, (255, 255, 255)) for line in lines]
-        # text_height = sum(line.get_height() for line in rendered_lines) + (line_spacing * (len(rendered_lines) - 1))
-        # y_offset = (self.height - text_height) // 2
+# Load an image
+image = pygame.image.load("src/img/spaa-gepard3.png")
 
-        # text_rects = []
-        # current_y = self.y + y_offset
-        # for line in rendered_lines:
-        #     text_rects.append(line.get_rect(topleft=(self.x+50, current_y)))
-        #     current_y += line.get_height() + line_spacing
+# Create a flipped version of the image (horizontally)
+flipped_image = pygame.transform.flip(image, True, False)
 
-        # return rendered_lines, text_rects
+# Set up the display
+screen = pygame.display.set_mode((800, 600))
+screen.fill((255, 255, 255))  # Fill the screen with white
 
+# Blit the original and flipped images onto the screen
+screen.blit(image, (100, 100))
+screen.blit(flipped_image, (300, 100))
 
-        
-render_text("""j7 pro ekran
-araması için
-İkinci El ve Sıfır Alışveriş
-kategorisinde
-22
-sonuç bulundu""")
+# Update the display
+pygame.display.update()
+
+# Event loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+# Quit Pygame
+pygame.quit()
