@@ -10,10 +10,9 @@ drone_list=['drone']
 
 def get_random_plane_image(plane_list):
     plane_name = random.choice(plane_list)
-    image = pygame.image.load(f'src/img/Air/{plane_name}.png').convert_alpha()
+    image = pygame.image.load(f'src/img/aircrafts/{plane_name}.png').convert_alpha()
 
-    selected_image = image
-    return selected_image
+    return image
 
 def random_bomber():
     random_bomber_image = get_random_plane_image(bomber_list)

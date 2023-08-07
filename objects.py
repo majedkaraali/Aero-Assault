@@ -755,7 +755,7 @@ class Bomb:
 
 
 class Enemy:
-    def __init__(self,x,y,vel,move_dir,bomb_count,guided_bomb,shooting_range,tag,health,target,sprites):
+    def __init__(self,x,y,vel,move_dir,bomb_count,guided_bomb,shooting_range,tag,health,target,sprite):
         self.x=x
         self.y=y
         self.vel=vel
@@ -774,8 +774,9 @@ class Enemy:
         self.kamikaze=False
         self.target=target
         self.charg=self.bomb_count
-        self.left_sprite=  sprites[0]
-        self.right_sprite= sprites[1]
+        self.right_sprite= sprite
+        self.left_sprite=pygame.transform.flip(self.right_sprite, True, False)
+        
         self.left_sprite_rect=self.left_sprite.get_rect()
         self.right_sprite_rect=self.right_sprite.get_rect()
 
@@ -799,6 +800,7 @@ class Enemy:
         return self.left_sprite.get_width()
     def get_height(self):
         return self.left_sprite.get_height()   
+    
     def move_bombs(self):
         
         for bomb in self.bombs:
@@ -813,7 +815,6 @@ class Enemy:
         for bomb in self.bombs:
             bomb.draw(screen)
             bomb.status(screen)
-
 
 
     def can_bomb(self):
@@ -993,8 +994,6 @@ class Enemy:
             screen.blit(self.lock_sprite,rect_center)
 
     
-
-
     
     def is_taken_damage(self):
         if self.damaged==True:

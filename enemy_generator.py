@@ -12,7 +12,7 @@ class Generate_enemies:
             
     def respawn_fighter(self,move_dircton,y):
             x=self.random_distance(move_dircton)
-            vel=3
+            vel=2
             sprites=loader.random_fighter()
             enemy=objects.Enemy(x,y,vel,move_dircton,3,0,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
@@ -34,14 +34,14 @@ class Generate_enemies:
 
 
     def respawn_drone(self,move_dircton,y):
-            vel=3
+            vel=2
             x=self.random_distance(move_dircton)
             sprites=loader.random_drone()
             enemy=objects.Enemy(x,y,vel,move_dircton,0,0,400,'kamikaze',30,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
-    def random_type():
+    def random_type(self):
             respawn_chance = random.random()
             if respawn_chance <= 0.3:  
                 return 'strike_aircraft'
@@ -54,7 +54,7 @@ class Generate_enemies:
             else:
                 return None  
             
-    def random_distance(direction):
+    def random_distance(self,direction):
         if direction=='right':  
             x_spawns=[-700,-650,-600,-550,-500,-450,-400,-350,-300,-250,-200]
         else:
@@ -64,12 +64,12 @@ class Generate_enemies:
         return x
         
 
-    def random_height():
+    def random_height(self):
         y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
         y=random.choice(y_spawns)
         return y
     
-    def random_direction():
+    def random_direction(self):
          move_dircton=random.choice(['right','left'])
          return move_dircton
         
