@@ -15,7 +15,7 @@ class Missile:
         self.y=y
         self.target=target
         self.owner=owner
-        self.image=pygame.image.load('src/img/missile3.png')
+        self.image=pygame.image.load('src/img/weapons/missile3.png')
         self.rect=self.image.get_rect()
         self.angle=0
 
@@ -153,13 +153,13 @@ class Item:
         value_list=['repair','repair','ammo','ammo','ammo','missiles']
         value=random.choice(value_list)
         if value=="repair":
-            image=pygame.image.load('src/img/drop-repair.png').convert_alpha()
+            image=pygame.image.load('src/img/drops/drop-repair.png').convert_alpha()
             self.value=value
         elif value=="ammo":
-            image=pygame.image.load('src/img/drop-ammo.png').convert_alpha()
+            image=pygame.image.load('src/img/drops/drop-ammo.png').convert_alpha()
             self.value=value
         elif value=="missiles":
-            image=pygame.image.load('src/img/drop-missile.png').convert_alpha()
+            image=pygame.image.load('src/img/drops/drop-missile.png').convert_alpha()
             self.value=value
         
         return image
@@ -204,7 +204,7 @@ class Bullet:
         self.hitted=False
         self.angel=0
 
-    image=pygame.image.load("src/img/bullet.png")
+    image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
     
        
@@ -271,8 +271,7 @@ class Bullet:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
        
-        
-       
+ 
     
 class Player:
 
@@ -635,9 +634,9 @@ class Bomb:
         self.dmage=50
         self.exploded=False
         self.angle=angle
-        self.image=pygame.image.load('src/img/bomb7.png')
+        self.image=pygame.image.load('src/img/weapons/bomb.png')
         self.rect=self.image.get_rect()
-        self.agm=pygame.image.load('src/img/agm2.png')
+        self.agm=pygame.image.load('src/img/weapons/agm2.png')
         self.agm_rect=self.agm.get_rect()
         self.max_velocity=2
         self.velocity_on_angle=self.max_velocity/90
@@ -780,9 +779,9 @@ class Enemy:
         self.left_sprite_rect=self.left_sprite.get_rect()
         self.right_sprite_rect=self.right_sprite.get_rect()
 
-    lock_sprite=pygame.image.load('src/img/lock8.png')
+    lock_sprite=pygame.image.load('src/img/weapons/lock.png')
     lock_sprite_rect=lock_sprite.get_rect()
-    track_sprite=pygame.image.load('src/img/track.png')
+    track_sprite=pygame.image.load('src/img/weapons/track.png')
     track_sprite_rect=track_sprite.get_rect()
     lock_sprite_width=lock_sprite.get_width()
 

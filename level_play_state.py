@@ -2,7 +2,8 @@ from states import GameState
 import objects
 import pygame 
 from windows import game_windows
-from states import menu_state,statics_image,font,background
+
+from states import menu_state,statics_image,font,background # remove this after 
 
 from enemy_generator import Generate_enemies
 
@@ -15,9 +16,8 @@ def _player():
 width,height=(1100,660)
 
 enemies=Generate_enemies(_player())
-
-#print(enemies)
 windo=game_windows()
+
 class Level_Play(GameState):
 
     mouse_button_pressed=False
@@ -25,13 +25,6 @@ class Level_Play(GameState):
     reward_screen=False
     enemy_list=[]
     score=0
-
-    #PAUSE SURFACE  #GUI
-   
-
-  
-
-
 
     def __init__(self,level):
         super().__init__()
@@ -53,16 +46,12 @@ class Level_Play(GameState):
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouse_button_pressed=True
-                mouse_pos = pygame.mouse.get_pos()
-
 
                 if self.paues:
                     pass
 
                 if self.reward_screen:
                     pass
-
-
 
 
        
@@ -88,8 +77,6 @@ class Level_Play(GameState):
                     player.droped_ammo+=player.magazine
                     player.magazine=0
 
-
-
  
             elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_TAB:
@@ -112,33 +99,14 @@ class Level_Play(GameState):
         return self.enemy_list
         
 
-   # def reward_screen_view(self,screen):
-    #   from windows import reward_screen_view
-      # reward_screen_view(screen,survival_play_state)
-
 
  
 
     def statics(self,screen):
-        global score,pause_menurect
-        surface_width = width
-        surface_height = 30
-        startic_surface = pygame.Surface((surface_width, surface_height))
-        
-        border = 1
-        position = (0, height-30)
         statics_rect=statics_image.get_rect()
         statics_rect.topleft=(0,630)
         screen.blit(statics_image,statics_rect)
-        pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
-     
-        # score_value =str(self.score)
-        # score_text = font.render("Score: "+score_value, True, ('black'))
-        # score_text_pos=(10,height-25)
-       
 
-        menu_text = font.render("MENU", True, 'black')
-        pause_menurect=menu_text.get_rect()
 
         if player.reloading:
             magazine='---'
@@ -160,7 +128,6 @@ class Level_Play(GameState):
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-170,height-25)
       
-   
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
