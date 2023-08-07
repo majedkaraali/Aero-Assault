@@ -83,11 +83,14 @@ class Game_modes_window(Screen):
         self.back_button=Button(150,400,"Return")
         self.apex_play_button=None
         self.survival_play_button=None
+        self.level_play_button=None
+        
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
   
         self.selected_frame=False
         self.holding_button=None
         self.holding_play=False
+        self.selected_level=False
         
 
 
@@ -107,19 +110,19 @@ class Game_modes_window(Screen):
         for level in levels:
             levels_frame.add_level(level)
 
-    
-
         self.selected_frame=levels_frame
     
 
     def level_description_frame(self,index,levels):
+        self.selected_level=levels[index-1]
         description=Frame(300,125,715,390)
-        description.write(levels[index-1].get_description())
+        description.write(self.selected_level.get_description())
         self.selected_frame=description
-        play_button=Button(description.width-100,description.height+100,'Play')
+        level_play_button=Button(description.width-100,description.height+100,'Play')
         back_button=Button(description.width+200,description.height+100,'Back')
+        self.level_play_button=level_play_button
         description.buttons.append(back_button)
-        description.buttons.append(play_button)
+        description.buttons.append(level_play_button)
 
 
 

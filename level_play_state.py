@@ -1,19 +1,29 @@
 from states import GameState
 import objects
 import pygame 
-from states import menu_state,player,statics_image,font,background,_player
-from enemy_generator import Generate_enemies
-enemies=Generate_enemies(_player())
+from states import menu_state,statics_image,font,background
 
+from enemy_generator import Generate_enemies
+
+
+def _player():
+        global player
+        player=objects.Player(400,height-107,[],[],'Unnamed',[])
+        return player
 
 width,height=(1100,660)
 
-class Survival(GameState):
+enemies=Generate_enemies(_player())
+
+#print(enemies)
+
+class Level_Play(GameState):
 
     mouse_button_pressed=False
     paues=False
     reward_screen=False
-    enemy_list=enemies.all_time_enemies(3)
+    enemy_list=[]
+   # print(enemy_list)
     score=0
 
     #PAUSE SURFACE  #GUI
@@ -46,10 +56,11 @@ class Survival(GameState):
     main_menu_btn_rect=pygame.Rect((rwd_surface_width//2)-150,rwd_surface_height-70,100,20)
     exit_btn_rect=pygame.Rect((rwd_surface_width//2)+100,rwd_surface_height-70,70,20)
 
-    def __init__(self):
+    def __init__(self,level):
         super().__init__()
         self.running=True
         self.force_reload=False
+        self.level=level
 
 
         
@@ -146,8 +157,8 @@ class Survival(GameState):
 
     
     
-    def generate_enemies(self,num_of_enemies):
-        enemies.all_time_enemies(num_of_enemies)
+    def generate_enemies(self,wave):
+        self.enemy_list=enemies.respawn_wave(wave)
            
 
     def get_enemies(self):
@@ -159,16 +170,7 @@ class Survival(GameState):
       # reward_screen_view(screen,survival_play_state)
 
 
-    
-    def ground(self,screen):
-        surface_width = width
-        surface_height = 120
-        ground_surface = pygame.Surface((surface_width, surface_height))
-        ground_surface.fill(pygame.Color('green'))
-        border = 1
-        position = (0, height-surface_height)
-        pygame.draw.rect(ground_surface, pygame.Color('green'), ground_surface.get_rect(), border)
-        screen.blit(ground_surface, position)
+ 
 
     def statics(self,screen):
         global score,pause_menurect
@@ -183,11 +185,12 @@ class Survival(GameState):
         screen.blit(statics_image,statics_rect)
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
      
-        score_value =str(self.score)
-        score_text = font.render("Score: "+score_value, True, ('black'))
-        score_text_pos=(10,height-25)
+        # score_value =str(self.score)
+        # score_text = font.render("Score: "+score_value, True, ('black'))
+        # score_text_pos=(10,height-25)
+       
+
         menu_text = font.render("MENU", True, 'black')
-        menu_text_pos=((width//2)-20,height-25)
         pause_menurect=menu_text.get_rect()
 
         if player.reloading:
@@ -210,7 +213,7 @@ class Survival(GameState):
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-170,height-25)
       
-        screen.blit(score_text,score_text_pos)
+   
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
@@ -223,15 +226,17 @@ class Survival(GameState):
         if not (self.paues) :
 
             if not self.reward_screen:
-              #  self.ground()
                 self.statics(screen)
 
                 #HANDLE PLAYER
                 if not player.forced:
                     
                     player.move_player()
-                    if len(self.enemy_list)<3:
-                        self.generate_enemies(3)
+                   # print(self.enemy_list)
+                    if len(self.enemy_list)==0:
+                        #print("YEE")
+                        self.generate_enemies(self.level.wave_1)
+
                 player.update_bullets(screen)
                 player.update_player(screen)
                 player.move_bullets() 

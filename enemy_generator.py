@@ -126,6 +126,26 @@ class Generate_enemies:
             return self.enemy_list
 
             
+    def respawn_wave(self,wave):
+        #print(wave)
+        print(self.enemy_list,"!!!")
+        for jet in range(wave[0]):
+            self.respawn_fighter('left',70)
+           
+            pass
+        for jet in range(wave[1]):
+            pass
+ 
+        for jet in range(wave[2]):
+            pass
+         
+        for jet in range(wave[3]):
+            pass
+        
+        print(self.enemy_list,"!!2222!")
+        return self.enemy_list
+
+
 
     def get_enemies(self):
         return self.enemy_list

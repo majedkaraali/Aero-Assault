@@ -23,6 +23,12 @@ class Level_1(Level):
         self.description='Level 1'
         self.number=1
         self.locked=False
+        self.enemies_wave=2
+        self.wave_1=[2,0,0,0]
+        self.wave_2=[0,1,0,0]
+
+    
+
 
 class Level_2(Level):
     def __init__(self):
@@ -45,7 +51,7 @@ class Level_4(Level):
         self.name="Level 3"
         self.number=4
         self.locked=True
-
+    
 class Level_5(Level):
     def __init__(self):
         super().__init__()

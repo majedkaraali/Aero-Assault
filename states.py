@@ -1,10 +1,11 @@
 import pygame
-from enemy_generator import Generate_enemies
+
 import objects
 import os
 from GUI import Button,Frame
 from windows import Main_menu_screen,Game_modes_window
 from levels import levels 
+
 #from survival_state import Survival
 
 pygame.init()
@@ -20,7 +21,7 @@ def _player():
 main_menu=Main_menu_screen()
 game_mode_window=Game_modes_window()
 
-ens=Generate_enemies(_player())
+
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
@@ -54,6 +55,7 @@ class MenuState(GameState):
         self.running=True
         self.screen=main_menu
         self.buttons=self.screen.get_buttons()
+        
     
 
         
@@ -104,7 +106,13 @@ class MenuState(GameState):
                 if self.screen.survival_play_button:
                     if self.screen.survival_play_button.holding:
                         _player()
-                        state=survival_play_state
+                       # state=survival_play_state
+                if self.screen.level_play_button:
+                    if self.screen.level_play_button.holding:
+                        from level_play_state import Level_Play
+                        level_paly_state=Level_Play(self.screen.selected_level)
+                        _player()
+                        state=level_paly_state
 
                 if button_head in ['1','2','3','4','5','6','7','8','9','10']:
                     self.screen.level_description_frame(int(button_head),levels)
@@ -125,8 +133,9 @@ class MenuState(GameState):
 
         
 menu_state = MenuState()
-from survival_state import Survival
-survival_play_state = Survival()
+#from survival_state import Survival
+
+#survival_play_state = Survival()
 
 state=menu_state
 
