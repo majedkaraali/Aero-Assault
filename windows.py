@@ -5,28 +5,6 @@ width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
 font = pygame.font.Font(None, 24)
 
-def pause_screen(screen,state):
-    pygame.draw.rect(state.rewards_surface,state.border_color, state.frame_surface.get_rect(), state.border_width)
-    screen.blit(state.frame_surface, state.frame_position)
-
-
-    resume_button = pygame.draw.rect(state.frame_surface, (0, 0, 255),state.resume_button_rect)
-    resume_button_text = font.render("Resume", True, (255, 255, 255))
-    resume_button_text_rect = resume_button_text.get_rect(center=resume_button.center)
-           
-
-    mainmenu_button=pygame.draw.rect(state.frame_surface,(0, 0, 255),state.main_menu_button_rect)
-    mainmenu_button_text=font.render("Main menu", True, (255, 255, 255))
-    mainmenu_button_text_rect=mainmenu_button_text.get_rect(center=mainmenu_button.center)
-
-    exit_button=pygame.draw.rect(state.frame_surface,(0, 0, 255),state.exit_button_rect)
-    exit_button_text=font.render("Exit", True, (255, 255, 255))
-    exit_button_text_rect=exit_button_text.get_rect(center=exit_button.center)
-
-
-    state.frame_surface.blit(resume_button_text,resume_button_text_rect)
-    state.frame_surface.blit(mainmenu_button_text,mainmenu_button_text_rect)
-    state.frame_surface.blit(exit_button_text,exit_button_text_rect)
 
 
 
@@ -71,7 +49,41 @@ class Screen():
         pass
     def handle_buttons(self):
         pass
+class game_windows(Screen):
+    def __init__(self) -> None:
+        super().__init__()
+        self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png')
+        self.buttons=[]
+        self.center=(width//2,height//2)
+        self.resume_button=Button(self.center[0],self.center[1]-50,'Resume')
+        self.options_button=Button(self.center[0],self.center[1]-5,'Options')
+        self.main_menu_button=Button(self.center[0],self.center[1]+40,'Main Menu')
+        self.buttons.extend([self.resume_button,self.options_button,])
+        self.smooth_button=pygame.image.load('src/img/GUI/smooth_button.png')
+        self.smooth_button_hold=pygame.image.load('src/img/GUI/smooth_button_holding.png')
+        self.selected_window=False
 
+    
+    def puse_window(self):
+
+        pause_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        pause_frame.confing(self.pause_image)
+        self.resume_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.options_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+        pause_frame.add_button(self.main_menu_button)
+        pause_frame.add_button(self.resume_button)
+        pause_frame.add_button(self.options_button)
+        self.selected_window=pause_frame
+
+        
+    def draw_frames(self, screen):
+        if self.selected_window:
+            self.selected_window.draw(screen)
+            self.selected_window.draw_buttons(screen)
+
+    def draw(self, screen):
+        pass
 
 class Game_modes_window(Screen):
     def __init__(self):
@@ -129,7 +141,6 @@ class Game_modes_window(Screen):
     def survival_frame(self):
         survival_frame=Frame(300,125,715,390)
         survival_frame.write("Try to engage all enemies and get the best score you can.")
-        self.selected_frame=survival_frame
         self.selected_frame=survival_frame
         survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play')
         self.survival_play_button=survival_play_button

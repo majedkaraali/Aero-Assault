@@ -26,6 +26,10 @@ class Button():
         self.holding_image=holding_image
         self.custum_rect=custum_rect
 
+    def change_images(self,image,hold_image):
+        self.image=image
+        self.holding_image=hold_image
+
     def scale(self, w, h):
         self.image = pygame.transform.scale(self.image, (w, h))
 
@@ -80,7 +84,8 @@ class Frame:
         self.height = height  -60
         self.image = pygame.image.load('src/img/GUI/LabelFrame.png').convert_alpha()
         self.buttons = []
-        self.text = "NON"
+        self.text = ""
+       
         self.font = pygame.font.Font(font_path, font_size)
 
     def write(self, text):
@@ -91,6 +96,11 @@ class Frame:
         rect.topleft = (self.x, self.y)
     
         return rect
+    
+    def add_button(self,button):
+        self.buttons.append(button)
+
+  
 
     def render_text(self):
         words = self.text.split()
@@ -119,7 +129,8 @@ class Frame:
             current_y += line.get_height() + line_spacing
 
         return rendered_lines, text_rects
-
+    def confing(self,image):
+        self.image=image
     def draw(self, screen):
         rendered_lines, text_rects = self.render_text()
         screen.blit(self.image, self.get_rect())
@@ -133,6 +144,8 @@ class Frame:
 
     def get_buttons(self):
         return self.buttons
+
+
 
 
 

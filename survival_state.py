@@ -21,7 +21,7 @@ class Survival(GameState):
     rerawrds_frame_color=('silver')
     pause_surface_width=250
     pause_surface_height=150
-    frame_position = ((width//2)-(pause_surface_width//2),(height//2)-(pause_surface_height//2))
+    
     frame_surface = pygame.Surface((pause_surface_width,pause_surface_height))
     frame_surface.fill(pause_frame_color)
     border_width = 1

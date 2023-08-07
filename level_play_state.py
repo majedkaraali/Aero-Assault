@@ -1,6 +1,7 @@
 from states import GameState
 import objects
 import pygame 
+from windows import game_windows
 from states import menu_state,statics_image,font,background
 
 from enemy_generator import Generate_enemies
@@ -16,45 +17,21 @@ width,height=(1100,660)
 enemies=Generate_enemies(_player())
 
 #print(enemies)
-
+windo=game_windows()
 class Level_Play(GameState):
 
     mouse_button_pressed=False
     paues=False
     reward_screen=False
     enemy_list=[]
-   # print(enemy_list)
     score=0
 
     #PAUSE SURFACE  #GUI
-    pause_frame_color = ('silver')
-    rerawrds_frame_color=('silver')
-    pause_surface_width=250
-    pause_surface_height=150
-    frame_position = ((width//2)-(pause_surface_width//2),(height//2)-(pause_surface_height//2))
-    frame_surface = pygame.Surface((pause_surface_width,pause_surface_height))
-    frame_surface.fill(pause_frame_color)
-    border_width = 1
-    border_color = (0, 0, 0)
+   
 
-    #REWARD SURFACE GUI
-    rwd_surface_width = width//2
-    rwd_surface_height = height//2
-    reward_scr_position =  ((width//2)-(rwd_surface_width//2),(height//2)-(rwd_surface_height//2))
-    rewards_surface = pygame.Surface((rwd_surface_width, rwd_surface_height))
-    rewards_surface.fill(rerawrds_frame_color)
+  
 
-    # RECTS   GUI
-    resume_button_rect=pygame.Rect(75, 20, 100, 20)
-    main_menu_button_rect=pygame.Rect(75, 60, 100, 20)
-    exit_button_rect=pygame.Rect(75, 100, 100, 20)
-    score_rect=pygame.Rect(35, height-15, 100, 20)
-    menu_rect=pygame.Rect((width//2), height-15, 100, 66)
-    missile_count_rect=pygame.Rect(width-50, height-15, 50, 66)
-    bullet_count_rect=pygame.Rect(width-150, height-15, 50, 66)
-    scorevalue_rect=pygame.Rect(80, height-15, 100, 20)
-    main_menu_btn_rect=pygame.Rect((rwd_surface_width//2)-150,rwd_surface_height-70,100,20)
-    exit_btn_rect=pygame.Rect((rwd_surface_width//2)+100,rwd_surface_height-70,70,20)
+
 
     def __init__(self,level):
         super().__init__()
@@ -63,6 +40,7 @@ class Level_Play(GameState):
         self.level=level
         self.wave=0
         self.complete=False
+
 
         
         
@@ -76,47 +54,15 @@ class Level_Play(GameState):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouse_button_pressed=True
                 mouse_pos = pygame.mouse.get_pos()
-                adjusted_mouse_pos = (
-                    mouse_pos[0] - self.frame_position[0],
-                    mouse_pos[1] - self.frame_position[1]
-                )
+
 
                 if self.paues:
-                    if self.resume_button_rect.collidepoint(adjusted_mouse_pos):
-                        self.paues = False
-
-                    elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
-                        current_state = menu_state 
-                        self.paues = False
-                        self.enemy_list.clear()
-                        player.missiles.clear()
-                        player.bullets.clear()
-                        player.clear()
-                
-
-                    elif self.exit_button_rect.collidepoint(adjusted_mouse_pos):
-                        self.running = False
+                    pass
 
                 if self.reward_screen:
-                    adjusted_mouse_pos = (
-                    mouse_pos[0] - self.reward_scr_position[0],
-                    mouse_pos[1] - self.reward_scr_position[1]
-                    )
-                    
-                
-                    if self.main_menu_btn_rect.collidepoint(adjusted_mouse_pos):
-                        current_state = menu_state 
-                        self.paues = False
-                        self.reward_screen=False
-                        for enemy in self.enemy_list:
-                            enemy.clear_bombs()
-                        self.enemy_list.clear()
-                        player.missiles.clear()
-                        player.bullets.clear()
-                        player.clear()
+                    pass
 
-                    elif self.exit_btn_rect.collidepoint(adjusted_mouse_pos):
-                        self.running = False
+
 
 
        
@@ -149,11 +95,11 @@ class Level_Play(GameState):
                     if event.key == pygame.K_TAB:
                         tab_pressed = False
 
-        
 
         if self.mouse_button_pressed:
                 if not player.forced:
-                    player.shoot()
+                    if not self.paues:
+                        player.shoot()
 
 
     
@@ -352,6 +298,11 @@ class Level_Play(GameState):
                 self.reward_screen_view(screen)
                
 
-   #     elif (self.paues):
-        #    from windows import pause_screen
-           # pause_screen(screen,survival_play_state)
+        elif (self.paues):
+            windo.puse_window()
+            windo.draw(screen)
+            windo.draw_frames(screen)
+  
+        
+            
+            
