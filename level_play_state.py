@@ -3,7 +3,7 @@ import objects
 import pygame 
 from windows import game_windows
 
-from states import menu_state,statics_image,font,background # remove this after 
+from states import statics_image,font,background # remove this after 
 
 from enemy_generator import Generate_enemies
 
