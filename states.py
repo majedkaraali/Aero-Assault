@@ -65,10 +65,6 @@ class MenuState(GameState):
             if event.type == pygame.QUIT:
                 self.running = False
 
-            
-
-                            
-
              
     def handle_buttons(self,event):
         global state

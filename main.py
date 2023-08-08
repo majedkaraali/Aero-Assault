@@ -19,8 +19,6 @@ def update_state():
     global current_state
     current_state = states.get_state()
 
-
-
 def main():
 
     while current_state.running:

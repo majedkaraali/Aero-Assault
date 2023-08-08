@@ -25,6 +25,7 @@ class Level_Play(GameState):
     reward_screen=False
     enemy_list=[]
     score=0
+    
 
     def __init__(self,level):
         super().__init__()
@@ -34,6 +35,7 @@ class Level_Play(GameState):
         self.wave=0
         self.complete=False
         self.game_over=False
+        self.close=False
 
 
         
