@@ -3,42 +3,10 @@ from GUI import Button,Frame,Levels_Frame
 pygame.init()
 width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
+
 font = pygame.font.Font(None, 24)
 
 
-
-
-def reward_screen_view(screen,state):
-        pygame.draw.rect(state.rewards_surface,state.border_color, state.rewards_surface.get_rect(), state.border_width)
-        screen.blit(state.rewards_surface, state.reward_scr_position)
-        state.rewards_surface.fill('silver')
-
-
-        
-        main_menu_text = font.render("Main Menu", True, (255, 255, 255))
-        main_menu_text_rect=main_menu_text.get_rect(center=state.main_menu_btn_rect.center)
-
-        
-        exit_text = font.render("Exit ", True, (255, 255, 255))
-        exit_text_rect=exit_text.get_rect(center=state.exit_btn_rect.center)
-
-
-        scor_text= font.render("Score: 0", True, (255, 255, 255))
-        score_pos=((state.rwd_surface_width//2)-scor_text.get_width()//2,80)
-
-        high_score= font.render("High Score: 0", True, (255, 255, 255))
-        high_score_pos=((state.rwd_surface_width//2)-high_score.get_width()//2,120)
-
-
-        died_text= font.render(" YOU HAVE BEEN DESTROYED ! ", True, (255, 255, 255))
-        died_text_pos=((state.rwd_surface_width//2)-(died_text.get_width()//2),20)
-
-
-        state.rewards_surface.blit(main_menu_text,main_menu_text_rect)
-        state.rewards_surface.blit(exit_text,exit_text_rect)
-        state.rewards_surface.blit(died_text,died_text_pos)
-        state.rewards_surface.blit(scor_text,score_pos)
-        state.rewards_surface.blit(high_score,high_score_pos)
 
 class Screen():
     def draw(self,screen):
@@ -49,15 +17,19 @@ class Screen():
         pass
     def handle_buttons(self):
         pass
+    
 class game_windows(Screen):
     def __init__(self) -> None:
         super().__init__()
         self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png')
         self.buttons=[]
         self.center=(width//2,height//2)
-        self.resume_button=Button(self.center[0],self.center[1]-50,'Resume')
-        self.options_button=Button(self.center[0],self.center[1]-5,'Options')
-        self.main_menu_button=Button(self.center[0],self.center[1]+40,'Main Menu')
+        self.resume_button=Button(self.center[0],self.center[1]-50,'Resume',18)
+        self.options_button=Button(self.center[0],self.center[1]-5,'Options',18)
+        self.main_menu_button=Button(self.center[0],self.center[1]+40,'Main Menu',18)
+        self.next_level=Button(self.center[0]+65,self.center[1]+40,'Next Level',18)
+ 
+
         self.buttons.extend([self.resume_button,self.options_button,])
         self.smooth_button=pygame.image.load('src/img/GUI/smooth_button.png')
         self.smooth_button_hold=pygame.image.load('src/img/GUI/smooth_button_holding.png')
@@ -71,10 +43,23 @@ class game_windows(Screen):
         self.resume_button.change_images(self.smooth_button,self.smooth_button_hold)
         self.options_button.change_images(self.smooth_button,self.smooth_button_hold)
         self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_location(self.center[0],self.center[1]+40)
         pause_frame.add_button(self.main_menu_button)
         pause_frame.add_button(self.resume_button)
         pause_frame.add_button(self.options_button)
         self.selected_window=pause_frame
+
+    def reward_window(self):
+        reward_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        reward_frame.confing(self.pause_image)
+        self.next_level.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_location(self.center[0]-65,self.center[1]+40)
+        reward_frame.add_button(self.main_menu_button)
+        reward_frame.add_button(self.next_level)
+    
+        reward_frame.write("Level Completed")
+        self.selected_window=reward_frame  
 
         
     def draw_frames(self, screen):
@@ -89,10 +74,10 @@ class Game_modes_window(Screen):
     def __init__(self):
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
         self.buttons=[]
-        self.levels_buttoon=Button(150,150,"Levels")
-        self.survival_buttonn=Button(150,220,"Survival")
-        self.apex_button=Button(150,290,"Apex Challenge")
-        self.back_button=Button(150,400,"Return")
+        self.levels_buttoon=Button(150,150,"Levels",22)
+        self.survival_buttonn=Button(150,220,"Survival",22)
+        self.apex_button=Button(150,290,"Apex Challenge",22)
+        self.back_button=Button(150,400,"Return",22)
         self.apex_play_button=None
         self.survival_play_button=None
         self.level_play_button=None
@@ -130,8 +115,8 @@ class Game_modes_window(Screen):
         description=Frame(300,125,715,390)
         description.write(self.selected_level.get_description())
         self.selected_frame=description
-        level_play_button=Button(description.width-100,description.height+100,'Play')
-        back_button=Button(description.width+200,description.height+100,'Back')
+        level_play_button=Button(description.width-100,description.height+100,'Play',22)
+        back_button=Button(description.width+200,description.height+100,'Back',22)
         self.level_play_button=level_play_button
         description.buttons.append(back_button)
         description.buttons.append(level_play_button)
@@ -142,7 +127,7 @@ class Game_modes_window(Screen):
         survival_frame=Frame(300,125,715,390)
         survival_frame.write("Try to engage all enemies and get the best score you can.")
         self.selected_frame=survival_frame
-        survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play')
+        survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play',22)
         self.survival_play_button=survival_play_button
         survival_frame.buttons.append(survival_play_button)
         
@@ -154,7 +139,7 @@ class Game_modes_window(Screen):
         apex_frame=Frame(300,125,715,390)
         apex_frame.write("Coming soon...")
         self.selected_frame=apex_frame
-        apex_play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play')
+        apex_play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play',20)
         self.apex_play_button=apex_play_button
         apex_frame.buttons.append(apex_play_button)
         
@@ -202,10 +187,10 @@ class Main_menu_screen(Screen):
         self.holding_button=None
         self.frames=[]
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
-        self.play_button=Button(width//2,180,"Play")
-        self.options_button=Button(width//2,260,"Options")
-        self.Credits_button=Button(width//2,340,"Credits")
-        self.Exit_button=Button(width//2,420,"Exit")
+        self.play_button=Button(width//2,180,"Play",22)
+        self.options_button=Button(width//2,260,"Options",22)
+        self.Credits_button=Button(width//2,340,"Credits",22)
+        self.Exit_button=Button(width//2,420,"Exit",22)
         self.buttons.extend([self.play_button, self.options_button, self.Credits_button,self.Exit_button])
         self.window=0
 

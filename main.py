@@ -1,7 +1,5 @@
 import pygame
 
-
-
 pygame.init()
 pygame.mixer.init()
 
@@ -13,11 +11,9 @@ screen_height = 660
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("SPAA Game")
 
+
 import states
 current_state = states.menu_state
- 
- 
-
 
 def update_state():
     global current_state

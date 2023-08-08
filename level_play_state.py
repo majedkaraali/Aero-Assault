@@ -33,6 +33,7 @@ class Level_Play(GameState):
         self.level=level
         self.wave=0
         self.complete=False
+        self.game_over=False
 
 
         
@@ -53,8 +54,6 @@ class Level_Play(GameState):
                 if self.reward_screen:
                     pass
 
-
-       
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
             
@@ -138,132 +137,139 @@ class Level_Play(GameState):
     def draw(self,screen):
         screen.blit(background,background.get_rect())
         if not (self.paues) :
+            if not self.game_over:
+                if not self.complete:
+                    self.statics(screen)
 
-            if not self.reward_screen:
-                self.statics(screen)
-
-                #HANDLE PLAYER
-                if not player.forced:
-                    
-                    player.move_player()
-                    if len(self.enemy_list)==0:
-                        self.wave+=1
-                        if self.wave<=self.level.get_waves_number():
-                 
-                            self.generate_enemies(self.level.make_wave(self.wave))
-                            
-                        else:
-                            self.complete=True
-                    print(self.complete)
-
-                player.update_bullets(screen)
-                player.update_player(screen)
-                player.move_bullets() 
-                player.move_missiles()
-                player.update_missiles(screen)
-                player.chek_magazine()
-                player.chek_missile_lounchers_pods()
-                player.move_drops(screen,player)
-                player.is_destroyed()   
-                player.get_enemies=self.get_enemies() 
-                
-                
-                
-                #CLEAN BULLETS KEYS
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_SPACE]:
+                    #HANDLE PLAYER
                     if not player.forced:
-                        player.shoot()
-                elif keys[pygame.K_f]:
-                    if not player.forced:
-                        player.fire_missile(player)
-                    
-                enemies_to_remove = []
-                bullets_to_remove = []
-                missiles_to_remove=[]
-
-
-
-                # HANDLE ENEMIES
-                for enemy in self.enemy_list:
-                    enemy.move_enemy(screen)
-                    enemy.update_enemy(screen)
-                    if enemy.destroyed:
-                        enemies_to_remove.append(enemy)
-                    if enemy.check_kill(player.bullets):
-                        self.score+=100
-                        drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
-                        player.drops.append(drop)
-                        enemies_to_remove.append(enemy)
-
-                    if enemy.move_dir=='left':
-                        if (enemy.x)<5:
-                            enemy.move_dir='right'
-                            enemy.recharge()
-                    elif enemy.move_dir=='right':
-                        if (enemy.x)>width-5-enemy.get_width():
-                            enemy.move_dir='left'
-                            enemy.recharge()
-
-                    if enemy.y>580:
-                        enemy.destroyed=True
-                        enemies_to_remove.append(enemy)
-
-
-
-
-            
-                # HANDLE BULLETS
-                for bullet in player.bullets:
-                    if bullet.out_of_range():
-                        bullets_to_remove.append(bullet)
-        
-                    elif bullet.hitted:
-                        self.score+=20
-                        bullets_to_remove.append(bullet)
-
-
-
-                # HANDLE MISSILES
-                for missile in  player.missiles:
-                    if missile.y<=-10:
-                        missiles_to_remove.append(missile)
-                    elif missile.hit_target():
-                        self.score+=200
-                        missiles_to_remove.append(missile)
-                        enemies_to_remove.append(missile.target)
                         
-                # CLEAN ENEMEIS
-                if len(enemies_to_remove)>0:
-                    for enemy in enemies_to_remove:
-                        enemy.destroyed=True
-                        if enemy in self.enemy_list:
-                            self.enemy_list.remove(enemy)
+                        player.move_player()
+                        if len(self.enemy_list)==0:
+                            self.wave+=1
+                            if self.wave<=self.level.get_waves_number():
+                    
+                                self.generate_enemies(self.level.make_wave(self.wave))
+                                
+                            else:
+                                self.complete=True
 
 
-                #CLEAN BULLETS
-                for bullet in bullets_to_remove:
-                    player.bullets.remove(bullet)
+                    player.update_bullets(screen)
+                    player.update_player(screen)
+                    player.move_bullets() 
+                    player.move_missiles()
+                    player.update_missiles(screen)
+                    player.chek_magazine()
+                    player.chek_missile_lounchers_pods()
+                    player.move_drops(screen,player)
+                    player.is_destroyed()   
+                    player.get_enemies=self.get_enemies() 
+                    
+                    
+                    
+                    #CLEAN BULLETS KEYS
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_SPACE]:
+                        if not player.forced:
+                            player.shoot()
+                    elif keys[pygame.K_f]:
+                        if not player.forced:
+                            player.fire_missile(player)
+                        
+                    enemies_to_remove = []
+                    bullets_to_remove = []
+                    missiles_to_remove=[]
 
-                #CLEAN MISSILES
-                for missile in missiles_to_remove:
-                    player.missiles.remove(missile)
 
-                #ATTACK PLAYER
-                for enemy in self.enemy_list:
-                    enemy.attack(player)
-                    enemy.move_bombs()
-                    enemy.draw_bombs(screen)
-                    break
+
+                    # HANDLE ENEMIES
+                    for enemy in self.enemy_list:
+                        enemy.move_enemy(screen)
+                        enemy.update_enemy(screen)
+                        if enemy.destroyed:
+                            enemies_to_remove.append(enemy)
+                        if enemy.check_kill(player.bullets):
+                            self.score+=100
+                            drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
+                            player.drops.append(drop)
+                            enemies_to_remove.append(enemy)
+
+                        if enemy.move_dir=='left':
+                            if (enemy.x)<5:
+                                enemy.move_dir='right'
+                                enemy.recharge()
+                        elif enemy.move_dir=='right':
+                            if (enemy.x)>width-5-enemy.get_width():
+                                enemy.move_dir='left'
+                                enemy.recharge()
+
+                        if enemy.y>580:
+                            enemy.destroyed=True
+                            enemies_to_remove.append(enemy)
+
+
+
+
+                
+                    # HANDLE BULLETS
+                    for bullet in player.bullets:
+                        if bullet.out_of_range():
+                            bullets_to_remove.append(bullet)
+            
+                        elif bullet.hitted:
+                            self.score+=20
+                            bullets_to_remove.append(bullet)
+
+
+
+                    # HANDLE MISSILES
+                    for missile in  player.missiles:
+                        if missile.y<=-10:
+                            missiles_to_remove.append(missile)
+                        elif missile.hit_target():
+                            self.score+=200
+                            missiles_to_remove.append(missile)
+                            enemies_to_remove.append(missile.target)
                             
+                    # CLEAN ENEMEIS
+                    if len(enemies_to_remove)>0:
+                        for enemy in enemies_to_remove:
+                            enemy.destroyed=True
+                            if enemy in self.enemy_list:
+                                self.enemy_list.remove(enemy)
 
-                if player.destroyed:
-                    self.reward_screen=True
+
+                    #CLEAN BULLETS
+                    for bullet in bullets_to_remove:
+                        player.bullets.remove(bullet)
+
+                    #CLEAN MISSILES
+                    for missile in missiles_to_remove:
+                        player.missiles.remove(missile)
+
+                    #ATTACK PLAYER
+                    for enemy in self.enemy_list:
+                        enemy.attack(player)
+                        enemy.move_bombs()
+                        enemy.draw_bombs(screen)
+                        break
+                                
+
+                    if player.destroyed:
+                        self.game_over=True
+
+                elif self.complete:
+                    windo.reward_window()
+                    windo.draw(screen)
+                    windo.draw_frames(screen)                   
 
 
             elif (self.reward_screen):
-                self.reward_screen_view(screen)
-               
+                windo.reward_window()
+                windo.draw(screen)
+                windo.draw_frames(screen)
+  
 
         elif (self.paues):
             windo.puse_window()

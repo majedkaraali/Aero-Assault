@@ -3,19 +3,19 @@ import os
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 22 
-font = pygame.font.Font(font_path, font_size)
+
 
 class Button():
-    def __init__(self, x, y, text):
+    def __init__(self, x, y, text,font_size):
         self.x = x
         self.y = y
         self.text = text
-        
         self.image = pygame.image.load('src/img/GUI/button.png').convert_alpha()
         self.holding_image=pygame.image.load('src/img/GUI/button_holding.png').convert_alpha()
         self.current_image=self.image
         self.holding=False
         self.custum_rect=False
+        self.font = pygame.font.Font(font_path, font_size)
 
 
     def get_text(self):
@@ -29,7 +29,9 @@ class Button():
     def change_images(self,image,hold_image):
         self.image=image
         self.holding_image=hold_image
-
+    def change_location(self,x,y):
+        self.x=x
+        self.y=y
     def scale(self, w, h):
         self.image = pygame.transform.scale(self.image, (w, h))
 
@@ -47,9 +49,9 @@ class Button():
      
         if holding:
             self.current_image=self.holding_image
-            button_text = font.render(self.text, True, (255, 255, 255))
+            button_text = self.font.render(self.text, True, (255, 255, 255))
         else:
-            button_text = font.render(self.text, True, (0, 0, 0))
+            button_text = self.font.render(self.text, True, (0, 0, 0))
             self.current_image=self.image
 
         button_text_rect = button_text.get_rect()
@@ -204,7 +206,7 @@ class Levels_Frame:
                     imag_rect.center=(center_rect)
                        
 
-                    level_button=Button(0,0,self.levels[index].get_number())
+                    level_button=Button(0,0,self.levels[index].get_number(),22)
                     level_button.conifig_button(self.level_image,self.hold_image,center_rect)
                     
 
@@ -213,7 +215,7 @@ class Levels_Frame:
                 
                        
                     else:
-                        level_button=Button(0,0,'')
+                        level_button=Button(0,0,'',22)
                         level_button.conifig_button(self.locked_image,self.locked_image,center_rect)
                   
 

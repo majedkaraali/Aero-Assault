@@ -27,8 +27,8 @@ font_size = 19
 font = pygame.font.Font(font_path, font_size)
 
 
-background=pygame.image.load('src/img/background1.png').convert_alpha()
-statics_image=pygame.image.load('src/img/statics2.png').convert_alpha()
+background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
+statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 
 class GameState:
 

@@ -27,8 +27,8 @@ class Level_1(Level):
         self.number=1
         self.locked=False
         self.waves=[]
-        self.wave_1=[2,0,0,0]
-        self.wave_2=[0,0,0,4]
+        self.wave_1=[1,0,0,0]
+        self.wave_2=[0,0,1,0]
         self.waves.extend([self.wave_1,self.wave_2])
 
     def make_wave(self,wave_number):

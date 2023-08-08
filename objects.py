@@ -304,9 +304,9 @@ class Player:
     destroyed=False
     forced=False
     forced_time = 0
-    image=pygame.image.load('src/img/spaa-gepard3.png')
+    image=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
     rect=image.get_rect()
-    barrel=pygame.image.load('src/img/barrel2.png')
+    barrel=pygame.image.load('src/img/vehicles/barrel2.png')
     barrel_rect=image.get_rect()
     last_known_position=(0,0)
     last_known_position_update_delay=2000
