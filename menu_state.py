@@ -1,30 +1,10 @@
 import pygame
-import objects
-import os
 from windows import Main_menu_window,Game_modes_window
 from levels import levels 
 
-def _player():
-        global player
-        player=objects.Player(400,height-107,[],[],'Unnamed',[])
-        return player
-
-
 width,height=1100,660
-
-
-
 main_menu_window=Main_menu_window()
 game_mode_window=Game_modes_window()
-
-
-
-
-
-
-
-
-
 
 
 class MenuState():
@@ -34,7 +14,6 @@ class MenuState():
         self.screen=main_menu_window
         self.buttons=self.screen.get_buttons()
         self.state=state
-
         
     def handle_events(self, events):
         for event in events:
@@ -44,9 +23,6 @@ class MenuState():
 
              
     def handle_buttons(self,event):
-
-
-
         
         if event.type==pygame.MOUSEBUTTONDOWN:
 
@@ -92,8 +68,6 @@ class MenuState():
 
                 elif button_head=="Back":
                     self.screen.levels_frame(levels)
-                
-
                 
 
     def draw(self,screen):

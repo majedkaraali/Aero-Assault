@@ -18,10 +18,11 @@ def _player():
         player=objects.Player(400,height-107,[],[],'Unnamed',[])
         return player
 
-width,height=(1100,660)
 
+width,height=(1100,660)
 enemies=Generate_enemies(_player())
 windo=game_windows()
+
 
 class Level_Play(GameState):
 
@@ -47,9 +48,10 @@ class Level_Play(GameState):
     def handle_events(self, events):
         tab_pressed = False
         for event in events:
+
             if event.type == pygame.QUIT:
                 self.running = False
-            
+    
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouse_button_pressed=True
 
@@ -71,6 +73,7 @@ class Level_Play(GameState):
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
             
+
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -82,15 +85,13 @@ class Level_Play(GameState):
                         self.paues=False
                     
 
-              
-
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_TAB] and not tab_pressed:
+                
+                if event.key == pygame.K_TAB and not tab_pressed:
                     if not player.forced:
                         player.next_lock()
                         tab_pressed = True
                         
-                if keys[pygame.K_r]:
+                if event.key == pygame.K_r:
                     player.reload_start_time=pygame.time.get_ticks()
                     player.droped_ammo+=player.magazine
                     player.magazine=0
@@ -99,7 +100,6 @@ class Level_Play(GameState):
             elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_TAB:
                         tab_pressed = False
-
 
         if self.mouse_button_pressed:
             if not player.forced:
@@ -116,15 +116,11 @@ class Level_Play(GameState):
     def get_enemies(self):
         return self.enemy_list
         
-
-
- 
-
     def statics(self,screen):
         statics_rect=statics_image.get_rect()
         statics_rect.topleft=(0,630)
-        screen.blit(statics_image,statics_rect)
 
+        screen.blit(statics_image,statics_rect)
 
         if player.reloading:
             magazine='---'
@@ -149,7 +145,6 @@ class Level_Play(GameState):
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
-
 
 
 
