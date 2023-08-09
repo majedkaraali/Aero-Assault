@@ -1,12 +1,17 @@
 from states import GameState
-import objects
+import objects,os
 import pygame 
 from windows import game_windows
-
-from states import statics_image,font,background # remove this after 
-
 from enemy_generator import Generate_enemies
 
+
+
+background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
+statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
+
+font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
+font_size = 19 
+font = pygame.font.Font(font_path, font_size)
 
 def _player():
         global player
@@ -25,9 +30,8 @@ class Level_Play(GameState):
     reward_screen=False
     enemy_list=[]
     score=0
-    
 
-    def __init__(self,level):
+    def __init__(self,state,level):
         super().__init__()
         self.running=True
         self.force_reload=False
@@ -36,12 +40,11 @@ class Level_Play(GameState):
         self.complete=False
         self.game_over=False
         self.close=False
+        self.state=state
+        self.buttons=windo.get_buttons()
 
-
-        
         
     def handle_events(self, events):
-        global current_state
         tab_pressed = False
         for event in events:
             if event.type == pygame.QUIT:
@@ -51,10 +54,19 @@ class Level_Play(GameState):
                 self.mouse_button_pressed=True
 
                 if self.paues:
-                    pass
+                    if windo.main_menu_button.holding:
+                        self.state.menu_state()
 
-                if self.reward_screen:
-                    pass
+                    if windo.resume_button.holding:
+                        self.paues=False
+
+                if self.complete:
+                    if windo.main_menu_button.holding:
+                        self.state.menu_state()
+
+                    if windo.next_level.holding:
+                        print('aa')
+                        #self.state.level_state()
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -62,11 +74,16 @@ class Level_Play(GameState):
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    if self.paues:
-                        self.paues = False
-                    else:
-                        if not self.reward_screen:
-                            self.paues = True
+
+                    if  not self.complete and not self.paues:
+                        self.paues = True
+
+                    elif self.paues:
+                        self.paues=False
+                    
+
+              
+
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_TAB] and not tab_pressed:
                     if not player.forced:
@@ -85,9 +102,9 @@ class Level_Play(GameState):
 
 
         if self.mouse_button_pressed:
-                if not player.forced:
-                    if not self.paues:
-                        player.shoot()
+            if not player.forced:
+                if not self.paues:
+                    player.shoot()
 
 
     

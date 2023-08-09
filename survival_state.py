@@ -1,8 +1,14 @@
 from states import GameState
 import objects
 import pygame 
-from states import menu_state,player,statics_image,font,background,_player
+from states import statics_image,font,background
 from enemy_generator import Generate_enemies
+width,height=1100,660
+def _player():
+        global player
+        player=objects.Player(400,height-107,[],[],'Unnamed',[])
+        return player
+
 enemies=Generate_enemies(_player())
 
 
@@ -46,10 +52,11 @@ class Survival(GameState):
     main_menu_btn_rect=pygame.Rect((rwd_surface_width//2)-150,rwd_surface_height-70,100,20)
     exit_btn_rect=pygame.Rect((rwd_surface_width//2)+100,rwd_surface_height-70,70,20)
 
-    def __init__(self):
+    def __init__(self,state):
         super().__init__()
         self.running=True
         self.force_reload=False
+        self.state=state
 
 
         
@@ -74,7 +81,7 @@ class Survival(GameState):
                         self.paues = False
 
                     elif self.main_menu_button_rect.collidepoint(adjusted_mouse_pos):
-                        current_state = menu_state 
+                   #     current_state = menu_state 
                         self.paues = False
                         self.enemy_list.clear()
                         player.missiles.clear()
@@ -93,7 +100,7 @@ class Survival(GameState):
                     
                 
                     if self.main_menu_btn_rect.collidepoint(adjusted_mouse_pos):
-                        current_state = menu_state 
+                      #  current_state = menu_state 
                         self.paues = False
                         self.reward_screen=False
                         for enemy in self.enemy_list:

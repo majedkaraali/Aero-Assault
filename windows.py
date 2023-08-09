@@ -72,12 +72,14 @@ class game_windows(Screen):
 
 class Game_modes_window(Screen):
     def __init__(self):
+        self.name='gamemode'
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
         self.buttons=[]
         self.levels_buttoon=Button(150,150,"Levels",22)
         self.survival_buttonn=Button(150,220,"Survival",22)
         self.apex_button=Button(150,290,"Apex Challenge",22)
         self.back_button=Button(150,400,"Return",22)
+        
         self.apex_play_button=None
         self.survival_play_button=None
         self.level_play_button=None
@@ -181,8 +183,9 @@ class Game_modes_window(Screen):
 
 
 
-class Main_menu_screen(Screen):
+class Main_menu_window(Screen):
     def __init__(self):
+        self.name='menu'
         self.buttons=[]
         self.holding_button=None
         self.frames=[]
