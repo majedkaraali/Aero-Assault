@@ -63,6 +63,7 @@ class Level_Play(GameState):
                         self.paues=False
 
                 if self.complete:
+                    self.level.unluck_level(int(self.level.get_number())+1)
                     if windo.main_menu_button.holding:
                         self.state.menu_state()
 

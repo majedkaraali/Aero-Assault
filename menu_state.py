@@ -1,6 +1,5 @@
 import pygame
 from windows import Main_menu_window,Game_modes_window
-from levels import levels 
 
 width,height=1100,660
 main_menu_window=Main_menu_window()
@@ -29,6 +28,7 @@ class MenuState():
             if self.screen.name=='menu':
 
                 if self.screen.play_button.holding:
+                    game_mode_window=Game_modes_window()
                     self.screen=game_mode_window
 
                    
@@ -40,11 +40,15 @@ class MenuState():
                     self.screen.apex_frame()
 
                 elif self.screen.levels_buttoon.holding:
+                    from levels import levels 
+                    for level in levels:
+                        level.chek_lock(level.number)
                     self.screen.levels_frame(levels)
 
                 elif self.screen.back_button.holding:
                     self.screen.selected_frame=False
                     self.screen=main_menu_window
+                    
 
                 if self.screen.apex_play_button:
                     if self.screen.apex_play_button.holding:
@@ -64,6 +68,10 @@ class MenuState():
                 button_head=self.screen.holding_button.get_text()
 
                 if button_head in ['1','2','3','4','5','6','7','8','9','10']:
+                    from levels import levels
+                    for level in levels:
+                        level.chek_lock(level.number)
+                
                     self.screen.level_description_frame(int(button_head),levels)
 
                 elif button_head=="Back":
@@ -71,6 +79,7 @@ class MenuState():
                 
 
     def draw(self,screen):
+     #   print(self.screen)
         self.screen.draw(screen)
         self.screen.draw_frames(screen)
         self.screen.handle_buttons()

@@ -12,15 +12,20 @@ class State():
 
     def survival_state(self):
         from survival_state import Survival
-        self.state=Survival(state)
+        current_state=Survival(state)
+        self.state=(current_state)
 
     def level_state(self,level):
         from level_play_state import Level_Play
-        self.state=Level_Play(state,level)
+        current_state=Level_Play(state,level)
+        self.state=(current_state)
 
     def menu_state(self):
+        
         from menu_state import MenuState
-        self.state=MenuState(state)
+        current_state=MenuState(state)
+        self.state=(current_state)
+
 
     def handle_events(self, events):
         self.state.handle_events(events)

@@ -1,3 +1,17 @@
+import json
+
+
+completed_levels = []
+try:
+    with open('data.json', 'r') as progress_file:
+        data = json.load(progress_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    pass
+
+completed_levels=data['completed_levels']
+
+
+
 class Level:
 
     levels_cont=0
@@ -7,6 +21,12 @@ class Level:
         self.number=0
         self.waves=[]
     
+    def chek_lock(self,number):
+        print("VV")
+        if number not in completed_levels:
+            self.locked=True
+        else:
+            self.locked=False
 
     def get_number(self):
         return str(self.number)
@@ -16,6 +36,14 @@ class Level:
     
     def get_waves_number(self):
         return len(self.waves)
+    
+    def unluck_level(self,level_number):
+        completed_level_number = level_number
+        if completed_level_number not in completed_levels:
+            completed_levels.append(completed_level_number)
+            with open('data.json', 'w') as progress_file:
+                json.dump(data, progress_file,indent=completed_level_number)
+
 
 
 
@@ -25,7 +53,8 @@ class Level_1(Level):
         self.name="Level 1"
         self.description='Level 1'
         self.number=1
-        self.locked=False
+        self.chek_lock(self.number)
+    
         self.waves=[]
         self.wave_1=[1,0,0,0]
         self.wave_2=[0,0,1,0]
@@ -46,63 +75,72 @@ class Level_2(Level):
         self.name="Level 2"
         self.description='Level 2'
         self.number=2
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_3(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=3
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_4(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=4
-        self.locked=True
+        self.chek_lock(self.number)
+    
     
 class Level_5(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=5
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_6(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=6
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_7(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=7
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_8(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=8
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_9(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=9
-        self.locked=True
+        self.chek_lock(self.number)
+    
 
 class Level_10(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
         self.number=10
-        self.locked=True
+        self.chek_lock(self.number)
+        
 
 levels=[]
 a=Level_1()
