@@ -13,27 +13,26 @@ font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
 
-def _player():
-        global player
-        player=objects.Player(400,height-107,[],[],'Unnamed',[])
-        return player
+
+        
+
 
 
 width,height=(1100,660)
-enemies=Generate_enemies(_player())
+
 windo=game_windows()
 
 
 class Level_Play(GameState):
 
-    mouse_button_pressed=False
-    paues=False
-    reward_screen=False
-    enemy_list=[]
-    score=0
+ 
+    
 
-    def __init__(self,state,level):
-        super().__init__()
+    def __init__(self,state,level,test):
+
+      #  super().__init__()
+        self.score=0
+       # print("GG")
         self.running=True
         self.force_reload=False
         self.level=level
@@ -43,9 +42,16 @@ class Level_Play(GameState):
         self.close=False
         self.state=state
         self.buttons=windo.get_buttons()
-
+        self.mouse_button_pressed=False
+        self.paues=False
+        self.reward_screen=False
+        self.enemy_list=[]
+        self.test=test
+        self.player=objects.Player(400,height-107,[],[],'Unnamed',[])
+        self.enemies=Generate_enemies(self.player)
         
     def handle_events(self, events):
+     #   print(self.test)
         tab_pressed = False
         for event in events:
 
@@ -57,6 +63,7 @@ class Level_Play(GameState):
 
                 if self.paues:
                     if windo.main_menu_button.holding:
+                  #      self.enemy_list.clear()
                         self.state.menu_state()
 
                     if windo.resume_button.holding:
@@ -65,11 +72,12 @@ class Level_Play(GameState):
                 if self.complete:
                     self.level.unluck_level(int(self.level.get_number())+1)
                     if windo.main_menu_button.holding:
+
                         self.state.menu_state()
 
                     if windo.next_level.holding:
-                        print('aa')
-                        #self.state.level_state()
+                        next_level=self.level.next_level()
+                        self.state.level_state(next_level)
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -88,14 +96,14 @@ class Level_Play(GameState):
 
                 
                 if event.key == pygame.K_TAB and not tab_pressed:
-                    if not player.forced:
-                        player.next_lock()
+                    if not self.player.forced:
+                        self.player.next_lock()
                         tab_pressed = True
                         
                 if event.key == pygame.K_r:
-                    player.reload_start_time=pygame.time.get_ticks()
-                    player.droped_ammo+=player.magazine
-                    player.magazine=0
+                    self.player.reload_start_time=pygame.time.get_ticks()
+                    self.player.droped_ammo+=self.player.magazine
+                    self.player.magazine=0
 
  
             elif event.type == pygame.KEYUP:
@@ -103,15 +111,15 @@ class Level_Play(GameState):
                         tab_pressed = False
 
         if self.mouse_button_pressed:
-            if not player.forced:
+            if not self.player.forced:
                 if not self.paues:
-                    player.shoot()
+                    self.player.shoot()
 
 
     
     
     def generate_enemies(self,wave):
-        self.enemy_list=enemies.respawn_wave(wave)
+        self.enemy_list=self.enemies.respawn_wave(wave)
            
 
     def get_enemies(self):
@@ -123,23 +131,23 @@ class Level_Play(GameState):
 
         screen.blit(statics_image,statics_rect)
 
-        if player.reloading:
+        if self.player.reloading:
             magazine='---'
         else:
-            magazine=str(player.magazine)
-        bullets=str(player.ammo)
+            magazine=str(self.player.magazine)
+        bullets=str(self.player.ammo)
 
-        if player.reloading_pods:
+        if self.player.reloading_pods:
             missiles='--'
         else:
-            missiles=player.ready_to_fire_missiles
+            missiles=self.player.ready_to_fire_missiles
 
-        storage=player.missiles_storage
+        storage=self.player.missiles_storage
         bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
         bullets_text_pos=(width-375,height-25)
         missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
         missiles_text_pos=(width-550,height-25)
-        heath_value=player.health
+        heath_value=self.player.health
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-170,height-25)
       
@@ -150,17 +158,19 @@ class Level_Play(GameState):
 
 
     def draw(self,screen):
+      #  print(self.enemy_list)
         screen.blit(background,background.get_rect())
         if not (self.paues) :
             if not self.game_over:
                 if not self.complete:
                     self.statics(screen)
 
-                    #HANDLE PLAYER
-                    if not player.forced:
+                    #HANDLE self.PLAYER
+                    if not self.player.forced:
                         
-                        player.move_player()
+                        self.player.move_player()
                         if len(self.enemy_list)==0:
+                            
                             self.wave+=1
                             if self.wave<=self.level.get_waves_number():
                     
@@ -168,29 +178,31 @@ class Level_Play(GameState):
                                 
                             else:
                                 self.complete=True
+                                
+                            print(self.enemy_list)
 
 
-                    player.update_bullets(screen)
-                    player.update_player(screen)
-                    player.move_bullets() 
-                    player.move_missiles()
-                    player.update_missiles(screen)
-                    player.chek_magazine()
-                    player.chek_missile_lounchers_pods()
-                    player.move_drops(screen,player)
-                    player.is_destroyed()   
-                    player.get_enemies=self.get_enemies() 
+                    self.player.update_bullets(screen)
+                    self.player.update_player(screen)
+                    self.player.move_bullets() 
+                    self.player.move_missiles()
+                    self.player.update_missiles(screen)
+                    self.player.chek_magazine()
+                    self.player.chek_missile_lounchers_pods()
+                    self.player.move_drops(screen,self.player)
+                    self.player.is_destroyed()   
+                    self.player.get_enemies=self.get_enemies() 
                     
                     
                     
                     #CLEAN BULLETS KEYS
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_SPACE]:
-                        if not player.forced:
-                            player.shoot()
+                        if not self.player.forced:
+                            self.player.shoot()
                     elif keys[pygame.K_f]:
-                        if not player.forced:
-                            player.fire_missile(player)
+                        if not self.player.forced:
+                            self.player.fire_missile(self.player)
                         
                     enemies_to_remove = []
                     bullets_to_remove = []
@@ -204,10 +216,10 @@ class Level_Play(GameState):
                         enemy.update_enemy(screen)
                         if enemy.destroyed:
                             enemies_to_remove.append(enemy)
-                        if enemy.check_kill(player.bullets):
+                        if enemy.check_kill(self.player.bullets):
                             self.score+=100
                             drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
-                            player.drops.append(drop)
+                            self.player.drops.append(drop)
                             enemies_to_remove.append(enemy)
 
                         if enemy.move_dir=='left':
@@ -228,7 +240,7 @@ class Level_Play(GameState):
 
                 
                     # HANDLE BULLETS
-                    for bullet in player.bullets:
+                    for bullet in self.player.bullets:
                         if bullet.out_of_range():
                             bullets_to_remove.append(bullet)
             
@@ -239,7 +251,7 @@ class Level_Play(GameState):
 
 
                     # HANDLE MISSILES
-                    for missile in  player.missiles:
+                    for missile in  self.player.missiles:
                         if missile.y<=-10:
                             missiles_to_remove.append(missile)
                         elif missile.hit_target():
@@ -257,21 +269,21 @@ class Level_Play(GameState):
 
                     #CLEAN BULLETS
                     for bullet in bullets_to_remove:
-                        player.bullets.remove(bullet)
+                        self.player.bullets.remove(bullet)
 
                     #CLEAN MISSILES
                     for missile in missiles_to_remove:
-                        player.missiles.remove(missile)
+                        self.player.missiles.remove(missile)
 
-                    #ATTACK PLAYER
+                    #ATTACK self.PLAYER
                     for enemy in self.enemy_list:
-                        enemy.attack(player)
+                        enemy.attack(self.player)
                         enemy.move_bombs()
                         enemy.draw_bombs(screen)
                         break
                                 
 
-                    if player.destroyed:
+                    if self.player.destroyed:
                         self.game_over=True
 
                 elif self.complete:

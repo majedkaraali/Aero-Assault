@@ -1,5 +1,5 @@
 
-
+import random
 class State():
     def __init__(self):
         self.state=None
@@ -12,12 +12,16 @@ class State():
 
     def survival_state(self):
         from survival_state import Survival
+     
         current_state=Survival(state)
+
         self.state=(current_state)
 
     def level_state(self,level):
+        x=random.randint(33333,99999)
         from level_play_state import Level_Play
-        current_state=Level_Play(state,level)
+        current_state=Level_Play(state,level,x)
+       # print(current_state)
         self.state=(current_state)
 
     def menu_state(self):

@@ -22,7 +22,7 @@ class Level:
         self.waves=[]
     
     def chek_lock(self,number):
-        print("VV")
+     #   print("VV")
         if number not in completed_levels:
             self.locked=True
         else:
@@ -37,6 +37,9 @@ class Level:
     def get_waves_number(self):
         return len(self.waves)
     
+    def next_level(self):
+        return levels[self.number+1-1] # -1 cuz the lists starts from 0    :D  
+    
     def unluck_level(self,level_number):
         completed_level_number = level_number
         if completed_level_number not in completed_levels:
@@ -45,7 +48,12 @@ class Level:
                 json.dump(data, progress_file,indent=completed_level_number)
 
 
-
+    def make_wave(self,wave_number):
+        wave=self.waves[wave_number-1]
+        return wave
+    
+    def get_waves_number(self):
+        return len(self.waves)
 
 class Level_1(Level):
     def __init__(self):
@@ -60,12 +68,7 @@ class Level_1(Level):
         self.wave_2=[0,0,1,0]
         self.waves.extend([self.wave_1,self.wave_2])
 
-    def make_wave(self,wave_number):
-        wave=self.waves[wave_number-1]
-        return wave
-    
-    def get_waves_number(self):
-        return len(self.waves)
+
     
 
 
@@ -76,6 +79,9 @@ class Level_2(Level):
         self.description='Level 2'
         self.number=2
         self.chek_lock(self.number)
+        self.wave_1=[0,1,0,0]
+        self.wave_2=[1,0,0,0]
+        self.waves.extend([self.wave_1,self.wave_2])
     
 
 class Level_3(Level):

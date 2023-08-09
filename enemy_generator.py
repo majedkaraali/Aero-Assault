@@ -11,11 +11,13 @@ class Generate_enemies:
             self.enemy_list=[]
             
     def respawn_fighter(self,move_dircton,y):
+            
             x=self.random_distance(move_dircton)
             vel=2
             sprites=loader.random_fighter()
             enemy=objects.Enemy(x,y,vel,move_dircton,3,0,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
+          #  print(enemy)
             
         
     def respawn_strike(self,move_dircton,y):
