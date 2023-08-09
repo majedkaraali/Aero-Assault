@@ -8,6 +8,7 @@ clock = pygame.time.Clock()
 
 screen_width = 1100
 screen_height = 660
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("SPAA Game")
 
