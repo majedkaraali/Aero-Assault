@@ -275,19 +275,19 @@ class Bullet:
     
 class Player:
 
-    def __init__(self,x,y,bullets,missiles,name,get_enemies) :
+    def __init__(self,x,y,name) :
         self.x=x
         self.y=y
-        self.bullets=bullets
-        self.missiles=missiles
+        self.bullets=[]
+        self.missiles=[]
         self.name=name
-        self.get_enemies=get_enemies
+        self.get_enemies=[]
+        self.drops=[]
+        self.attacked_targets=[]
+        self.enemies_in_radar=[]
+        self.tracked=[]
+        self.selected=0
 
-    attacked_targets=[]
-    enemies_in_radar=[]
-    tracked=[]
-    drops=[]
-    selected=0
     ammo=1680
     magazine=240
     magazine_size=240
@@ -775,7 +775,7 @@ class Enemy:
         self.charg=self.bomb_count
         self.right_sprite= sprite
         self.left_sprite=pygame.transform.flip(self.right_sprite, True, False)
-        
+        self.bombs=[]
         self.left_sprite_rect=self.left_sprite.get_rect()
         self.right_sprite_rect=self.right_sprite.get_rect()
 
@@ -787,7 +787,7 @@ class Enemy:
 
 
         
-    bombs=[]
+    
 
     def get_center_y(self):
         return self.left_sprite.get_height()//2

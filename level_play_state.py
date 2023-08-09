@@ -47,7 +47,7 @@ class Level_Play(GameState):
         self.reward_screen=False
         self.enemy_list=[]
         self.test=test
-        self.player=objects.Player(400,height-107,[],[],'Unnamed',[])
+        self.player=objects.Player(400,height-107,'Unnamed')
         self.enemies=Generate_enemies(self.player)
         
     def handle_events(self, events):
