@@ -669,7 +669,7 @@ class Bomb:
 
         else:
             xy=self.target.get_last_known_position()
-            pygame.draw.rect(screen,('red'),(xy[0],xy[1],10,10))
+            
             angle=self.get_angle()
             angle=round(angle)
          #   print(angle)
@@ -682,6 +682,7 @@ class Bomb:
 
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
+            pygame.draw.rect(screen,('red'),(xy[0],xy[1],10,10))
 
         
     def get_angle(self):
