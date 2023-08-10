@@ -20,9 +20,9 @@ class Level:
         self.description="Level Play"
         self.number=0
         self.waves=[]
+        self.background_path='src\\img\\backgrounds\\background1.png' # defult path
     
     def chek_lock(self,number):
-     #   print("VV")
         if number not in completed_levels:
             self.locked=True
         else:
@@ -38,7 +38,10 @@ class Level:
         return len(self.waves)
     
     def next_level(self):
-        return levels[self.number+1-1] # -1 cuz the lists starts from 0    :D  
+        if self.number+1-1 <= len(levels):
+            return levels[self.number+1-1] #   +1 we need the next level, and -1 cuz lists starts from 0    :D
+        else :
+            return False
     
     def unluck_level(self,level_number):
         completed_level_number = level_number
@@ -62,10 +65,10 @@ class Level_1(Level):
         self.description='Level 1'
         self.number=1
         self.chek_lock(self.number)
-    
+        self.background_path='src\\img\\backgrounds\\background1.png'
         self.waves=[]
-        self.wave_1=[1,0,0,0]
-        self.wave_2=[0,0,1,0]
+        self.wave_1=[3,0,0,0]
+        self.wave_2=[0,0,2,0]
         self.waves.extend([self.wave_1,self.wave_2])
 
 
@@ -79,8 +82,13 @@ class Level_2(Level):
         self.description='Level 2'
         self.number=2
         self.chek_lock(self.number)
+        self.background_path = 'src\\img\\backgrounds\\background2.png'
+        #print(str(self.background_path))
+
+
         self.wave_1=[0,1,0,0]
         self.wave_2=[1,0,0,0]
+
         self.waves.extend([self.wave_1,self.wave_2])
     
 

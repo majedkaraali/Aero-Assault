@@ -6,7 +6,7 @@ from enemy_generator import Generate_enemies
 
 
 
-background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
+#background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
@@ -46,7 +46,12 @@ class Level_Play(GameState):
         self.paues=False
         self.reward_screen=False
         self.enemy_list=[]
+        self.bombs=[]
         self.test=test
+        self.background_path=level.background_path
+        #print(self.background_path)
+        self.background=pygame.image.load(self.background_path).convert_alpha()
+
         self.player=objects.Player(400,height-107,'Unnamed')
         self.enemies=Generate_enemies(self.player)
         
@@ -159,7 +164,7 @@ class Level_Play(GameState):
 
     def draw(self,screen):
       #  print(self.enemy_list)
-        screen.blit(background,background.get_rect())
+        screen.blit(self.background,self.background.get_rect())
         if not (self.paues) :
             if not self.game_over:
                 if not self.complete:
@@ -278,9 +283,24 @@ class Level_Play(GameState):
                     #ATTACK self.PLAYER
                     for enemy in self.enemy_list:
                         enemy.attack(self.player)
-                        enemy.move_bombs()
-                        enemy.draw_bombs(screen)
-                        break
+                        for bomb in enemy.bombs:
+                            if bomb not in  self.bombs and not bomb.exploded:
+                                self.bombs.append(bomb)
+                    
+
+                    for bomb in self.bombs:
+                        bomb.move()
+                        if bomb.exploded==True:
+                            print("AAAAAAa")
+                            self.bombs.remove(bomb)
+
+
+
+                    for bomb in self.bombs:
+                        bomb.draw(screen)
+                        bomb.status(screen)
+
+                        
                                 
 
                     if self.player.destroyed:

@@ -641,6 +641,9 @@ class Bomb:
         self.max_velocity=2
         self.velocity_on_angle=self.max_velocity/90
 
+
+        
+
     def get_rect(self):
         return  self.rect
     
@@ -800,21 +803,10 @@ class Enemy:
     def get_height(self):
         return self.left_sprite.get_height()   
     
-    def move_bombs(self):
-        
-        for bomb in self.bombs:
-            bomb.move()
-            if bomb.exploded==True:
-                self.bombs.remove(bomb)
+
 
     def clear_bombs(self):
         self.bombs.clear()
-
-    def draw_bombs(self,screen):
-        for bomb in self.bombs:
-            bomb.draw(screen)
-            bomb.status(screen)
-
 
     def can_bomb(self):
         current_time = pygame.time.get_ticks()
