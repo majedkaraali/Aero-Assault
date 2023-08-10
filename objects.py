@@ -106,9 +106,14 @@ class Missile:
         
 
     def move_misile(self):
+  
         self.get_colid_point_angle()
-        self.x+=self.turn_vel()[0]
-        self.y-=self.turn_vel()[1]
+        x_turn=self.turn_vel()[0]
+        y_turn=self.turn_vel()[1]
+        
+       # print(x_turn,y_turn)
+        self.x+=x_turn
+        self.y-=y_turn
 
 
         
@@ -309,7 +314,7 @@ class Player:
     barrel=pygame.image.load('src/img/vehicles/barrel2.png')
     barrel_rect=image.get_rect()
     last_known_position=(0,0)
-    last_known_position_update_delay=2000
+    last_known_position_update_delay=800
     last_known_position_updated=False
     last_known_position_update_time = 0
     player_alive=True
@@ -347,6 +352,9 @@ class Player:
         center_x=self.x+(self.get_width()//2)
         return center_x
     
+    def get_centery(self):
+        center_y=self.y+(self.get_height()//2)
+        return center_y
 
     
 
@@ -398,7 +406,8 @@ class Player:
             self.last_known_position_updated = True
         else:
             if current_time >= self.last_known_position_update_time + self.last_known_position_update_delay:
-                self.last_known_position = (self.x, self.y)
+
+                self.last_known_position = (self.get_centerx(), self.get_centery())
                 self.last_known_position_update_time = current_time
             
             
@@ -526,6 +535,7 @@ class Player:
     def move_missiles(self):
         for mis in self.missiles:
             mis.move_misile()
+          
 
     def update_bullets(self,screen):
         for bullet in self.bullets:
@@ -640,6 +650,7 @@ class Bomb:
         self.agm_rect=self.agm.get_rect()
         self.max_velocity=2
         self.velocity_on_angle=self.max_velocity/90
+        self.moved_x=0
 
 
         
@@ -648,6 +659,7 @@ class Bomb:
         return  self.rect
     
     def draw(self,screen):
+       
         if not self.guided:
             rotated_image = pygame.transform.rotate(self.image, self.angle)
             rotated_rect = rotated_image.get_rect()
@@ -656,7 +668,12 @@ class Bomb:
             screen.blit(rotated_image,rotated_rect)
 
         else:
-            rotated_image = pygame.transform.rotate(self.agm, self.angle)
+            xy=self.target.get_last_known_position()
+            pygame.draw.rect(screen,('red'),(xy[0],xy[1],10,10))
+            angle=self.get_angle()
+            angle=round(angle)
+         #   print(angle)
+            rotated_image = pygame.transform.rotate(self.agm, angle)
             rotated_rect = rotated_image.get_rect()
             self.rect.topleft=(self.x,self.y)
             rotated_rect.topleft = (self.x, self.y)
@@ -668,7 +685,7 @@ class Bomb:
 
         
     def get_angle(self):
-        xy=self.target.get_last_known_position()
+        xy=self.target.x,self.target.y
         v1_x=xy[0]
         v1_y=xy[1]+15
         v2_x=(self.x)
@@ -689,26 +706,34 @@ class Bomb:
         if self.guided:
             self.dmage=75
             self.guide_move()
+
         else:
             self.dum_move()
 
-    def guide_move(self):
-        angle=self.get_angle()
-        angle=round(angle)
-        if angle>=180 and angle <270:
-            fixed_angle=angle-180
-            vely=fixed_angle*self.velocity_on_angle
-            velx=self.max_velocity-vely
-            velx=-velx
-            self.x+=velx
-            self.y+=vely
 
-        elif angle >=270:
-            fixed_angle=angle-270
-            velx=fixed_angle*self.velocity_on_angle
-            vely=self.max_velocity-velx
-            self.x+=velx
-            self.y+=vely
+    
+
+
+
+
+    def guide_move(self):
+        xy=self.target.get_last_known_position()
+        x_distance = xy[0] - self.x
+        y_distance = xy[1] - self.y
+        distance = pygame.math.Vector2(x_distance, y_distance)
+        distance.normalize_ip()
+        movement = distance * 1
+
+        self.x += movement.x
+        self.y += movement.y
+        self.moved_x+=abs(movement.x)
+        if self.moved_x>=700:
+            self.y+=0.1
+       
+
+
+   
+      
    
 
             
@@ -745,7 +770,7 @@ class Bomb:
             self.effect(screen)
             self.exploded=True
             
-        elif self.y >= 567:
+        elif self.y >= 580:
             self.effect(screen)
             self.exploded=True
 
@@ -928,6 +953,7 @@ class Enemy:
             self.x-=self.vel
     
     def recharge(self):
+       # pass
         self.bomb_count=self.charg
             
 

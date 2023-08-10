@@ -32,7 +32,7 @@ def main():
 
         current_state.handle_events(events)
         current_state.draw(screen)
-    
+
 
         pygame.display.flip()
       #  print(clock.get_fps())

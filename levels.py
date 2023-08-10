@@ -67,8 +67,8 @@ class Level_1(Level):
         self.chek_lock(self.number)
         self.background_path='src\\img\\backgrounds\\background1.png'
         self.waves=[]
-        self.wave_1=[3,0,0,0]
-        self.wave_2=[0,0,2,0]
+        self.wave_1=[0,1,0,0]
+        self.wave_2=[0,3,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
 
 

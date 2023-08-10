@@ -1,10 +1,15 @@
 from states import GameState
 import objects,os
 import pygame 
+import math 
+from math import atan2 ,pi,degrees
 from windows import game_windows
 from enemy_generator import Generate_enemies
 
 
+crosshair_image = pygame.image.load("src\img\crosshair.png")
+
+crosshair_rect = crosshair_image.get_rect()
 
 #background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
@@ -19,7 +24,6 @@ font = pygame.font.Font(font_path, font_size)
 
 
 width,height=(1100,660)
-
 windo=game_windows()
 
 
@@ -28,7 +32,7 @@ class Level_Play(GameState):
  
     
 
-    def __init__(self,state,level,test):
+    def __init__(self,state,level):
 
       #  super().__init__()
         self.score=0
@@ -47,17 +51,20 @@ class Level_Play(GameState):
         self.reward_screen=False
         self.enemy_list=[]
         self.bombs=[]
-        self.test=test
         self.background_path=level.background_path
-        #print(self.background_path)
         self.background=pygame.image.load(self.background_path).convert_alpha()
 
-        self.player=objects.Player(400,height-107,'Unnamed')
+        self.player=objects.Player(540,height-107,'Unnamed')
+       
         self.enemies=Generate_enemies(self.player)
+        pygame.mouse.set_visible(False)
         
     def handle_events(self, events):
-     #   print(self.test)
         tab_pressed = False
+
+
+
+    
         for event in events:
 
             if event.type == pygame.QUIT:
@@ -184,7 +191,7 @@ class Level_Play(GameState):
                             else:
                                 self.complete=True
                                 
-                            print(self.enemy_list)
+              
 
 
                     self.player.update_bullets(screen)
@@ -291,7 +298,6 @@ class Level_Play(GameState):
                     for bomb in self.bombs:
                         bomb.move()
                         if bomb.exploded==True:
-                            print("AAAAAAa")
                             self.bombs.remove(bomb)
 
 
@@ -300,7 +306,12 @@ class Level_Play(GameState):
                         bomb.draw(screen)
                         bomb.status(screen)
 
-                        
+
+
+
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    crosshair_rect.center = (mouse_x, mouse_y)
+                    screen.blit(crosshair_image, crosshair_rect)
                                 
 
                     if self.player.destroyed:
@@ -313,12 +324,14 @@ class Level_Play(GameState):
 
 
             elif (self.reward_screen):
+                pygame.mouse.set_visible(True)
                 windo.reward_window()
                 windo.draw(screen)
                 windo.draw_frames(screen)
   
 
         elif (self.paues):
+            pygame.mouse.set_visible(True)
             windo.puse_window()
             windo.draw(screen)
             windo.draw_frames(screen)
