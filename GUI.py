@@ -94,6 +94,7 @@ class Frame:
         self.text = text
 
     def get_rect(self):
+      #  print(self.image)
         rect = self.image.get_rect()
         rect.topleft = (self.x, self.y)
     

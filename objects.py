@@ -292,6 +292,7 @@ class Player:
         self.enemies_in_radar=[]
         self.tracked=[]
         self.selected=0
+        self.moving_dir='right'
 
     ammo=1680
     magazine=240
@@ -309,10 +310,14 @@ class Player:
     destroyed=False
     forced=False
     forced_time = 0
-    image=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
-    rect=image.get_rect()
-    barrel=pygame.image.load('src/img/vehicles/barrel2.png')
-    barrel_rect=image.get_rect()
+    right_sprite=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
+    rect=right_sprite.get_rect()
+    left_sprite=pygame.transform.flip(right_sprite, True, False)
+    barrel1=pygame.image.load('src/img/vehicles/barrel1.png')
+    barrel2=pygame.image.load('src/img/vehicles/barrel2.png')
+    
+    
+
     last_known_position=(0,0)
     last_known_position_update_delay=800
     last_known_position_updated=False
@@ -344,9 +349,9 @@ class Player:
         return  self.rect
     
     def get_width(self):
-        return self.image.get_width()
+        return self.left_sprite.get_width()
     def get_height(self):
-        return self.image.get_height()
+        return self.left_sprite.get_height()
 
     def get_centerx(self):
         center_x=self.x+(self.get_width()//2)
@@ -363,8 +368,11 @@ class Player:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             vel_x = -self.move_speed
+            self.moving_dir='left'
+            
             self.moving=True
         elif keys[pygame.K_d]:
+            self.moving_dir='right'
             vel_x = self.move_speed
             self.moving=True
         else:
@@ -376,18 +384,25 @@ class Player:
         
     def update_player(self,screen):
         self.rect.topleft = (self.x, self.y)
-        screen.blit(self.image, self.rect)
-
+        
         mouse_x, mouse_y = pygame.mouse.get_pos()
         angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
        
-        rotated_image = pygame.transform.rotate(self.barrel, -angle)
-        rotated_rect = rotated_image.get_rect()
+        barrel2 = pygame.transform.rotate(self.barrel2, -angle)
+        barrel1 = pygame.transform.rotate(self.barrel1, -angle)
+        rotated_rect = barrel2.get_rect()
         rotated_rect.center = (self.x+57, self.y+30)
 
-
+        screen.blit(barrel1, rotated_rect)
+        if self.moving_dir=='left':
+            screen.blit(self.left_sprite, self.rect)
+        else:
+            screen.blit(self.right_sprite, self.rect)            
+        screen.blit(barrel2, rotated_rect)
         
-        screen.blit(rotated_image, rotated_rect)
+
+
+
         self.radar()
         pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 2))
         pygame.draw.rect(screen, ('darkgreen'), (5, 10, 2, self.radar_min_height))

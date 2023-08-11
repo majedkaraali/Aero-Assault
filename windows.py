@@ -21,14 +21,14 @@ class Screen():
 class game_windows(Screen):
     def __init__(self) -> None:
         super().__init__()
-        self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png')
+        self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png').convert_alpha()
         self.buttons=[]
         self.center=(width//2,height//2)
         self.resume_button=Button(self.center[0],self.center[1]-50,'Resume',18)
         self.options_button=Button(self.center[0],self.center[1]-5,'Options',18)
         self.main_menu_button=Button(self.center[0],self.center[1]+40,'Main Menu',18)
         self.next_level=Button(self.center[0]+65,self.center[1]+40,'Next Level',18)
- 
+        self.ok_button=Button(self.center[0],self.center[1]+217,'OK',18)
 
         self.buttons.extend([self.resume_button,self.options_button,])
         self.smooth_button=pygame.image.load('src/img/GUI/smooth_button.png')
@@ -61,11 +61,25 @@ class game_windows(Screen):
         reward_frame.write("Level Completed")
         self.selected_window=reward_frame  
 
+
+    def tutorial_window(self,image_path):
+ 
+        image=pygame.image.load(image_path).convert_alpha()
+        tuturial=Frame(self.center[0]-image.get_width()//2,self.center[1]-image.get_height()//2,image.get_width(),image.get_height())
+        tuturial.confing(image)
+
+
+        self.ok_button.change_images(self.smooth_button,self.smooth_button_hold)
+        tuturial.add_button(self.ok_button)
+
+        self.selected_window=tuturial      
+
         
     def draw_frames(self, screen):
         if self.selected_window:
             self.selected_window.draw(screen)
             self.selected_window.draw_buttons(screen)
+    
 
     def draw(self, screen):
         pass

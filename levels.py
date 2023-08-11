@@ -21,6 +21,8 @@ class Level:
         self.number=0
         self.waves=[]
         self.background_path='src\\img\\backgrounds\\background1.png' # defult path
+        self.tutorial=False
+        self.tutorial_image=''
     
     def chek_lock(self,number):
         if number not in completed_levels:
@@ -70,7 +72,8 @@ class Level_1(Level):
         self.wave_1=[0,1,0,0]
         self.wave_2=[0,3,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
-
+        self.tutorial=True
+        self.tutorial_image='src\\img\\tutorials\\tuturial3.png'
 
     
 
@@ -90,6 +93,8 @@ class Level_2(Level):
         self.wave_2=[1,0,0,0]
 
         self.waves.extend([self.wave_1,self.wave_2])
+        self.tutorial=True
+        self.tutorial_image='src\\img\\tutorials\\tuturial2.png'
     
 
 class Level_3(Level):
@@ -98,6 +103,12 @@ class Level_3(Level):
         self.name="Level 3"
         self.number=3
         self.chek_lock(self.number)
+        self.wave_1=[0,0,4,0]
+        self.wave_2=[1,2,3,4]
+
+        self.waves.extend([self.wave_1,self.wave_2])
+        self.tutorial=True
+        self.tutorial_image='src\\img\\tutorials\\tuturial3.png'
     
 
 class Level_4(Level):
