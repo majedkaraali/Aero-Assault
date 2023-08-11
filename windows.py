@@ -119,11 +119,11 @@ class Game_modes_window(Screen):
         return []
 
     def levels_frame(self,levels):
-        #print(levels,"%#####")
+
         levels_frame=Levels_Frame(300,125,715,390,3,5)
         for level in levels:
             levels_frame.add_level(level)
-          #  print(level.locked)
+      
 
         self.selected_frame=levels_frame
     

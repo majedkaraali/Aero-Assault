@@ -175,7 +175,7 @@ class Level_Play(GameState):
 
 
     def draw(self,screen):
-      #  print(self.enemy_list)
+
         screen.blit(self.background,self.background.get_rect())
         self.statics(screen)
         if not self.tutorial:

@@ -111,7 +111,6 @@ class Missile:
         x_turn=self.turn_vel()[0]
         y_turn=self.turn_vel()[1]
         
-       # print(x_turn,y_turn)
         self.x+=x_turn
         self.y-=y_turn
 
