@@ -75,6 +75,9 @@ class MenuState():
                     self.screen.level_description_frame(int(button_head),levels)
 
                 elif button_head=="Back":
+                    from levels import levels
+                    for level in levels:
+                        level.chek_lock(level.number)
                     self.screen.levels_frame(levels)
                 
 
