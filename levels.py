@@ -67,9 +67,9 @@ class Level_1(Level):
         self.description='Level 1'
         self.number=1
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background1.png'
+        self.background_path='src\\img\\backgrounds\\background4.png'
         self.waves=[]
-        self.wave_1=[2,0,8,0]
+        self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
         self.tutorial=True
@@ -85,7 +85,7 @@ class Level_2(Level):
         self.description='Level 2'
         self.number=2
         self.chek_lock(self.number)
-        self.background_path = 'src\\img\\backgrounds\\background4.png'
+        self.background_path = 'src\\img\\backgrounds\\background2.png'
         #print(str(self.background_path))
 
 
