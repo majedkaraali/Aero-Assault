@@ -31,7 +31,7 @@ class Generate_enemies:
             vel=2
             x=self.random_distance(move_dircton)
             sprites=loader.random_bomber()
-            enemy=objects.Enemy(x,y,vel,move_dircton,6,0,120,'bomber',130,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,6,0,200,'bomber',130,self.target,sprites)
             self.enemy_list.append(enemy)
 
 

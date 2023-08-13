@@ -821,6 +821,8 @@ class Enemy:
         self.bombs=[]
         self.left_sprite_rect=self.left_sprite.get_rect()
         self.right_sprite_rect=self.right_sprite.get_rect()
+        self.up=False
+        self.down=False
 
     lock_sprite=pygame.image.load('src/img/weapons/lock.png')
     lock_sprite_rect=lock_sprite.get_rect()
@@ -961,6 +963,8 @@ class Enemy:
         
 
     def side_move(self):
+
+
         if self.move_dir=='right':
             self.x+=self.vel
          
@@ -970,6 +974,8 @@ class Enemy:
     def recharge(self):
        # pass
         self.bomb_count=self.charg
+
+
             
 
     def move_enemy(self,screen):
