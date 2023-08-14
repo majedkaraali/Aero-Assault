@@ -119,7 +119,7 @@ class Level_4(Level):
         super().__init__()
         self.name="Level 3"
         self.number=4
-        self.background_path='src\\img\\maps\\NovaExpanse.png'
+        self.background_path='src\\img\\maps\\CrimsonCitadel.png'
         self.wave_1=[0,0,4,0]
         self.wave_2=[1,2,3,2]
 
@@ -146,7 +146,7 @@ class Level_6(Level):
         self.name="Level 3"
         self.number=6
         self.chek_lock(self.number)
-        self.background_path='src\\img\\maps\\EnchantedCaledra.png'
+        self.background_path='src\\img\\maps\\EnchantedCaldera.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -184,7 +184,7 @@ class Level_9(Level):
         self.name="Level 3"
         self.number=9
         self.chek_lock(self.number)
-        self.background_path='src\\img\\maps\\CrimsonCitadel.png'
+        self.background_path='src\\img\\maps\\NovaExpanse.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
