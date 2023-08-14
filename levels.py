@@ -72,7 +72,7 @@ class Level_1(Level):
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
-        
+        self.tutorial=True
         self.tutorial_image='src\\img\\tutorials\\tuturial1.png'
 
     
@@ -106,9 +106,9 @@ class Level_3(Level):
         self.background_path='src\\img\\maps\\Shadowfire.png'
         self.chek_lock(self.number)
         self,
-        self.wave_1=[0,1,0,0]
-        self.wave_2=[0,2,0,0]
-        self.wave_2=[2,0,0,0]
+        self.wave_1=[4,0,0,0]
+        self.wave_2=[2,0,2,0]
+        self.wave_2=[4,0,2,0]
         self.waves.extend([self.wave_1,self.wave_2])
         self.tutorial=True
         self.tutorial_image='src\\img\\tutorials\\tuturial3.png'
@@ -120,12 +120,13 @@ class Level_4(Level):
         self.name="Level 3"
         self.number=4
         self.background_path='src\\img\\maps\\CrimsonCitadel.png'
-        self.wave_1=[0,0,4,0]
-        self.wave_2=[1,2,3,2]
+        self.wave_1=[0,2,0,0]
+        self.wave_2=[2,2,0,0]
 
         self.waves.extend([self.wave_1,self.wave_2])
         self.chek_lock(self.number)
-    
+        self.tutorial=True
+        self.tutorial_image='src\\img\\tutorials\\tuturial4.png'
     
 class Level_5(Level):
     def __init__(self):
@@ -198,8 +199,8 @@ class Level_10(Level):
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
-        self.wave_1=[2,0,0,0]
-        self.wave_2=[2,0,0,0]
+        self.wave_1=[0,1,0,0]
+        self.wave_2=[0,1,0,0]
         self.waves.extend([self.wave_1,self.wave_2])       
 
 levels=[]

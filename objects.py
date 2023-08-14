@@ -403,8 +403,8 @@ class Player:
 
 
         self.radar()
-        pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 4))
-        pygame.draw.rect(screen, ('darkgreen'), (5, 10, 4, self.radar_min_height))
+        pygame.draw.rect(screen, ('#66CD00'), (self.radar_max_left, 10, self.radar_range , 4))
+        pygame.draw.rect(screen, ('#66CD00'), (5, 10, 4, self.radar_min_height))
         
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
@@ -584,7 +584,7 @@ class Player:
                 self.tracked.remove(target)
             elif target in self.attacked_targets:
                 self.tracked.remove(target)
-        print(self.enemies_in_radar)
+      
         
         locked=self.auto_lock()
 
