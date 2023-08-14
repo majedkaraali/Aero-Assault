@@ -8,16 +8,15 @@ from EnemyMaker import Generate_enemies
 
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
-
 crosshair_rect = crosshair_image.get_rect()
 
-#background=pygame.image.load('src/img/backgrounds/background1.png').convert_alpha()
+
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
-
+#pygame.mouse.set_visible(False)
 
         
 
@@ -28,12 +27,12 @@ windo=game_windows()
 
 
 class Level_Play(GameState):
-
+    
  
     
 
     def __init__(self,state,level):
-
+        
       #  super().__init__()
         self.score=0
        # print("GG")
@@ -57,9 +56,11 @@ class Level_Play(GameState):
         self.enemies=Generate_enemies(self.player)
         pygame.mouse.set_visible(False)
         self.tutorial=False
+
         if level.tutorial:
             self.tutorial_image_path=level.tutorial_image
             self.tutorial=True
+
 
         
         
@@ -84,8 +85,8 @@ class Level_Play(GameState):
                 if self.tutorial:
                     if windo.ok_button.holding:
                         self.tutorial=False
-                        pygame.mouse.set_visible(False)
                         pygame.time.delay(200)
+
                 if self.complete:
                     self.level.unluck_level(int(self.level.get_number())+1)
                     if windo.main_menu_button.holding:
@@ -94,6 +95,7 @@ class Level_Play(GameState):
                     if windo.next_level.holding:
                         next_level=self.level.next_level()
                         self.state.level_state(next_level)
+                        
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_button_pressed = False
@@ -131,6 +133,11 @@ class Level_Play(GameState):
                 if not self.paues:
                     if not self.tutorial:
                         self.player.shoot()
+
+        if self.complete or self.reward_screen or self.paues or self.tutorial:
+            pygame.mouse.set_visible(True)
+        else:
+            pygame.mouse.set_visible(False)
 
 
     
@@ -325,27 +332,27 @@ class Level_Play(GameState):
                             self.game_over=True
 
                     elif self.complete:
-                        pygame.mouse.set_visible(True)
                         windo.reward_window()
                         windo.draw(screen)
                         windo.draw_frames(screen)                   
 
 
                 elif (self.reward_screen):
-                    pygame.mouse.set_visible(True)
+          
                     windo.reward_window()
                     windo.draw(screen)
                     windo.draw_frames(screen)
     
 
             elif (self.paues):
-                pygame.mouse.set_visible(True)
+
                 windo.puse_window()
                 windo.draw(screen)
                 windo.draw_frames(screen)
 
         elif self.tutorial:
-            pygame.mouse.set_visible(True)
+            
+            
             windo.tutorial_window(self.tutorial_image_path)
             windo.draw(screen)
             windo.draw_frames(screen)

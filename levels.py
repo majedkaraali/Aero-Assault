@@ -64,7 +64,7 @@ class Level_1(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 1"
-        self.description='Level 1'
+        self.description=f"{self.name}: {'Learn controls.'}"
         self.number=1
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\LunarVein.png'
@@ -82,7 +82,7 @@ class Level_2(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 2"
-        self.description='Level 2'
+        self.description=f"{self.name}: {'Learn How to lead targets'}"
         self.number=2
         self.chek_lock(self.number)
         self.background_path = 'src\\img\\maps\\MidnightMirage.png'
@@ -102,6 +102,7 @@ class Level_3(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 3"
+        self.description=f"{self.name}: {'Learn How to Launch Missiles'}"
         self.number=3
         self.background_path='src\\img\\maps\\Shadowfire.png'
         self.chek_lock(self.number)
@@ -117,11 +118,12 @@ class Level_3(Level):
 class Level_4(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 4"
+        self.description=f"{self.name}: {'Learn How to avoid  guided bombs'}"
         self.number=4
         self.background_path='src\\img\\maps\\CrimsonCitadel.png'
-        self.wave_1=[0,2,0,0]
-        self.wave_2=[2,2,0,0]
+        self.wave_1=[0,1,0,0]
+        self.wave_2=[2,1,0,0]
 
         self.waves.extend([self.wave_1,self.wave_2])
         self.chek_lock(self.number)
@@ -131,7 +133,7 @@ class Level_4(Level):
 class Level_5(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 5"
         self.number=5
         self.background_path='src\\img\\maps\\Azure.png'
         self.wave_1=[3,2,0,0]
@@ -144,7 +146,7 @@ class Level_5(Level):
 class Level_6(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 6"
         self.number=6
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\EnchantedCaldera.png'
@@ -157,7 +159,7 @@ class Level_6(Level):
 class Level_7(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 7"
         self.number=7
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\Crossroads.png'
@@ -170,7 +172,7 @@ class Level_7(Level):
 class Level_8(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 8"
         self.number=8
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\Frostfall.png'
@@ -182,7 +184,7 @@ class Level_8(Level):
 class Level_9(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 9"
         self.number=9
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\NovaExpanse.png'
@@ -194,7 +196,7 @@ class Level_9(Level):
 class Level_10(Level):
     def __init__(self):
         super().__init__()
-        self.name="Level 3"
+        self.name="Level 10"
         self.number=10
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
