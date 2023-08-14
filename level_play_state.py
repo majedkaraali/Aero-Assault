@@ -7,7 +7,7 @@ from windows import game_windows
 from enemy_generator import Generate_enemies
 
 
-crosshair_image = pygame.image.load("src\img\crosshair.png")
+crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 
 crosshair_rect = crosshair_image.get_rect()
 

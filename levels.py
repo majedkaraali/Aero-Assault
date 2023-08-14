@@ -20,7 +20,7 @@ class Level:
         self.description="Level Play"
         self.number=0
         self.waves=[]
-        self.background_path='src\\img\\backgrounds\\background1.png' # defult path
+        self.background_path='src\\img\\maps\\LunarVein.png' # defult path
         self.tutorial=False
         self.tutorial_image=''
     
@@ -67,7 +67,7 @@ class Level_1(Level):
         self.description='Level 1'
         self.number=1
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background1.png'
+        self.background_path='src\\img\\maps\\LunarVein.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -85,7 +85,7 @@ class Level_2(Level):
         self.description='Level 2'
         self.number=2
         self.chek_lock(self.number)
-        self.background_path = 'src\\img\\backgrounds\\background2.png'
+        self.background_path = 'src\\img\\maps\\MidnightMirage.png'
         #print(str(self.background_path))
 
 
@@ -103,7 +103,7 @@ class Level_3(Level):
         super().__init__()
         self.name="Level 3"
         self.number=3
-        self.background_path='src\\img\\backgrounds\\background3.png'
+        self.background_path='src\\img\\maps\\Shadowfire.png'
         self.chek_lock(self.number)
         self,
         self.wave_1=[0,1,0,0]
@@ -119,7 +119,7 @@ class Level_4(Level):
         super().__init__()
         self.name="Level 3"
         self.number=4
-        self.background_path='src\\img\\backgrounds\\background4.png'
+        self.background_path='src\\img\\maps\\NovaExpanse.png'
         self.wave_1=[0,0,4,0]
         self.wave_2=[1,2,3,2]
 
@@ -132,7 +132,7 @@ class Level_5(Level):
         super().__init__()
         self.name="Level 3"
         self.number=5
-        self.background_path='src\\img\\backgrounds\\background5.png'
+        self.background_path='src\\img\\maps\\Azure.png'
         self.wave_1=[3,2,0,0]
         self.wave_2=[0,0,0,5]
         self.wave_3=[6,1,2,0]
@@ -146,7 +146,7 @@ class Level_6(Level):
         self.name="Level 3"
         self.number=6
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background6.png'
+        self.background_path='src\\img\\maps\\EnchantedCaledra.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -159,7 +159,7 @@ class Level_7(Level):
         self.name="Level 3"
         self.number=7
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background7.png'
+        self.background_path='src\\img\\maps\\Crossroads.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -172,7 +172,7 @@ class Level_8(Level):
         self.name="Level 3"
         self.number=8
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background8.png'
+        self.background_path='src\\img\\maps\\Frostfall.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -184,7 +184,7 @@ class Level_9(Level):
         self.name="Level 3"
         self.number=9
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background9.png'
+        self.background_path='src\\img\\maps\\CrimsonCitadel.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
@@ -196,7 +196,7 @@ class Level_10(Level):
         self.name="Level 3"
         self.number=10
         self.chek_lock(self.number)
-        self.background_path='src\\img\\backgrounds\\background10.png'
+        self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
