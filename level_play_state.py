@@ -4,7 +4,7 @@ import pygame
 import math 
 from math import atan2 ,pi,degrees
 from windows import game_windows
-from enemy_generator import Generate_enemies
+from EnemyMaker import Generate_enemies
 
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")

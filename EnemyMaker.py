@@ -67,7 +67,7 @@ class Generate_enemies:
         
 
     def random_height(self):
-        y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400,430,470,500]
+        y_spawns=[5,33,60,90,120,150,180,210,240,270,300,330,370,400]
         y=random.choice(y_spawns)
         return y
     

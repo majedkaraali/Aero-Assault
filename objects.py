@@ -334,7 +334,7 @@ class Player:
     pods_reload_start_time=0
     radar_range=900
     radar_max_left=0
-    radar_min_height=300
+    radar_min_height=250
 
     def clear(self):
         self.attacked_targets.clear()
@@ -403,8 +403,8 @@ class Player:
 
 
         self.radar()
-        pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 2))
-        pygame.draw.rect(screen, ('darkgreen'), (5, 10, 2, self.radar_min_height))
+        pygame.draw.rect(screen, ('darkgreen'), (self.radar_max_left, 10, self.radar_range , 4))
+        pygame.draw.rect(screen, ('darkgreen'), (5, 10, 4, self.radar_min_height))
         
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
@@ -562,14 +562,16 @@ class Player:
     def radar(self):
         max_left=self.x-self.radar_range//2
         max_right=self.x+self.radar_range//2
-        radar_angle=list(range(max_left,max_right))
         self.radar_max_left=max_left
-        self.enemies_in_radar=[]
+
+        radar_angle=list(range(max_left,max_right))
+        radar_rect=pygame.Rect(max_left,10,self.radar_range,self.radar_min_height)
+        
+        
         enemies=self.get_enemies
 
         for enemy in enemies:
-            if enemy.get_centerx() in radar_angle and enemy.y < self.radar_min_height:
-                    self.enemies_in_radar.append(enemy)
+            if enemy.get_rect().colliderect(radar_rect) :
                     if enemy not in self.tracked :
                             if enemy not in self.attacked_targets:
                                 self.tracked.append(enemy)
@@ -582,7 +584,7 @@ class Player:
                 self.tracked.remove(target)
             elif target in self.attacked_targets:
                 self.tracked.remove(target)
-            
+        print(self.enemies_in_radar)
         
         locked=self.auto_lock()
 
@@ -990,7 +992,7 @@ class Enemy:
 
 
     def get_rect(self):
-        return  self.right_sprite_rect
+        return  self.left_sprite_rect
     
     def get_angle_between_rects(self,rect1, rect2):
 

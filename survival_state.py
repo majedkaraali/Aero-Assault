@@ -2,7 +2,7 @@ from states import GameState
 import objects
 import pygame 
 from states import statics_image,font,background
-from enemy_generator import Generate_enemies
+from EnemyMaker import Generate_enemies
 width,height=1100,660
 def _player():
         global player
