@@ -265,7 +265,7 @@ class Bullet:
     def out_of_range(self):
 
 
-        if abs(self.moved_y)>500:
+        if abs(self.moved_y)>800:
             return True
 
         else:
@@ -293,14 +293,11 @@ class Player:
         self.selected=0
         self.moving_dir='right'
 
-    ammo=1680
-    magazine=240
     magazine_size=240
     reloading=False
     moving=False
     droped_ammo=0
-    missiles_storage=12
-    ready_to_fire_missiles=4
+
     pods_size=4
     reloading_pods=False
     out_of_missiles=False
@@ -342,6 +339,16 @@ class Player:
         self.tracked.clear()
         self.drops.clear()
         self.selected=0
+
+    def loadout(self,player_loadout):
+        ammo=player_loadout[0]
+        magazine=player_loadout[1]
+        missiles_storage=player_loadout[2]
+        ready_to_fire_missiles=player_loadout[3]
+        self.ammo=ammo                                              #1680
+        self.magazine=magazine                                      #240
+        self.missiles_storage=missiles_storage                      #12
+        self.ready_to_fire_missiles=ready_to_fire_missiles          #4
     
     def get_rect(self):
         self.rect.topleft=(self.x,self.y)

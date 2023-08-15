@@ -53,6 +53,8 @@ class Level_Play(GameState):
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
         self.player=objects.Player(540,height-107,'Unnamed')
+        print(level.player_loadout)
+        self.player.loadout(level.player_loadout)
         self.enemies=Generate_enemies(self.player)
         pygame.mouse.set_visible(False)
         self.tutorial=False

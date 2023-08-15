@@ -20,9 +20,10 @@ class Level:
         self.description="Level Play"
         self.number=0
         self.waves=[]
-        self.background_path='src\\img\\maps\\LunarVein.png' # defult path
+        self.background_path='src\\img\\maps\\LunarVein.png' # default path
         self.tutorial=False
         self.tutorial_image=''
+        self.player_loadout=(1680,240,12,4) # default
     
     def chek_lock(self,number):
         if number not in completed_levels:
@@ -74,6 +75,7 @@ class Level_1(Level):
         self.waves.extend([self.wave_1,self.wave_2])
         self.tutorial=True
         self.tutorial_image='src\\img\\tutorials\\tuturial1.png'
+        self.player_loadout=(480,240,0,0)
 
     
 
@@ -138,7 +140,7 @@ class Level_5(Level):
         self.background_path='src\\img\\maps\\Azure.png'
         self.wave_1=[3,2,0,0]
         self.wave_2=[0,0,0,5]
-        self.wave_3=[6,1,2,0]
+        self.wave_3=[6,0,2,0]
         self.waves.extend([self.wave_1,self.wave_2,self.wave_3])
         self.chek_lock(self.number)
     
