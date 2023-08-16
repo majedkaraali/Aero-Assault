@@ -62,13 +62,20 @@ class Level_Play(GameState):
         if level.tutorial:
             self.tutorial_image_path=level.tutorial_image
             self.tutorial=True
+        self.allies=[]
+        self.ally1=objects.Ally(-120,height-112,88,66)
+        self.ally2=objects.Ally(-220,height-112,88,66)
+        self.ally3=objects.Ally(-320,height-112,88,66)
+        self.ally4=objects.Ally(-420,height-112,88,66)
+        self.allies.extend([self.ally1,self.ally2,self.ally3,self.ally4])
 
 
         
         
     def handle_events(self, events):
         tab_pressed = False
-        
+        for ally in self.allies:
+            ally.move()
         for event in events:
 
             if event.type == pygame.QUIT:
@@ -140,6 +147,8 @@ class Level_Play(GameState):
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
+
+        
 
 
     
@@ -220,6 +229,9 @@ class Level_Play(GameState):
                         self.player.move_drops(screen,self.player)
                         self.player.is_destroyed()   
                         self.player.get_enemies=self.get_enemies() 
+
+                        for ally in self.allies:
+                            ally.draw(screen)
                         
                         
                         
