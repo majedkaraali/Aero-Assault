@@ -293,6 +293,7 @@ class Player:
         self.selected=0
         self.moving_dir='right'
 
+
     magazine_size=240
     reloading=False
     moving=False
@@ -332,6 +333,7 @@ class Player:
     radar_range=900
     radar_max_left=0
     radar_min_height=250
+    
 
     def clear(self):
         self.attacked_targets.clear()
@@ -651,11 +653,13 @@ class Player:
             if drop.expired():
                 if drop in self.drops:
                     self.drops.remove(drop)
-
+  
+    def bombed(self,dmage):
+        self.health-=dmage
  
 
 class Bomb:
-    def __init__(self,x,y,velx,vely,guided,target,angle):
+    def __init__(self,x,y,velx,vely,guided,angle):
         self.x=x
         self.y=y
         self.width=4
@@ -663,7 +667,7 @@ class Bomb:
         self.velx=velx
         self.vely=vely
         self.guided=guided
-        self.target=target
+        self.target=False
         self.dmage=50
         self.exploded=False
         self.angle=angle
@@ -772,9 +776,11 @@ class Bomb:
 
 
 
-    def hit_player(self):
-        if self.get_rect().colliderect(self.target.get_rect()):
-            return True
+    def is_hit_object(self,objects):
+        for obj in objects:
+            if self.get_rect().colliderect(obj.get_rect()):
+                self.exploded=True
+                obj.bombed(self.dmage)
       
         
     def explode_and_dmage(self):
@@ -789,12 +795,7 @@ class Bomb:
         
     def status(self,screen):
         
-        if self.hit_player():
-            self.explode_and_dmage()
-            self.effect(screen)
-            self.exploded=True
-            
-        elif self.y >= 580:
+        if self.y >= 580:
             self.effect(screen)
             self.exploded=True
 
@@ -807,14 +808,17 @@ class Bomb:
 
 class Ally:
     def __init__(self, x, y, frame_width, frame_height):
-        self.spritesheet = pygame.image.load("src/img/HMV.png")
+        self.spritesheet = pygame.image.load("src/img/HMV3.png")
         self.sprite_width=self.spritesheet.get_width()
         self.sprite_height= self.spritesheet.get_height()
         self.x=x
         self.y=y
+        self.height=frame_height
+        self.width=frame_width
         self.frames = []  
         self.current_frame = 0
-        self.health=100
+        self.health=5
+        self.destroyed=False
 
         
         self.load_frames(self.sprite_width, self.sprite_height, frame_width, frame_height)
@@ -827,16 +831,29 @@ class Ally:
                 self.frames.append(frame)
 
     def move(self):
+        if self.health<=0:
+            self.destroyed=True
+
         self.x+=1
         
+    def status(self,bombs):
+        pass
 
+    def get_rect(self):
+        rect=pygame.Rect(self.x,self.y,self.width,self.height)
+        return rect
+    
     def draw(self,screen):
+
         screen.blit(self.frames[self.current_frame], (self.x, self.y))
+        
         self.current_frame += 1
         if self.current_frame >= len(self.frames):
             self.current_frame = 0  
-
-
+        if debug:
+            pygame.draw.rect(screen,'blue',self.get_rect())
+    def bombed(self,dmage):
+        self.health-=dmage
 
          
 
@@ -940,9 +957,9 @@ class Enemy:
                         if not guided:
                             if self.bomb_count>0:
                                 if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,target,135)
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,135)
                                 else:
-                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,target,45)
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,45)
                                 self.bombs.append(bomb)
                                 self.last_bomb_time = pygame.time.get_ticks()
                                 self.bomb_count-=1

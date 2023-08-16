@@ -48,8 +48,10 @@ class Level_Play(GameState):
         self.mouse_button_pressed=False
         self.paues=False
         self.reward_screen=False
+        self.allies=[]
         self.enemy_list=[]
         self.bombs=[]
+        self.ground_vhls=[]
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
         self.player=objects.Player(540,height-107,'Unnamed')
@@ -62,13 +64,20 @@ class Level_Play(GameState):
         if level.tutorial:
             self.tutorial_image_path=level.tutorial_image
             self.tutorial=True
-        self.allies=[]
-        self.ally1=objects.Ally(-120,height-112,88,66)
-        self.ally2=objects.Ally(-220,height-112,88,66)
-        self.ally3=objects.Ally(-320,height-112,88,66)
-        self.ally4=objects.Ally(-420,height-112,88,66)
-        self.allies.extend([self.ally1,self.ally2,self.ally3,self.ally4])
 
+
+        self.ground_vhls.append(self.player)
+
+        if level.allies:
+            ally_start_point=-400
+            for ally in range(level.allies_count):
+                ally=objects.Ally(ally_start_point,height-105,88,46)
+                self.allies.append(ally)
+                ally_start_point-=100
+
+        self.ground_vhls.extend(self.allies)
+
+        print(self.ground_vhls)
 
         
         
@@ -76,6 +85,8 @@ class Level_Play(GameState):
         tab_pressed = False
         for ally in self.allies:
             ally.move()
+            ally.status(self.bombs)
+
         for event in events:
 
             if event.type == pygame.QUIT:
@@ -232,6 +243,8 @@ class Level_Play(GameState):
 
                         for ally in self.allies:
                             ally.draw(screen)
+                            if ally.destroyed:
+                                self.allies.remove(ally)
                         
                         
                         
@@ -317,6 +330,10 @@ class Level_Play(GameState):
 
                         #ATTACK self.PLAYER
                         for enemy in self.enemy_list:
+                            # if len(self.allies)>0:
+                            #     enemy.attack(self.player,self.allies)
+                            # else:
+                            #     enemy.attack(self.player)
                             enemy.attack(self.player)
                             for bomb in enemy.bombs:
                                 if bomb not in  self.bombs and not bomb.exploded:
@@ -333,6 +350,10 @@ class Level_Play(GameState):
                         for bomb in self.bombs:
                             bomb.draw(screen)
                             bomb.status(screen)
+                            bomb.is_hit_object(self.ground_vhls)
+
+
+                       
 
 
 

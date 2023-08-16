@@ -19,6 +19,7 @@ class Level:
         Level.levels_cont+=1
         self.description="Level Play"
         self.number=0
+        self.allies=False
         self.waves=[]
         self.background_path='src\\img\\maps\\LunarVein.png' # default path
         self.tutorial=False
@@ -77,6 +78,7 @@ class Level_1(Level):
         self.tutorial_image='src\\img\\tutorials\\tuturial1.png'
         self.player_loadout=(480,240,0,0)
 
+
     
 
 
@@ -88,7 +90,7 @@ class Level_2(Level):
         self.number=2
         self.chek_lock(self.number)
         self.background_path = 'src\\img\\maps\\MidnightMirage.png'
-        #print(str(self.background_path))
+  
 
 
         self.wave_1=[2,0,0,0]
@@ -138,11 +140,14 @@ class Level_5(Level):
         self.name="Level 5"
         self.number=5
         self.background_path='src\\img\\maps\\Azure.png'
-        self.wave_1=[3,2,0,0]
-        self.wave_2=[0,0,0,5]
-        self.wave_3=[6,0,2,0]
+        self.description=f"{self.name}: {'Defend allies as they go on their mission'}"
+        self.wave_1=[3,0,0,0]
+        self.wave_2=[3,0,0,0]
+        self.wave_3=[4,0,2,0]
         self.waves.extend([self.wave_1,self.wave_2,self.wave_3])
         self.chek_lock(self.number)
+        self.allies=True
+        self.allies_count=4
     
 
 class Level_6(Level):
