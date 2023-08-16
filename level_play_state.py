@@ -48,9 +48,10 @@ class Level_Play(GameState):
         self.mouse_button_pressed=False
         self.paues=False
         self.reward_screen=False
-        self.allies=[]
+        self.allies=False
         self.enemy_list=[]
         self.bombs=[]
+        self.base=None
         self.ground_vhls=[]
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
@@ -61,6 +62,7 @@ class Level_Play(GameState):
         pygame.mouse.set_visible(False)
         self.tutorial=False
 
+
         if level.tutorial:
             self.tutorial_image_path=level.tutorial_image
             self.tutorial=True
@@ -69,23 +71,31 @@ class Level_Play(GameState):
         self.ground_vhls.append(self.player)
 
         if level.allies:
+            self.allies=[]
             ally_start_point=-400
             for ally in range(level.allies_count):
-                ally=objects.Ally(ally_start_point,height-105,88,46)
+                ally=objects.Ally(ally_start_point,height-95,88,46)
                 self.allies.append(ally)
                 ally_start_point-=100
+            self.ground_vhls.extend(self.allies)
 
-        self.ground_vhls.extend(self.allies)
 
-        print(self.ground_vhls)
+        if level.base:
+            self.base=objects.Base(level.base_loc[0],level.base_loc[1],level.base_hp)
+            self.ground_vhls.append(self.base)
+
+
+            
+
 
         
         
     def handle_events(self, events):
         tab_pressed = False
-        for ally in self.allies:
-            ally.move()
-            ally.status(self.bombs)
+        if self.allies:
+            for ally in self.allies:
+                ally.move()
+                ally.status(self.bombs)
 
         for event in events:
 
@@ -207,6 +217,7 @@ class Level_Play(GameState):
 
         screen.blit(self.background,self.background.get_rect())
         self.statics(screen)
+
         if not self.tutorial:
             if not (self.paues) :
                 if not self.game_over:
@@ -228,7 +239,13 @@ class Level_Play(GameState):
                                     self.complete=True
                                     
                 
-
+                        if self.allies:
+                            for ally in self.allies:
+                                ally.draw(screen)
+                                if ally.destroyed:
+                                    self.allies.remove(ally)
+                        if self.base:
+                            self.base.draw(screen)
 
                         self.player.update_bullets(screen)
                         self.player.update_player(screen)
@@ -241,10 +258,7 @@ class Level_Play(GameState):
                         self.player.is_destroyed()   
                         self.player.get_enemies=self.get_enemies() 
 
-                        for ally in self.allies:
-                            ally.draw(screen)
-                            if ally.destroyed:
-                                self.allies.remove(ally)
+
                         
                         
                         
@@ -349,8 +363,8 @@ class Level_Play(GameState):
 
                         for bomb in self.bombs:
                             bomb.draw(screen)
-                            bomb.status(screen)
                             bomb.is_hit_object(self.ground_vhls)
+                            bomb.status(screen)
 
 
                        

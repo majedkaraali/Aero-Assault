@@ -728,7 +728,7 @@ class Bomb:
 
         return degs
         
-        
+    
 
     def move(self):
         if self.guided:
@@ -783,21 +783,17 @@ class Bomb:
                 obj.bombed(self.dmage)
       
         
-    def explode_and_dmage(self):
-        if not self.exploded:
-            if self.target.health-self.dmage<0:
-                self.target.health=0
-            else:
-                self.target.health-=self.dmage
-            self.exploded=True
+ 
         
 
         
     def status(self,screen):
-        
+
         if self.y >= 580:
-            self.effect(screen)
             self.exploded=True
+
+        if self.exploded:
+            self.effect(screen)
 
     def effect(self,screen):
         
@@ -817,7 +813,7 @@ class Ally:
         self.width=frame_width
         self.frames = []  
         self.current_frame = 0
-        self.health=5
+        self.health=100
         self.destroyed=False
 
         
@@ -859,8 +855,26 @@ class Ally:
 
 
 
+class Base:
+    def __init__(self,x,y,hp):
+        self.x=x
+        self.y=y
+        self.health=hp
+        self.image=pygame.image.load('src\\img\\maps\\base.png')
+        print("aaaaa")
+        self.rect=self.image.get_rect()
+        self.rect.center=(self.x,self.y)
 
+    def draw(self,screen):
+        screen.blit(self.image,self.rect)
+        hb_bar=pygame.Rect(self.x,self.y,self.health,10)
+        pygame.draw.rect(screen,'green',hb_bar)
 
+    def get_rect(self):
+        return self.rect
+
+    def bombed(self,dmage):
+        self.health-=dmage
 
 
 class Enemy:
@@ -968,9 +982,9 @@ class Enemy:
                         else:
                             if self.guided_bomb>0:
                                 if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,target,0)
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,0)
                                 else:
-                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,target,0)
+                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,0)
 
                                 self.bombs.append(bomb)
                                 self.last_bomb_time = pygame.time.get_ticks()

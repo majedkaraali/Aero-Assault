@@ -25,6 +25,7 @@ class Level:
         self.tutorial=False
         self.tutorial_image=''
         self.player_loadout=(1680,240,12,4) # default
+        self.base=False
     
     def chek_lock(self,number):
         if number not in completed_levels:
@@ -146,8 +147,7 @@ class Level_5(Level):
         self.wave_3=[4,0,2,0]
         self.waves.extend([self.wave_1,self.wave_2,self.wave_3])
         self.chek_lock(self.number)
-        self.allies=True
-        self.allies_count=4
+
     
 
 class Level_6(Level):
@@ -161,6 +161,8 @@ class Level_6(Level):
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
+        self.allies=True
+        self.allies_count=4
     
 
 class Level_7(Level):
@@ -174,6 +176,8 @@ class Level_7(Level):
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
+        self.allies=True
+        self.allies_count=4
     
 
 class Level_8(Level):
@@ -208,9 +212,12 @@ class Level_10(Level):
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
-        self.wave_1=[0,1,0,0]
-        self.wave_2=[0,1,0,0]
-        self.waves.extend([self.wave_1,self.wave_2])       
+        self.wave_1=[3,0,0,0]
+        self.wave_2=[3,0,0,0]
+        self.waves.extend([self.wave_1,self.wave_2])
+        self.base=True
+        self.base_loc=(550,550)      
+        self.base_hp=200
 
 levels=[]
 a=Level_1()

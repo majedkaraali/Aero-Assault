@@ -42,7 +42,7 @@ pygame.display.set_caption("Sprite Example")
 
 
 
-sprite = Sprite( 20,20,  88, 46)
+sprite = Sprite(20,20,88,46)
 
 running = True
 while running:
