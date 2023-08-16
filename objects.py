@@ -805,6 +805,47 @@ class Bomb:
 
 
 
+class Ally():
+    def __init__(self, x, y, frame_width, frame_height):
+        self.spritesheet = pygame.image.load("src/img/HMV.png")
+        self.sprite_width=self.spritesheet.get_width()
+        self.sprite_height= self.spritesheet.get_height()
+        self.x=x
+        self.y=y
+        self.frames = []  
+        self.current_frame = 0
+        self.health=100
+
+        
+        self.load_frames(self.sprite_width, self.sprite_height, frame_width, frame_height)
+    
+    def load_frames(self, width, height, frame_width, frame_height):
+        for y_offset in range(0, height, frame_height):
+            for x_offset in range(0, width, frame_width):
+                frame_rect = pygame.Rect(x_offset, y_offset, frame_width, frame_height)
+                frame = self.spritesheet.subsurface(frame_rect)
+                self.frames.append(frame)
+
+    def move(self):
+        self.x+=1
+        
+
+    def draw(self,screen):
+        screen.blit(self.frames[self.current_frame], (self.x, self.y))
+        self.current_frame += 1
+        if self.current_frame >= len(self.frames):
+            self.current_frame = 0  
+
+
+
+         
+
+
+
+
+
+
+
 class Enemy:
     def __init__(self,x,y,vel,move_dir,bomb_count,guided_bomb,shooting_range,tag,health,target,sprite):
         self.x=x
