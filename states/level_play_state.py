@@ -1,8 +1,6 @@
-from states import GameState
+from states.states import GameState
 import objects,os
 import pygame 
-import math 
-from math import atan2 ,pi,degrees
 from windows import game_windows
 from EnemyMaker import Generate_enemies
 

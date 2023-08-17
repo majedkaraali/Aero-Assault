@@ -869,13 +869,17 @@ class Base:
 
     def draw(self,screen):
         screen.blit(self.image,self.rect)
-        hb_bar=pygame.Rect(self.x,self.y-50,self.health_percentage,10)
-        if self.health_percentage<70:
+        hb_bar=pygame.Rect(self.x-40,self.y-80,self.health_percentage,10)
+
+        if self.health_percentage>=70 and self.health_percentage<=100:
             color='green'
-        elif self.health_percentage<50:
+
+        elif self.health_percentage>=50  and self.health_percentage<=69:
             color='yellow'
-        else:
+
+        elif self.health_percentage>=1 and self.health_percentage<=49:
             color='red'
+
         pygame.draw.rect(screen,color,hb_bar)
         self.health_percentage = (self.actual_health / self.base_health) * 100
 
@@ -954,7 +958,6 @@ class Enemy:
             distance_x=abs(distance_x)
             distance_y=abs(self.y)-abs(target.y)
             target_x=target.get_centerx()
-
 
             guided=False
             if self.tag=='strike':

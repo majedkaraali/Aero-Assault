@@ -17,13 +17,13 @@ class State():
         self.state=(current_state)
 
     def level_state(self,level):
-        from level_play_state import Level_Play
+        from states.level_play_state import Level_Play
         current_state=Level_Play(state,level)
         self.state=(current_state)
 
     def menu_state(self):
         
-        from menu_state import MenuState
+        from states.menu_state import MenuState
         current_state=MenuState(state)
         self.state=(current_state)
 

@@ -13,7 +13,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("SPAA Game")
 
 
-from states import state
+from states import states
+state=states.state
 state.menu_state()
 
 
