@@ -216,8 +216,9 @@ class Level_10(Level):
         self.wave_2=[3,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
         self.base=True
-        self.base_loc=(550,550)      
-        self.base_hp=200
+        self.base_loc=(650,568)      
+        self.base_hp=300
+        
 
 levels=[]
 a=Level_1()

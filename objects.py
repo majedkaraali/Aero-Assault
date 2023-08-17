@@ -859,22 +859,37 @@ class Base:
     def __init__(self,x,y,hp):
         self.x=x
         self.y=y
-        self.health=hp
         self.image=pygame.image.load('src\\img\\maps\\base.png')
-        print("aaaaa")
         self.rect=self.image.get_rect()
         self.rect.center=(self.x,self.y)
+        self.base_health=hp
+        self.actual_health=self.base_health
+        self.health_percentage = (self.actual_health / self.base_health) * 100
+        self.destroyed=False
+
 
     def draw(self,screen):
         screen.blit(self.image,self.rect)
-        hb_bar=pygame.Rect(self.x,self.y,self.health,10)
-        pygame.draw.rect(screen,'green',hb_bar)
+        hb_bar=pygame.Rect(self.x,self.y-50,self.health_percentage,10)
+        if self.health_percentage<70:
+            color='green'
+        elif self.health_percentage<50:
+            color='yellow'
+        else:
+            color='red'
+        pygame.draw.rect(screen,color,hb_bar)
+        self.health_percentage = (self.actual_health / self.base_health) * 100
+        print(self.health_percentage)
 
     def get_rect(self):
         return self.rect
 
     def bombed(self,dmage):
-        self.health-=dmage
+        self.actual_health-=dmage
+        if self.actual_health<=0:
+            self.destroyed=True
+
+
 
 
 class Enemy:
