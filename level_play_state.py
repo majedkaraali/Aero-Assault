@@ -60,6 +60,8 @@ class Level_Play(GameState):
         self.player.loadout(level.player_loadout)
         self.enemies=Generate_enemies(self.player)
         pygame.mouse.set_visible(False)
+        pygame.mouse.set_pos((1000, 500))
+
         self.tutorial=False
 
 
@@ -71,13 +73,14 @@ class Level_Play(GameState):
         self.ground_vhls.append(self.player)
 
         if level.allies:
-            self.allies=[]
+            self.allies=True
+            self.allies_list=[]
             ally_start_point=-400
             for ally in range(level.allies_count):
                 ally=objects.Ally(ally_start_point,height-95,88,46)
-                self.allies.append(ally)
+                self.allies_list.append(ally)
                 ally_start_point-=100
-            self.ground_vhls.extend(self.allies)
+            self.ground_vhls.extend(self.allies_list)
 
 
         if level.base:
@@ -93,7 +96,7 @@ class Level_Play(GameState):
     def handle_events(self, events):
         tab_pressed = False
         if self.allies:
-            for ally in self.allies:
+            for ally in self.allies_list:
                 ally.move()
                 ally.status(self.bombs)
 
@@ -250,10 +253,14 @@ class Level_Play(GameState):
                                         
                     
                             if self.allies:
-                                for ally in self.allies:
+                                if len(self.allies_list)==0:
+                                    self.lose=True
+        
+                                    
+                                for ally in self.allies_list:
                                     ally.draw(screen)
                                     if ally.destroyed:
-                                        self.allies.remove(ally)
+                                        self.allies_list.remove(ally)
 
 
                             if self.base:

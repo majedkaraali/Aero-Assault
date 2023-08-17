@@ -165,7 +165,7 @@ class Level_6(Level):
         self.wave_2=[2,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
         self.allies=True
-        self.allies_count=4
+        self.allies_count=1
     
 
 class Level_7(Level):
