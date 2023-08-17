@@ -699,7 +699,6 @@ class Bomb:
             
             angle=self.get_angle()
             angle=round(angle)
-         #   print(angle)
             rotated_image = pygame.transform.rotate(self.agm, angle)
             rotated_rect = rotated_image.get_rect()
             self.rect.topleft=(self.x,self.y)
@@ -879,7 +878,6 @@ class Base:
             color='red'
         pygame.draw.rect(screen,color,hb_bar)
         self.health_percentage = (self.actual_health / self.base_health) * 100
-        print(self.health_percentage)
 
     def get_rect(self):
         return self.rect

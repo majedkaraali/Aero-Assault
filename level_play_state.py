@@ -125,6 +125,14 @@ class Level_Play(GameState):
                     if windo.next_level.holding:
                         next_level=self.level.next_level()
                         self.state.level_state(next_level)
+
+                if self.lose:
+                    if windo.retry.holding:
+                        retry_lvl=self.level.retry_level()
+                        self.state.level_state(retry_lvl)
+                        
+                    if windo.main_menu_button.holding:
+                        self.state.menu_state()
                         
 
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -140,6 +148,7 @@ class Level_Play(GameState):
 
                     elif self.paues:
                         self.paues=False
+                    
                     
 
                 
@@ -163,6 +172,7 @@ class Level_Play(GameState):
                 if not self.paues:
                     if not self.tutorial:
                         self.player.shoot()
+
 
         if self.complete or self.reward_screen or self.paues or self.tutorial or self.lose:
             pygame.mouse.set_visible(True)

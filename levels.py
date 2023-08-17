@@ -47,6 +47,9 @@ class Level:
             return levels[self.number+1-1] #   +1 we need the next level, and -1 cuz lists starts from 0    :D
         else :
             return False
+        
+    def retry_level(self):
+        return levels[self.number-1]
     
     def unluck_level(self,level_number):
         completed_level_number = level_number

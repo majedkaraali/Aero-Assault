@@ -28,6 +28,7 @@ class game_windows(Screen):
         self.options_button=Button(self.center[0],self.center[1]-5,'Options',18)
         self.main_menu_button=Button(self.center[0],self.center[1]+40,'Main Menu',18)
         self.next_level=Button(self.center[0]+65,self.center[1]+40,'Next Level',18)
+        self.retry=Button(self.center[0]+65,self.center[1]+40,'Retry',18)
         self.ok_button=Button(self.center[0],self.center[1]+217,'OK',18)
 
         self.buttons.extend([self.resume_button,self.options_button,])
@@ -77,12 +78,11 @@ class game_windows(Screen):
     def lose_window(self):
         lose_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
         lose_frame.confing(self.pause_image)
-        self.next_level.change_images(self.smooth_button,self.smooth_button_hold)
-        self.next_level.text="Retry"
+        self.retry.change_images(self.smooth_button,self.smooth_button_hold)
         self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
         self.main_menu_button.change_location(self.center[0]-65,self.center[1]+40)
         lose_frame.add_button(self.main_menu_button)
-        lose_frame.add_button(self.next_level)
+        lose_frame.add_button(self.retry)
     
         lose_frame.write("Game Over")
         self.selected_window=lose_frame     
