@@ -21,7 +21,7 @@ state.menu_state()
 
 def main():
     while state.running:
-        current_state=state.get_state()
+        current_state=state
 
         clock.tick(60)
         events = pygame.event.get()

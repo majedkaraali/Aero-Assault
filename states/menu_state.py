@@ -13,7 +13,7 @@ class MenuState():
         self.screen=main_menu_window
         self.buttons=self.screen.get_buttons()
         self.state=state
-        
+ 
     def handle_events(self, events):
         for event in events:
             self.handle_buttons(event)

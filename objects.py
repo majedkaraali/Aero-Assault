@@ -18,6 +18,7 @@ class Missile:
         self.image=pygame.image.load('src/img/weapons/missile3.png')
         self.rect=self.image.get_rect()
         self.angle=0
+        self.destroyed=False
 
 
     max_velocity = 4
@@ -46,6 +47,12 @@ class Missile:
     def get_angle(self):
         angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())
         return angle
+    
+    def get_width(self):
+        return self.image.get_width()
+    
+    def get_height(self):
+        return self.image.get_height()
     
     def get_colid_point_angle(self):
         v1_x=(self.colid_point_x())
@@ -114,6 +121,8 @@ class Missile:
         self.x+=x_turn
         self.y-=y_turn
 
+        if self.y<=-10:
+                self.destroyed=True
 
         
 
@@ -207,6 +216,7 @@ class Bullet:
         self.moved_y=0
         self.hitted=False
         self.angel=0
+        self.destroyed=False
 
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
@@ -224,6 +234,12 @@ class Bullet:
 
         self.moved_x+=abs(self.vel_x)
         self.moved_y+=abs(self.vel_y)
+
+        if self.out_of_range():
+            self.destroyed=True
+    
+        elif self.hitted:
+            self.destroyed=True
 
 
 
@@ -554,10 +570,18 @@ class Player:
     def move_bullets(self):
         for bullet in self.bullets:
             bullet.move_bullet()
+            if bullet.destroyed:
+                self.bullets.remove(bullet)
 
     def move_missiles(self):
         for mis in self.missiles:
             mis.move_misile()
+            if mis.destroyed:
+                self.missiles.remove(mis)
+
+
+            
+            
           
 
     def update_bullets(self,screen):
@@ -656,6 +680,8 @@ class Player:
   
     def bombed(self,dmage):
         self.health-=dmage
+        if self.health<=0:
+            self.destroyed=True
  
 
 class Bomb:
@@ -678,9 +704,10 @@ class Bomb:
         self.max_velocity=2
         self.velocity_on_angle=self.max_velocity/90
         self.moved_x=0
+        self.target=None
 
-
-        
+    def set_target(self,target):
+        self.target=target
 
     def get_rect(self):
         return  self.rect
@@ -1001,7 +1028,8 @@ class Enemy:
                                     bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,0)
                                 else:
                                     bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,0)
-
+                                    
+                                bomb.set_target(target)
                                 self.bombs.append(bomb)
                                 self.last_bomb_time = pygame.time.get_ticks()
                                 self.guided_bomb-=1
@@ -1064,9 +1092,21 @@ class Enemy:
 
         if self.move_dir=='right':
             self.x+=self.vel
+
+            # if self.x<5:
+            #     self.move_dir='left'
+            #     self.recharge()
          
         elif self.move_dir=="left":
             self.x-=self.vel
+
+            # if self.x>width-5:
+            #     self.move_dir='right'
+            #     self.recharge()
+
+        if self.y>=580:
+            self.destroyed=True
+            
     
     def recharge(self):
        # pass
@@ -1136,8 +1176,8 @@ class Enemy:
         else:
             return False
 
-    def check_kill(self, obje):
-        for bullet in obje:
+    def check_kill(self, bullets,missiles):
+        for bullet in bullets:
             if (self.x < bullet.x + bullet.get_width() and
                 self.x + self.get_width() > bullet.x and
                 self.y < bullet.y + bullet.get_height() and
@@ -1146,6 +1186,17 @@ class Enemy:
                 self.health-=15
                 if self.health<0:
                     self.destroyed=True
-                    return True       
+                    return True  
+
+        for missile in missiles:
+            if (self.x < missile.x + missile.get_width() and
+                self.x + self.get_width() > missile.x and
+                self.y < missile.y + missile.get_height() and
+                self.y + self.get_height() > missile.y):
+                missile.hitted=True
+                self.health-=15
+                if self.health<0:
+                    self.destroyed=True
+                    return True      
 
         return False

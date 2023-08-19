@@ -143,14 +143,17 @@ class Level_5(Level):
         super().__init__()
         self.name="Level 5"
         self.number=5
-        self.background_path='src\\img\\maps\\Azure.png'
-        self.description=f"{self.name}: {'Defend allies as they go on their mission'}"
-        self.wave_1=[3,0,0,0]
-        self.wave_2=[3,0,0,0]
+        self.background_path='src\\img\\maps\\CelestialRuins.png'
+        self.description=f"{self.name}: {'Attack and defeat all incoming enemy waves , Defend the base from enemy bombs.'}"
+        self.wave_1=[3,0,2,0]
+        self.wave_2=[3,0,0,2]
         self.wave_3=[4,0,2,0]
-        self.waves.extend([self.wave_1,self.wave_2,self.wave_3])
+        self.wave_4=[0,1,2,0]
+        self.waves.extend([self.wave_1,self.wave_2,self.wave_3,self.wave_4])
         self.chek_lock(self.number)
-
+        self.base=True
+        self.base_loc=(400,568)      
+        self.base_hp=800
     
 
 class Level_6(Level):
@@ -159,13 +162,18 @@ class Level_6(Level):
         self.name="Level 6"
         self.number=6
         self.chek_lock(self.number)
-        self.background_path='src\\img\\maps\\EnchantedCaldera.png'
+        self.description=f"{self.name}: {'Protect  allies from enemy bombs until they get in safe zone.'}"
+        self.background_path='src\\img\\maps\EnchantedCaldera\.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
-        self.wave_2=[2,0,0,0]
+        self.wave_2=[2,0,1,2]
+        self.wave_2=[2,2,0,0]
+        self.wave_2=[0,1,3,1]
+        self.wave_2=[4,1,1,0]
+
         self.waves.extend([self.wave_1,self.wave_2])
         self.allies=True
-        self.allies_count=1
+        self.allies_count=3
     
 
 class Level_7(Level):
@@ -174,13 +182,22 @@ class Level_7(Level):
         self.name="Level 7"
         self.number=7
         self.chek_lock(self.number)
+        self.description=f"{self.name}: {'Attack and defeat all incoming enemy waves.'}"
         self.background_path='src\\img\\maps\\Crossroads.png'
+        
         self.waves=[]
         self.wave_1=[2,0,0,0]
-        self.wave_2=[2,0,0,0]
-        self.waves.extend([self.wave_1,self.wave_2])
-        self.allies=True
-        self.allies_count=4
+        self.wave_2=[2,0,2,0]
+        self.wave_3=[0,1,1,0]
+        self.wave_4=[2,1,2,0]
+        self.wave_5=[4,0,0,0]
+        self.wave_6=[0,0,0,4]
+        self.wave_7=[2,2,0,2]
+        self.wave_8=[0,2,3,0]
+        self.wave_9=[0,0,5,0]
+        self.wave_10=[6,0,0,0]
+        self.waves.extend([self.wave_1,self.wave_2,self.wave_3,self.wave_4,self.wave_5,self.wave_6,self.wave_7,self.wave_8,self.wave_9,self.wave_10])
+
     
 
 class Level_8(Level):
@@ -189,17 +206,23 @@ class Level_8(Level):
         self.name="Level 8"
         self.number=8
         self.chek_lock(self.number)
-        self.background_path='src\\img\\maps\\Frostfall.png'
+        self.description=f"{self.name}: {'Protect  allies from enemy bombs until they get in safe zone.'}"
+        self.background_path='src\\img\\maps\\Azure.png'
         self.waves=[]
-        self.wave_1=[2,0,0,0]
-        self.wave_2=[2,0,0,0]
-        self.waves.extend([self.wave_1,self.wave_2])    
+        self.wave_1=[4,0,0,0]
+        self.wave_2=[5,2,0,0]
+        self.wave_3=[2,2,2,2]
+        self.wave_4=[2,0,4,0]
+        self.waves.extend([self.wave_1,self.wave_2,self.wave_3,self.wave_4])    
+        self.allies=True
+        self.allies_count=4
 
 class Level_9(Level):
     def __init__(self):
         super().__init__()
         self.name="Level 9"
         self.number=9
+        self.description=f"{self.name}: {'Attack and defeat all incoming enemy waves.'}"
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\NovaExpanse.png'
         self.waves=[]
@@ -212,6 +235,7 @@ class Level_10(Level):
         super().__init__()
         self.name="Level 10"
         self.number=10
+        self.description=f"{self.name}: {'Attack and defeat all incoming enemy waves , Defend the base from enemy bombs.'}"
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]

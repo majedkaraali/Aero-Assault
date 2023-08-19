@@ -15,7 +15,7 @@ class Generate_enemies:
             x=self.random_distance(move_dircton)
             vel=2
             sprites=loader.random_fighter()
-            enemy=objects.Enemy(x,y,vel,move_dircton,3,0,50,'fighter',80,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,2,0,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
           #  print(enemy)
             

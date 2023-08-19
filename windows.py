@@ -83,10 +83,18 @@ class game_windows(Screen):
         self.main_menu_button.change_location(self.center[0]-65,self.center[1]+40)
         lose_frame.add_button(self.main_menu_button)
         lose_frame.add_button(self.retry)
-    
-        lose_frame.write("Game Over")
-        self.selected_window=lose_frame     
 
+        lose_frame.write("Game Over")
+        self.selected_window=lose_frame    
+
+    def in_game_level_description_frame(self,level):
+        _level=level
+        description=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        description.write(_level.get_description())
+        self.ok_button=Button(description.width-100,description.height+100,'Conform',22)
+        self.ok_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.selected_window=description
+        description.add_button(self.ok_button)
         
     def draw_frames(self, screen):
         if self.selected_window:
@@ -152,6 +160,9 @@ class Game_modes_window(Screen):
         self.level_play_button=level_play_button
         description.buttons.append(back_button)
         description.buttons.append(level_play_button)
+
+
+
 
 
 
