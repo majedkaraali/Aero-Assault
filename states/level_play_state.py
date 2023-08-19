@@ -1,4 +1,3 @@
-from states.states import GameState
 import objects,os
 import pygame 
 from windows import game_windows
@@ -24,20 +23,16 @@ width,height=(1100,660)
 windo=game_windows()
 
 
-class Level_Play(GameState):
+class Level_Play():
     
  
     
 
     def __init__(self,state,level):
-        
-      #  super().__init__()
-        self.score=0
+        super().__init__()
         self.lose=False
-        self.running=True
         self.force_reload=False
-        self.level=level
-        self.wave=0
+        self.play_conformed=False
         self.complete=False
         self.game_over=False
         self.close=False
@@ -47,18 +42,18 @@ class Level_Play(GameState):
         self.pause=False
         self.reward_screen=False
         self.allies=False
+        self.level=level
+        self.wave=0
         self.enemy_list=[]
-        self.bombs=[]
         self.base=None
         self.ground_vhls=[]
-
         self.enemies_to_remove = []
-
-        self.drops=[]
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
         self.player=objects.Player(540,height-107,'Unnamed')
-        self.play_conformed=False
+        
+
+
         print(level.player_loadout)
         self.player.loadout(level.player_loadout)
         self.enemies=Generate_enemies(self.player)
