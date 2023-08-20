@@ -1,4 +1,3 @@
-from states import GameState
 import objects
 import pygame 
 from states import statics_image,font,background
@@ -14,7 +13,7 @@ enemies=Generate_enemies(_player())
 
 width,height=(1100,660)
 
-class Survival(GameState):
+class Survival(Game):
 
     mouse_button_pressed=False
     paues=False

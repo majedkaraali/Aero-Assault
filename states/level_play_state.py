@@ -1,8 +1,9 @@
-import objects,os
+import os
 import pygame 
+from objects import objects
 from windows import game_windows
 from EnemyMaker import Generate_enemies
-
+from Game import GameState
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
@@ -23,7 +24,7 @@ width,height=(1100,660)
 windo=game_windows()
 
 
-class Level_Play():
+class Level_Play(GameState):
     
  
     
@@ -51,14 +52,12 @@ class Level_Play():
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
         self.player=objects.Player(540,height-107,'Unnamed')
-        
-
-
         print(level.player_loadout)
         self.player.loadout(level.player_loadout)
         self.enemies=Generate_enemies(self.player)
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
+        self.bombs=[]
 
         self.tutorial=False
 
@@ -84,61 +83,14 @@ class Level_Play():
         if level.base:
             self.base=objects.Base(level.base_loc[0],level.base_loc[1],level.base_hp)
             self.ground_vhls.append(self.base)
-
-
-            
-
-
-
-
-
     
     
-    def generate_enemies(self,wave):
-        self.enemy_list=self.enemies.respawn_wave(wave)
-           
-
-    def get_enemies(self):
-        return self.enemy_list
-        
-    def statics(self,screen):
-        statics_rect=statics_image.get_rect()
-        statics_rect.topleft=(0,630)
-
-        screen.blit(statics_image,statics_rect)
-
-        if self.player.reloading:
-            magazine='---'
-        else:
-            magazine=str(self.player.magazine)
-        bullets=str(self.player.ammo)
-
-        if self.player.reloading_pods:
-            missiles='--'
-        else:
-            missiles=self.player.ready_to_fire_missiles
-
-        storage=self.player.missiles_storage
-        bullets_text = font.render(f"bullets: {magazine}/{bullets}", True, 'black')
-        bullets_text_pos=(width-375,height-25)
-        missiles_text = font.render(f"missiles: {missiles}/{storage}", True, 'black')
-        missiles_text_pos=(width-550,height-25)
-        heath_value=self.player.health
-        heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
-        heatl_text_pos=(width-170,height-25)
-      
-        screen.blit(bullets_text, bullets_text_pos)
-        screen.blit(missiles_text, missiles_text_pos)
-        screen.blit(heatl_text, heatl_text_pos)
-
-
 
     def draw(self,screen):
 
         screen.blit(self.background,self.background.get_rect())
         self.statics(screen)
         self.update_game(screen)
-
 
 
     def update_game(self, screen):
@@ -208,8 +160,7 @@ class Level_Play():
             if enemy.destroyed:
                 self.enemies_to_remove.append(enemy)
                 drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
-                self.drops.append(drop)
-
+                self.player.drops.append(drop)
 
 
     def handle_bullets(self,screen):
