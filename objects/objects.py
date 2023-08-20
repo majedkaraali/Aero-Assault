@@ -948,6 +948,8 @@ class Enemy:
         self.right_sprite_rect=self.right_sprite.get_rect()
         self.up=False
         self.down=False
+        self.turning_opposite_direction=True
+        self.turn_opposite_direction_times=0
 
     lock_sprite=pygame.image.load('src/img/weapons/lock.png')
     lock_sprite_rect=lock_sprite.get_rect()
@@ -1093,19 +1095,38 @@ class Enemy:
         if self.move_dir=='right':
             self.x+=self.vel
 
-            # if self.x<5:
-            #     self.move_dir='left'
-            #     self.recharge()
+            if self.turning_opposite_direction:
+                
+                if self.x>width-self.get_width()-5:
+                    self.move_dir='left'
+                    self.turn_opposite_direction_times+=1
+
+                    self.recharge()
+                
          
+
         elif self.move_dir=="left":
             self.x-=self.vel
 
-            # if self.x>width-5:
-            #     self.move_dir='right'
-            #     self.recharge()
+            if self.turning_opposite_direction:
+                
+                if self.x<5:
+                    self.move_dir='right'
+                    self.turn_opposite_direction_times+=1
+                    self.recharge()
+
+
+        if self.turn_opposite_direction_times>=2:
+            self.turning_opposite_direction=False
+
 
         if self.y>=580:
             self.destroyed=True
+
+
+        if not self.turning_opposite_direction:
+            if self.x<-200 or self.x >1300:
+                self.destroyed=True
             
     
     def recharge(self):

@@ -9,7 +9,6 @@ crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
-print(font_path)
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
 
