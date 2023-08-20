@@ -105,7 +105,7 @@ class game_windows(Screen):
     def draw(self, screen):
         pass
 
-class Game_modes_window(Screen):
+class Test(Screen):
     def __init__(self):
         self.name='gamemode'
         self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
@@ -114,11 +114,17 @@ class Game_modes_window(Screen):
         self.survival_buttonn=Button(150,220,"Survival",22)
         self.apex_button=Button(150,290,"Apex Challenge",22)
         self.back_button=Button(150,400,"Return",22)
+        self.play_button=Button(width//2,180,"Play",22)
+        self.options_button=Button(width//2,260,"Options",22)
+        self.Credits_button=Button(width//2,340,"Credits",22)
+        self.Exit_button=Button(width//2,420,"Exit",22)
+        
         
         self.apex_play_button=None
         self.survival_play_button=None
         self.level_play_button=None
         
+        self.buttons.extend([self.play_button, self.options_button, self.Credits_button,self.Exit_button])
         self.buttons.extend([self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button])
   
         self.selected_frame=False
@@ -128,16 +134,18 @@ class Game_modes_window(Screen):
         
 
 
-    def draw(self,screen):
-      screen.blit(self.image, (0,0))
-      for button in self.buttons:
-          button.place(screen)
+
     
     def get_buttons(self):
         return self.buttons
     
     def get_frames(self):
         return []
+
+
+     
+    def main_menu_frame(self):
+        pass
 
     def levels_frame(self,levels):
 
@@ -187,7 +195,10 @@ class Game_modes_window(Screen):
         apex_frame.buttons.append(apex_play_button)
         
 
-
+    def draw(self,screen):
+      screen.blit(self.image, (0,0))
+      for button in self.buttons:
+          button.place(screen)
 
     def draw_frames(self,screen):
         if self.selected_frame:
@@ -212,10 +223,6 @@ class Game_modes_window(Screen):
       
     
         
- 
-   
-         
-
     def clear_selection(self):
         self.selected_frame=False
 
