@@ -1,5 +1,7 @@
 import objects
 import pygame 
+
+from Game import GameState
 from states import statics_image,font,background
 from EnemyMaker import Generate_enemies
 width,height=1100,660
@@ -13,7 +15,7 @@ enemies=Generate_enemies(_player())
 
 width,height=(1100,660)
 
-class Survival(Game):
+class Survival(GameState):
 
     mouse_button_pressed=False
     paues=False
@@ -189,9 +191,7 @@ class Survival(Game):
         screen.blit(statics_image,statics_rect)
         pygame.draw.rect(startic_surface, pygame.Color('lightgreen'), startic_surface.get_rect(), border)
      
-        score_value =str(self.score)
-        score_text = font.render("Score: "+score_value, True, ('black'))
-        score_text_pos=(10,height-25)
+        
         menu_text = font.render("MENU", True, 'black')
         menu_text_pos=((width//2)-20,height-25)
         pause_menurect=menu_text.get_rect()
@@ -215,8 +215,8 @@ class Survival(Game):
         heath_value=player.health
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-170,height-25)
-      
-        screen.blit(score_text,score_text_pos)
+        
+
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
