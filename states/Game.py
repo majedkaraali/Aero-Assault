@@ -32,12 +32,17 @@ class GameState():
         self.mouse_button_pressed=False
         self.pause=False
         self.reward_screen=False
+        self.tutorial=False
+
         self.wave=0
         self.score=0
 
+        self.player=objects.Player(540,height-107,'Unnamed')
+        self.enemies=Generate_enemies(self.player)
+
         self.enemy_list=[]
         self.enemies_to_remove = []
-        self.player=objects.Player(540,height-107,'Unnamed')
+        
         
 
         
@@ -186,18 +191,19 @@ class GameState():
             self.player.droped_ammo+=self.player.magazine
             self.player.magazine=0
 
-        elif keys[pygame.MOUSEBUTTONDOWN]:
-            print('shoo')
-            if not self.player.forced or self.pause or self.tutorial:
-                print('shoot`22')
-                self.player.shoot()
-
         elif keys[pygame.K_ESCAPE]:
             if  not self.complete and not self.pause:
                 self.pause = True
 
             elif self.pause:
                 self.pause=False
+
+
+        mouse_buttons = pygame.mouse.get_pressed()
+
+        if mouse_buttons[0]:  
+            if not self.player.forced or self.pause or self.tutorial:
+                self.player.shoot()
 
 
 

@@ -2,21 +2,14 @@ import os
 import pygame 
 from objects import objects
 from windows import game_windows
-from EnemyMaker import Generate_enemies
 from .Game import GameState
 
-
-
-
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
-
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
 
         
-
-
 
 width,height=(1100,660)
 windo=game_windows()
@@ -28,28 +21,29 @@ class Level_Play(GameState):
         self.state=state
         self.buttons=windo.get_buttons()
         self.allies=False
-        self.tutorial=False
         self.level=level
         self.base=None
+        self.bombs=[]
         self.ground_vhls=[]
         self.enemies_to_remove = []
+
         self.background_path=level.background_path
-        print(self.background_path)
         self.background=pygame.image.load(self.background_path).convert_alpha()
-        
         self.player.loadout(level.player_loadout)
-        self.enemies=Generate_enemies(self.player)
+        self.ground_vhls.append(self.player)
+
+
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
-        self.bombs=[]
 
         
+
         if level.tutorial:
             self.tutorial_image_path=level.tutorial_image
             self.tutorial=True
 
 
-        self.ground_vhls.append(self.player)
+        
 
         if level.allies:
             self.allies=True
