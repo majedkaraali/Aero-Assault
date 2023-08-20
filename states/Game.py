@@ -3,7 +3,6 @@ import pygame
 from objects import objects
 from windows import game_windows
 from EnemyMaker import Generate_enemies
-from .Game import GameState
 
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
@@ -39,8 +38,8 @@ class GameState():
         self.enemy_list=[]
         self.enemies_to_remove = []
         self.player=objects.Player(540,height-107,'Unnamed')
-        self.background_path='src/'
         
+
         
 
     def handle_events(self, events):

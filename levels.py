@@ -163,7 +163,7 @@ class Level_6(Level):
         self.number=6
         self.chek_lock(self.number)
         self.description=f"{self.name}: {'Protect  allies from enemy bombs until they get in safe zone.'}"
-        self.background_path='src\\img\\maps\EnchantedCaldera\.png'
+        self.background_path='src\\img\\maps\Crossroads.png'
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,1,2]
@@ -183,7 +183,7 @@ class Level_7(Level):
         self.number=7
         self.chek_lock(self.number)
         self.description=f"{self.name}: {'Attack and defeat all incoming enemy waves.'}"
-        self.background_path='src\\img\\maps\\Crossroads.png'
+        self.background_path='src\\img\\maps\\Azure.png'
         
         self.waves=[]
         self.wave_1=[2,0,0,0]
@@ -207,7 +207,7 @@ class Level_8(Level):
         self.number=8
         self.chek_lock(self.number)
         self.description=f"{self.name}: {'Protect  allies from enemy bombs until they get in safe zone.'}"
-        self.background_path='src\\img\\maps\\Azure.png'
+        self.background_path='src\\img\\maps\\Crossroads.png'
         self.waves=[]
         self.wave_1=[4,0,0,0]
         self.wave_2=[5,2,0,0]

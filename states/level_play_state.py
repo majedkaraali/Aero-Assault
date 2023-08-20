@@ -34,6 +34,7 @@ class Level_Play(GameState):
         self.ground_vhls=[]
         self.enemies_to_remove = []
         self.background_path=level.background_path
+        print(self.background_path)
         self.background=pygame.image.load(self.background_path).convert_alpha()
         
         self.player.loadout(level.player_loadout)
