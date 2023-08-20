@@ -110,7 +110,6 @@ class Level_Play(GameState):
             self.handle_lose(screen)
 
 
-    
 
     def handle_base(self,screen):
 
@@ -141,39 +140,6 @@ class Level_Play(GameState):
                 self.generate_enemies(self.level.make_wave(self.wave))   
             else:
                 self.complete=True
-
-    def handle_keys(self):
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_SPACE]:
-                self.player.shoot()
-
-        elif keys[pygame.K_f]:
-                self.player.fire_missile(self.player)
-
-        elif keys[pygame.K_TAB]:
-                self.player.next_lock()
-
-        elif keys [pygame.K_r]:
-            self.player.reload_start_time=pygame.time.get_ticks()
-            self.player.droped_ammo+=self.player.magazine
-            self.player.magazine=0
-
-        elif keys[pygame.MOUSEBUTTONDOWN]:
-            print('shoo')
-            if not self.player.forced or self.pause or self.tutorial:
-                print('shoot`22')
-                self.player.shoot()
-
-
-
-        elif keys[pygame.K_ESCAPE]:
-            if  not self.complete and not self.pause:
-                self.pause = True
-
-            elif self.pause:
-                self.pause=False
-            
 
 
     def handle_events(self, events):

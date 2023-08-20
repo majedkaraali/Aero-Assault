@@ -41,6 +41,7 @@ class GameState():
         self.player=objects.Player(540,height-107,'Unnamed')
         self.background_path='src/'
         
+        
 
     def handle_events(self, events):
         pass
@@ -52,12 +53,20 @@ class GameState():
         pass
 
 
+
+
+
+
+
+
+
     def generate_enemies(self,wave):
         self.enemy_list=self.enemies.respawn_wave(wave)
            
 
     def get_enemies(self):
         return self.enemy_list
+    
         
     def statics(self,screen):
         statics_rect=statics_image.get_rect()
@@ -85,10 +94,10 @@ class GameState():
         heatl_text = font.render(f"health: {str(heath_value)}", True, 'black')
         heatl_text_pos=(width-170,height-25)
 
-      
         screen.blit(bullets_text, bullets_text_pos)
         screen.blit(missiles_text, missiles_text_pos)
         screen.blit(heatl_text, heatl_text_pos)
+
 
 
 
@@ -134,14 +143,7 @@ class GameState():
                 self.player.drops.append(drop)
 
 
-    def handle_bullets(self,screen):
-        pass
-    
-    def handle_missiles(self):
-        pass  
 
-    def handle_drops(self):
-        pass
 
 
     def handle_bombs(self,screen):
@@ -168,6 +170,36 @@ class GameState():
         screen.blit(crosshair_image, crosshair_rect)
 
 
+    def handle_keys(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+                self.player.shoot()
+
+        elif keys[pygame.K_f]:
+                self.player.fire_missile(self.player)
+
+        elif keys[pygame.K_TAB]:
+                self.player.next_lock()
+
+        elif keys [pygame.K_r]:
+            self.player.reload_start_time=pygame.time.get_ticks()
+            self.player.droped_ammo+=self.player.magazine
+            self.player.magazine=0
+
+        elif keys[pygame.MOUSEBUTTONDOWN]:
+            print('shoo')
+            if not self.player.forced or self.pause or self.tutorial:
+                print('shoot`22')
+                self.player.shoot()
+
+        elif keys[pygame.K_ESCAPE]:
+            if  not self.complete and not self.pause:
+                self.pause = True
+
+            elif self.pause:
+                self.pause=False
+
 
 
     def handle_base(self,screen):
@@ -182,3 +214,13 @@ class GameState():
     def handle_waves(self):
 
         pass        # Method Found In states/all states in the folder
+
+
+    def handle_bullets(self,screen):
+        pass
+    
+    def handle_missiles(self):
+        pass  
+
+    def handle_drops(self):
+        pass
