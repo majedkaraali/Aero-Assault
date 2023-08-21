@@ -87,6 +87,7 @@ class Frame:
         self.image = pygame.image.load('src/img/GUI/LabelFrame.png').convert_alpha()
         self.buttons = []
         self.text = ""
+        self.selected_button=None
        
         self.font = pygame.font.Font(font_path, font_size)
 
@@ -142,8 +143,17 @@ class Frame:
             screen.blit(line, text_rect)
 
     def draw_buttons(self,screen):
+        self.selected_button=None
+
         for button in self.buttons:
+            if button.holding:
+                self.selected_button=button
+
+
             button.place(screen)
+
+    def get_selected_btn(self):
+        return 0
 
     def get_buttons(self):
         return self.buttons
@@ -154,7 +164,7 @@ class Frame:
 
 
 class Levels_Frame:
-    def __init__(self, x, y, width, height, rows, cols):
+    def __init__(self, x, y, width, height, rows, cols,levels):
         self.x = x
         self.y = y
         self.width = width
@@ -165,40 +175,25 @@ class Levels_Frame:
         self.level_image=pygame.image.load('src/img/GUI/level.png').convert_alpha()
         self.locked_image=pygame.image.load('src/img/GUI/level_locked2.png').convert_alpha()
         self.hold_image=pygame.image.load('src/img/GUI/level_hold.png').convert_alpha()
-        self.levels = [] 
+      
+        self.levels=[]
         self.image_width = 600 // cols
         self.image_height = 225 // rows
         self.buttons=[]
-        
         self.selected_button=None
 
-    def add_level(self, level):
-        self.levels.append(level)
-    def get_buttons(self):
-        return self.buttons
+        for level in levels:
 
-    def get_rect(self,index):
-        rect = self.buttons[index].get_rect()
-        return rect
-    
-    
+            self.add_level(level)
 
-    def chek_hold(self,rect):
-        mouse=pygame.mouse.get_pos()
 
-        if rect.collidepoint(mouse):
-            return True
-        else:
-            return False
-
-    def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
-        self.buttons=[]
         for row in range(self.rows):
+           
             for col in range(self.cols):
+             
                 index = row * self.cols + col
+       
                 if index < len(self.levels):
-                    
                    
                     center_rect=(self.x + col * (self.image_width + 10)+95, self.y + row * (self.image_height + 10)+70)
 
@@ -218,19 +213,47 @@ class Levels_Frame:
                     else:
                         level_button=Button(0,0,'',22)
                         level_button.conifig_button(self.locked_image,self.locked_image,center_rect)
-                  
-
-           
+                
                     self.buttons.append(level_button)
-             
 
-                    
-                    
-                        
+
+    def add_level(self, level):
+        self.levels.append(level)
+
+    def get_buttons(self):
+        return self.buttons
+
+    def get_rect(self,index):
+        rect = self.buttons[index].get_rect()
+        return rect
+    
+
+    def chek_hold(self,rect):
+        mouse=pygame.mouse.get_pos()
+
+        if rect.collidepoint(mouse):
+            return True
+        else:
+            return False
+        
+
+
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+  
+    def get_selected_btn(self):
+        return self.selected_button     
                     
     def draw_buttons(self,screen):
+        self.selected_button=None
+
         for button in self.buttons:
+            if button.holding:
+                self.selected_button=button
+
             button.place(screen)
+            
 
 
 
