@@ -45,9 +45,9 @@ class Level:
     def next_level(self):
       
         if self.number+1 <= len(levels):
-            return levels[self.number+1-1] #   +1 we need the next level, and -1 cuz lists starts from 0    :D
+            return levels[self.number] 
         else :
-            print("GG")
+     
             return False
         
     def retry_level(self):
