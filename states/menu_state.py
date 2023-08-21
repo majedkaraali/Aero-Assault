@@ -15,6 +15,8 @@ class MenuState():
         self.buttons=self.window.get_buttons()
         self.state=state
         self.levels_numbers=[]
+        for level in levels:
+            self.levels_numbers.append(level.get_number())
  
     def handle_events(self, events):
         for event in events:
@@ -47,13 +49,12 @@ class MenuState():
             
             if self.window.selected_frame_button:
                 button_text=self.window.selected_frame_button.get_text()
-                if button_text in ['1','2','3','4','5','6','7','8','9','10']:
+                if button_text in self.levels_numbers:
                     self.selected_level=int(button_text)
                     self.window.level_description_frame(button_text,levels)
 
 
                 if button_text=='Play':
-                    print('hahah')
                     self.state.level_state(levels[self.selected_level-1])
 
                 if button_text=='Back':
@@ -63,7 +64,6 @@ class MenuState():
      
 
     def draw(self,screen):
-        print(self.window.selected_frame_button)
         self.window.draw(screen)
         self.window.draw_frames(screen)
         self.window.handle_buttons()
