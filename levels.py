@@ -43,9 +43,11 @@ class Level:
         return len(self.waves)
     
     def next_level(self):
-        if self.number+1-1 <= len(levels):
+      
+        if self.number+1 <= len(levels):
             return levels[self.number+1-1] #   +1 we need the next level, and -1 cuz lists starts from 0    :D
         else :
+            print("GG")
             return False
         
     def retry_level(self):
@@ -53,7 +55,7 @@ class Level:
     
     def unluck_level(self,level_number):
         completed_level_number = level_number
-        if completed_level_number not in completed_levels:
+        if completed_level_number not in completed_levels and completed_level_number<=len(levels):
             completed_levels.append(completed_level_number)
             with open('data.json', 'w') as progress_file:
                 json.dump(data, progress_file,indent=completed_level_number)
@@ -240,7 +242,7 @@ class Level_10(Level):
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
         self.wave_1=[3,0,0,0]
-        self.wave_2=[3,0,0,0]
+        self.wave_2=[0,0,0,0]
         self.waves.extend([self.wave_1,self.wave_2])
         self.base=True
         self.base_loc=(650,568)      

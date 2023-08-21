@@ -177,8 +177,9 @@ class Level_Play(GameState):
                         self.state.menu_state()
 
                     if windo.next_level.holding:
-                        next_level=self.level.next_level()
-                        self.state.level_state(next_level)
+                        if self.level.next_level():
+                            next_level=self.level.next_level()
+                            self.state.level_state(next_level)
                         
             
             
@@ -190,9 +191,14 @@ class Level_Play(GameState):
 
 
     def handle_complete(self,screen):
-        windo.reward_window()
-        windo.draw(screen)
-        windo.draw_frames(screen) 
+        if self.level.next_level():
+            windo.reward_window()
+            windo.draw(screen)
+            windo.draw_frames(screen) 
+        else:
+            windo.finish_levels_window()
+            windo.draw(screen)
+            windo.draw_frames(screen) 
 
     def handle_reward(self,screen):
         windo.reward_window()

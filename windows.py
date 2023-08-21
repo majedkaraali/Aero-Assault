@@ -63,6 +63,18 @@ class game_windows(Screen):
         self.selected_window=reward_frame  
 
 
+    def finish_levels_window(self):
+        finish_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        finish_frame.confing(self.pause_image)
+        self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+        finish_frame.add_button(self.main_menu_button)
+ 
+    
+        finish_frame.write("Congrats! All Levels Completed")
+        self.selected_window=finish_frame  
+
+
+
     def tutorial_window(self,image_path):
  
         image=pygame.image.load(image_path).convert_alpha()
