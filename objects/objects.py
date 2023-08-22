@@ -217,6 +217,9 @@ class Bullet:
         self.hitted=False
         self.angel=0
         self.destroyed=False
+        self.effect=pygame.image.load('src\img\weapons\shoot_effect.png')
+        self.effect_drawn=False
+        self.rotate_bullet()
 
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
@@ -244,7 +247,7 @@ class Bullet:
 
 
     def draw_effect(self,screen):
-
+        
         rotated_effect = pygame.transform.rotate(self.effect, -self.angle)
         rotated_rect = rotated_effect.get_rect()
         rotated_rect.center = (self.x, self.y)
@@ -254,7 +257,8 @@ class Bullet:
 
 
     def draw_bullet(self,screen):
-      
+        
+        
         rotated_image = pygame.transform.rotate(self.image, -self.angle)
         rotated_rect = rotated_image.get_rect()
         rotated_rect.topleft = (self.x, self.y)
@@ -264,7 +268,12 @@ class Bullet:
         xy=self.moved_y+self.moved_x
 
 
-        if xy>100 :
+        if xy>85 :
+            if not self.effect_drawn:
+                self.draw_effect(screen)
+                self.effect_drawn=True
+
+        if xy>150 :
             screen.blit(rotated_image, rotated_rect)
 
         
@@ -308,6 +317,7 @@ class Player:
         self.tracked=[]
         self.selected=0
         self.moving_dir='right'
+        self.barrel_position=(self.x+20,self.y+29)
 
 
     magazine_size=240
@@ -319,15 +329,15 @@ class Player:
     reloading_pods=False
     out_of_missiles=False
     out_of_ammo=False
-    health=100
+    health=100000000
     destroyed=False
     forced=False
     forced_time = 0
     right_sprite=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
     rect=right_sprite.get_rect()
     left_sprite=pygame.transform.flip(right_sprite, True, False)
-    barrel1=pygame.image.load('src/img/vehicles/barrel1.png')
-    barrel2=pygame.image.load('src/img/vehicles/barrel2.png')
+    barrel1=pygame.image.load('src/img/vehicles/test.png')
+    barrel2=barrel1
     
     
 
@@ -349,6 +359,7 @@ class Player:
     radar_range=900
     radar_max_left=0
     radar_min_height=250
+    
     
 
     def clear(self):
@@ -408,21 +419,33 @@ class Player:
         
     def update_player(self,screen):
         self.rect.topleft = (self.x, self.y)
+  
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
-       
+
+        angle_radians = math.atan2(mouse_y - (self.y + 28), mouse_x - (self.x + 52))
+        angle = math.degrees(angle_radians)
+
+        angle_radians2 = math.atan2(mouse_y - (self.y + 36), mouse_x - (self.x + 52))
+        angle2 = math.degrees(angle_radians2)
+
         barrel2 = pygame.transform.rotate(self.barrel2, -angle)
-        barrel1 = pygame.transform.rotate(self.barrel1, -angle)
-        rotated_rect = barrel2.get_rect()
-        rotated_rect.center = (self.x+57, self.y+30)
+        barrel1 = pygame.transform.rotate(self.barrel1, -angle2)
+
+        rotated_rect = barrel1.get_rect()
+        rotated_rect.center = (self.x+52, self.y+36)
+
+        rotated_rect2 = barrel2.get_rect()
+        rotated_rect2.center = (self.x+52, self.y+28)
 
         screen.blit(barrel1, rotated_rect)
+
         if self.moving_dir=='left':
             screen.blit(self.left_sprite, self.rect)
         else:
-            screen.blit(self.right_sprite, self.rect)            
-        screen.blit(barrel2, rotated_rect)
+            screen.blit(self.right_sprite, self.rect)  
+
+        screen.blit(barrel2, rotated_rect2)
         
 
 
@@ -551,17 +574,16 @@ class Player:
         if self.can_shoot():
             self.magazine-=2
             target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.x+70  - 6 // 2, self.y+34)
+            bullet = Bullet(self.x+52, self.y+29)
 
             bullet.shoot_at(target_x, target_y)
-            bullet.rotate_bullet()
+           
             self.bullets.append(bullet)
 
             # bullet2 = Bullet(self.x+70  // 2, self.y+32)
             # bullet2.shoot_at(target_x, target_y)
             # bullet2.rotate_bullet()
             # self.bullets.append(bullet2)
-
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
             
@@ -1016,7 +1038,7 @@ class Enemy:
                         if not guided:
                             if self.bomb_count>0:
                                 if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,135)
+                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,136)
                                 else:
                                     bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,False,45)
                                 self.bombs.append(bomb)
