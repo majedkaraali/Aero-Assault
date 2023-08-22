@@ -217,7 +217,7 @@ class Bullet:
         self.hitted=False
         self.angel=0
         self.destroyed=False
-        self.effect=pygame.image.load('src\img\weapons\shoot_effect.png')
+        self.effect=pygame.image.load('src\img\weapons\shoot_effect2.png')
         self.effect_drawn=False
         self.rotate_bullet()
 
