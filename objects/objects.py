@@ -206,7 +206,7 @@ class Item:
 
 
 class Bullet:
-    speed = 10
+    speed = 14
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -217,8 +217,20 @@ class Bullet:
         self.hitted=False
         self.angel=0
         self.destroyed=False
-        self.effect=pygame.image.load('src\img\weapons\shoot_effect2.png')
+        self.effect1=pygame.image.load('src\\img\weapons\\1.png')
+        self.effect2=pygame.image.load('src\\img\weapons\\2.png')
+        self.effect3=pygame.image.load('src\\img\weapons\\3.png')
+        self.effect4=pygame.image.load('src\\img\weapons\\4.png')
+        self.effect5=pygame.image.load('src\\img\weapons\\5.png')
+        self.effect6=pygame.image.load('src\\img\weapons\\6.png')
+        self.current_efct=0
+        self.efct_nmbr=0
+        self.effects=[[self.effect1,self.effect3,self.effect3],[self.effect4,self.effect5,self.effect6]]
+
+        self.random_effect=random.choice(self.effects)
         self.effect_drawn=False
+        self.efct_pos=(self.x,self.y)
+        self.efct_pos_taken=False
         self.rotate_bullet()
 
     image=pygame.image.load("src/img/weapons/bullet.png")
@@ -248,11 +260,22 @@ class Bullet:
 
     def draw_effect(self,screen):
         
-        rotated_effect = pygame.transform.rotate(self.effect, -self.angle)
-        rotated_rect = rotated_effect.get_rect()
-        rotated_rect.center = (self.x, self.y)
+        
 
-        screen.blit(rotated_effect, rotated_rect)
+        if self.current_efct>=len(self.effects):
+            self.current_efct=0
+    
+        index=self.current_efct
+
+
+        rotated_effect1= pygame.transform.rotate(self.random_effect[index], -self.angle)
+        print(index)
+        rotated_rect = rotated_effect1.get_rect()
+        rotated_rect.center =self.efct_pos
+        self.current_efct+=1
+        screen.blit(rotated_effect1, rotated_rect)
+        self.efct_nmbr+=1
+        
 
 
 
@@ -262,18 +285,26 @@ class Bullet:
         rotated_image = pygame.transform.rotate(self.image, -self.angle)
         rotated_rect = rotated_image.get_rect()
         rotated_rect.topleft = (self.x, self.y)
-
+        
         self.moved_y=abs(self.moved_y)
         self.moved_x=abs(self.moved_x)
         xy=self.moved_y+self.moved_x
+        xy=round(xy)
 
+        if xy>=94 :
 
-        if xy>85 :
+            if not self.efct_pos_taken:
+                self.efct_pos=(self.x,self.y)
+                self.efct_pos_taken=True
+
             if not self.effect_drawn:
-                self.draw_effect(screen)
-                self.effect_drawn=True
+                if self.efct_nmbr>6:
+                    self.effect_drawn=True
+                else:
+                    self.draw_effect(screen)
 
         if xy>150 :
+            pass
             screen.blit(rotated_image, rotated_rect)
 
         
@@ -346,7 +377,7 @@ class Player:
     last_known_position_updated=False
     last_known_position_update_time = 0
     player_alive=True
-    move_speed = 2
+    move_speed = 1.5
     shoot_delay = 100  
     last_shot_time = 0
     fire_missie_delay=300
@@ -619,7 +650,7 @@ class Player:
         max_right=self.x+self.radar_range//2
         self.radar_max_left=max_left
 
-        radar_angle=list(range(max_left,max_right))
+        radar_angle=list(range(int(max_left),int(max_right)))
         radar_rect=pygame.Rect(max_left,10,self.radar_range,self.radar_min_height)
         
         
@@ -1017,7 +1048,7 @@ class Enemy:
                 guided=False
              
                 self.shooting_range=70
-            target_attak_range=list(range(target_x-self.shooting_range,target_x+self.shooting_range))
+            target_attak_range=list(range(int(target_x-self.shooting_range),int(target_x+self.shooting_range)))
             y_vel=1
             x_vel=1
 

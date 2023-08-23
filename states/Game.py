@@ -112,8 +112,8 @@ class GameState():
     def handle_player(self,screen):
         if not self.player.forced:
             self.player.move_player()
-            self.player.update_bullets(screen)
             self.player.update_player(screen)
+            self.player.update_bullets(screen)
             self.player.move_bullets() 
             self.player.move_missiles()
             self.player.update_missiles(screen)

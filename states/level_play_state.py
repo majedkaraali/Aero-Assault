@@ -79,9 +79,10 @@ class Level_Play(GameState):
 
     def update_game(self, screen):
         if self.can_play():
-            self.handle_player(screen)
+            
             self.handle_allies(screen)
             self.handle_base(screen)
+            self.handle_player(screen)
             self.handle_bullets(screen)
             self.handle_missiles()
             self.handle_enemies(screen)
