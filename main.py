@@ -36,7 +36,6 @@ def main():
 
 
         pygame.display.flip()
-      #  print(clock.get_fps())
 
     pygame.quit()
 if __name__=='__main__':
