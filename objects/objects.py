@@ -207,7 +207,7 @@ class Item:
 
 class Bullet:
     speed = 14
-    def __init__(self, x, y):
+    def __init__(self, x, y,angle):
         self.x = x
         self.y = y
         self.vel_x = 0
@@ -215,8 +215,12 @@ class Bullet:
         self.moved_x=0
         self.moved_y=0
         self.hitted=False
-        self.angel=0
+        self.angle=angle
         self.destroyed=False
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.shoot_at(mouse_x, mouse_y)
+
         self.effect1=pygame.image.load('src\\img\weapons\\1.png')
         self.effect2=pygame.image.load('src\\img\weapons\\2.png')
         self.effect3=pygame.image.load('src\\img\weapons\\3.png')
@@ -231,7 +235,7 @@ class Bullet:
         self.effect_drawn=False
         self.efct_pos=(self.x,self.y)
         self.efct_pos_taken=False
-        self.rotate_bullet()
+     
 
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
@@ -268,7 +272,7 @@ class Bullet:
         index=self.current_efct
 
 
-        rotated_effect1= pygame.transform.rotate(self.random_effect[index], -self.angle)
+        rotated_effect1= pygame.transform.rotate(self.random_effect[index], self.angle)
        
         rotated_rect = rotated_effect1.get_rect()
         rotated_rect.center =self.efct_pos
@@ -282,7 +286,7 @@ class Bullet:
     def draw_bullet(self,screen):
         
         
-        rotated_image = pygame.transform.rotate(self.image, -self.angle)
+        rotated_image = pygame.transform.rotate(self.image, self.angle)
         rotated_rect = rotated_image.get_rect()
         rotated_rect.topleft = (self.x, self.y)
         
@@ -301,6 +305,7 @@ class Bullet:
             if self.efct_nmbr>6:
                 self.effect_drawn=True
             else:
+                
                 self.draw_effect(screen)
 
 
@@ -310,13 +315,15 @@ class Bullet:
         
 
     def shoot_at(self, target_x, target_y):
-        dx = target_x - self.x
-        dy = target_y - self.y
-        distance = math.sqrt(dx ** 2 + dy ** 2)
+            dx = target_x - self.x
+            dy = target_y - self.y
+            distance = math.sqrt(dx ** 2 + dy ** 2)
 
-        if distance != 0:
-            self.vel_x = (dx / distance) * self.speed
-            self.vel_y = (dy / distance) * self.speed
+            if distance != 0:
+                self.vel_x = (dx / distance) * self.speed
+                self.vel_y = (dy / distance) * self.speed
+        
+        
 
     def out_of_range(self):
 
@@ -327,10 +334,14 @@ class Bullet:
         else:
             return False
 
-    def rotate_bullet(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
-       
+    # def rotate_bullet(self):
+    #     mouse_x, mouse_y = pygame.mouse.get_pos()
+    #     self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
+  
+    #     if self.angle<=1 and self.angle>=-90:
+    #         self.angle=1
+    #     elif self.angle >=179 or self.angle <=-90:
+    #          self.angle=179
  
     
 class Player:
@@ -368,7 +379,7 @@ class Player:
     right_sprite=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
     rect=right_sprite.get_rect()
     left_sprite=pygame.transform.flip(right_sprite, True, False)
-    barrel1=pygame.image.load('src/img/vehicles/test3.png')
+    barrel1=pygame.image.load('src/img/vehicles/barrel2.png')
     barrel2=barrel1
     barrel_width,barrel_height=barrel1.get_size()
     
@@ -458,21 +469,35 @@ class Player:
 
         angle_radians = math.atan2(mouse_y - (self.y + 28), mouse_x - (self.x + 52))
         angle = math.degrees(angle_radians)
+        angle=-angle
 
-        angle_radians2 = math.atan2(mouse_y - (self.y + 36), mouse_x - (self.x + 52))
-        angle2 = math.degrees(angle_radians2)
+        if angle<=0 and angle>=-90:
+            angle=0
+        elif angle >=180 or angle <=-90:
+             angle=180
+        self.bullet_angle=angle
 
-        barrel2 = pygame.transform.rotate(self.barrel2, -angle)
-        barrel1 = pygame.transform.rotate(self.barrel1, -angle2)
+
+        # angle_radians2 = math.atan2(mouse_y - (self.y + 22), mouse_x - (self.x + 52))
+        # angle2 = math.degrees(angle_radians2)
+
+        barrel2 = pygame.transform.rotate(self.barrel2, angle)
+        barrel1 = pygame.transform.rotate(self.barrel1, angle)
 
         rotated_rect = barrel1.get_rect()
-        rotated_rect.center = (self.x+52, self.y+36)
-    
+        rotated_rect.center = (self.x+49, self.y+22)
+        
 
         rotated_rect2 = barrel2.get_rect()
         rotated_rect2.center = (self.x+52, self.y+28)
 
-        self.barrel_top_right=(rotated_rect2.topright)
+        
+        if angle>=90:
+            self.barrel_top_right=(rotated_rect2.topleft)
+        else:
+            self.barrel_top_right=(rotated_rect2.topright)
+        
+
 
         # rectt=pygame.Rect(self.x+52, self.y+28,142,60)
         # rectt.center=(self.x+52, self.y+28)
@@ -483,15 +508,15 @@ class Player:
 
 
         tplftt=pygame.Rect(self.barrel_top_right[0],self.barrel_top_right[1],15,15)
-        pygame.draw.rect(screen,'red',tplftt)
+    #    pygame.draw.rect(screen,'red',tplftt)
         screen.blit(barrel1, rotated_rect)
 
 
       
-        if self.moving_dir=='left':
-            screen.blit(self.left_sprite, self.rect)
-        else:
-            screen.blit(self.right_sprite, self.rect)  
+        # if self.moving_dir=='left':
+        #     screen.blit(self.left_sprite, self.rect)
+        # else:
+        #     screen.blit(self.right_sprite, self.rect)  
 
         screen.blit(barrel2, rotated_rect2)
         
@@ -603,9 +628,19 @@ class Player:
         
         if not self.reloading:
             if current_time - self.last_shot_time >= self.shoot_delay:
-                return True
+                if self.bullet_angle>=179 or self.bullet_angle<=1:
+                    return False
+                else:
+                    return True
+            
+        
+        
         else:
+            
             return False
+        
+
+       
         
 
     
@@ -621,10 +656,10 @@ class Player:
     def shoot(self):
         if self.can_shoot():
             self.magazine-=2
-            target_x, target_y = pygame.mouse.get_pos()
-            bullet = Bullet(self.barrel_top_right[0],self.barrel_top_right[1])
+            
+            bullet = Bullet(self.barrel_top_right[0],self.barrel_top_right[1],self.bullet_angle)
 
-            bullet.shoot_at(target_x, target_y)
+      
            
             self.bullets.append(bullet)
 
