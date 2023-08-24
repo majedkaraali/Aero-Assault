@@ -497,7 +497,7 @@ class Player:
         else:
             self.barrel_top_right=(rotated_rect2.topright)
 
-        if angle>=82 and angle<=100:
+        if angle>=80 and angle<=100:
             self.barrel_top_right=(rotated_rect2.midtop)
         
 
@@ -510,16 +510,17 @@ class Player:
         # pygame.draw.rect(screen,'lightgray',rectt)
 
 
-        tplftt=pygame.Rect(self.barrel_top_right[0],self.barrel_top_right[1],15,15)
+        # tplftt=pygame.Rect(self.barrel_top_right[0],self.barrel_top_right[1],15,15)
     #    pygame.draw.rect(screen,'red',tplftt)
+
         screen.blit(barrel1, rotated_rect)
 
 
       
-        # if self.moving_dir=='left':
-        #     screen.blit(self.left_sprite, self.rect)
-        # else:
-        #     screen.blit(self.right_sprite, self.rect)  
+        if self.moving_dir=='left':
+            screen.blit(self.left_sprite, self.rect)
+        else:
+            screen.blit(self.right_sprite, self.rect)  
 
         screen.blit(barrel2, rotated_rect2)
         
