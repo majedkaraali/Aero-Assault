@@ -27,14 +27,20 @@ class Level_Play(GameState):
         self.ground_vhls=[]
         self.enemies_to_remove = []
 
+        self.conform=True
+
         self.background_path=level.background_path
         self.background=pygame.image.load(self.background_path).convert_alpha()
         self.player.loadout(level.player_loadout)
         self.ground_vhls.append(self.player)
 
 
+
+
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
+
+
 
         
 
@@ -78,7 +84,7 @@ class Level_Play(GameState):
 
 
     def update_game(self, screen):
-        if self.can_play():
+        if self.can_play() and not self.conform:
             
             self.handle_allies(screen)
             self.handle_base(screen)
@@ -102,8 +108,15 @@ class Level_Play(GameState):
             self.handle_pause(screen)
         elif self.tutorial:
             self.handle_tutorial(screen)
+
         elif self.lose:
             self.handle_lose(screen)
+
+
+
+        elif self.conform:
+            if not self.tutorial:
+                self.handle_conform(screen)
 
 
 
@@ -148,6 +161,12 @@ class Level_Play(GameState):
     
             if event.type == pygame.MOUSEBUTTONDOWN:
 
+                if self.conform:
+        
+                    if windo.ok_button.holding:
+                        self.conform=False
+                        self.play_conformed=True
+
                 if self.pause:
                     if windo.main_menu_button.holding:
                         self.state.menu_state()
@@ -184,7 +203,7 @@ class Level_Play(GameState):
                         
             
             
-        if self.complete or self.reward_screen or self.pause or self.tutorial or self.lose:
+        if self.complete or self.reward_screen or self.pause or self.tutorial or self.lose or self.conform:
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
@@ -220,3 +239,9 @@ class Level_Play(GameState):
             windo.lose_window()
             windo.draw(screen)
             windo.draw_frames(screen)
+
+    def handle_conform(self,screen):
+
+        windo.in_game_level_description_frame(self.level)
+        windo.draw(screen)
+        windo.draw_frames(screen)

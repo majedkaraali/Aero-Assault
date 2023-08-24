@@ -101,12 +101,13 @@ class game_windows(Screen):
 
     def in_game_level_description_frame(self,level):
         _level=level
-        description=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        description=Frame(self.center[0]-357,self.center[1]-195,715,390)
         description.write(_level.get_description())
-        self.ok_button=Button(description.width-100,description.height+100,'Conform',22)
+        self.ok_button=Button(description.width-65,description.height+100,'Conform',22)
         self.ok_button.change_images(self.smooth_button,self.smooth_button_hold)
         self.selected_window=description
         description.add_button(self.ok_button)
+
         
     def draw_frames(self, screen):
         if self.selected_window:

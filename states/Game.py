@@ -106,7 +106,7 @@ class GameState():
 
 
     def can_play(self):
-        return not (self.lose or self.tutorial or self.pause or self.game_over or self.complete )
+        return not (self.lose or self.tutorial or self.pause or self.game_over or self.complete ) #or self.play_conformed  )
     
 
     def handle_player(self,screen):
