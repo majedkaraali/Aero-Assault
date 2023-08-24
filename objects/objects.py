@@ -496,6 +496,9 @@ class Player:
             self.barrel_top_right=(rotated_rect2.topleft)
         else:
             self.barrel_top_right=(rotated_rect2.topright)
+
+        if angle>=82 and angle<=100:
+            self.barrel_top_right=(rotated_rect2.midtop)
         
 
 
