@@ -19,6 +19,7 @@ class Missile:
         self.rect=self.image.get_rect()
         self.angle=0
         self.destroyed=False
+        self.hitted=False
 
 
     max_velocity = 4
@@ -34,16 +35,18 @@ class Missile:
                 drop=Item(self.target.get_centerx(),self.target.y,'gift')
                 self.owner.drops.append(drop)
                 self.target.destroyed=True
+                self.destroyed=True
                 return True
+
                 
             else:
                 return False
 
     def get_rect(self):
-
         rect=self.rect
         rect.topleft=(self.x,self.y)
         return  rect
+    
     def get_angle(self):
         angle = self.target.get_angle_between_rects(self.get_rect(),self.target.get_rect())
         return angle
@@ -113,8 +116,8 @@ class Missile:
         
 
     def move_misile(self):
-  
         self.get_colid_point_angle()
+
         x_turn=self.turn_vel()[0]
         y_turn=self.turn_vel()[1]
         
@@ -125,6 +128,9 @@ class Missile:
                 self.destroyed=True
 
         
+        if self.hitted:
+          #  self.target.locked=False
+            self.destroyed=True
 
     def draw_missile(self,screen):
         
@@ -685,6 +691,7 @@ class Player:
 
     def move_missiles(self):
         for mis in self.missiles:
+            mis.hit_target()
             mis.move_misile()
             if mis.destroyed:
                 self.missiles.remove(mis)
@@ -1319,15 +1326,6 @@ class Enemy:
                     self.destroyed=True
                     return True  
 
-        for missile in missiles:
-            if (self.x < missile.x + missile.get_width() and
-                self.x + self.get_width() > missile.x and
-                self.y < missile.y + missile.get_height() and
-                self.y + self.get_height() > missile.y):
-                missile.hitted=True
-                self.health-=15
-                if self.health<0:
-                    self.destroyed=True
-                    return True      
+        
 
         return False
