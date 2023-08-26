@@ -818,10 +818,11 @@ class Bomb:
         self.rect=self.image.get_rect()
         self.agm=pygame.image.load('src/img/weapons/agm2.png')
         self.agm_rect=self.agm.get_rect()
-        self.max_velocity=2
+        self.max_velocity=1.5
         self.velocity_on_angle=self.max_velocity/90
         self.moved_x=0
         self.target=None
+  
 
     def set_target(self,target):
         self.target=target
@@ -893,13 +894,14 @@ class Bomb:
         y_distance = xy[1] - self.y
         distance = pygame.math.Vector2(x_distance, y_distance)
         distance.normalize_ip()
-        movement = distance * 1
+        movement = distance * self.max_velocity
 
         self.x += movement.x
         self.y += movement.y
-        self.moved_x+=abs(movement.x)
-        if self.moved_x>=700:
-            self.y+=0.1
+
+        # self.moved_x+=abs(movement.x)
+        # if self.moved_x>=700:
+        #     self.y+=0.1
        
 
 
@@ -932,7 +934,7 @@ class Bomb:
         
     def status(self,screen):
 
-        if self.y >= 580:
+        if self.y >= 570:
             self.exploded=True
 
         if self.exploded:

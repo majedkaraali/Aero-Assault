@@ -96,15 +96,19 @@ class Survival(GameState):
         if self.score>=200:
             self.enemies_to_respawn=2
 
-        elif self.score>=1000:
+        if  self.score>=1000:
             self.enemies_to_respawn=3
-        elif self.score>=2500:
+
+        if  self.score>=2500:
             self.enemies_to_respawn=4
-        elif self.score>=5000:
+
+        if  self.score>=5000:
             self.enemies_to_respawn=5
-        elif self.score>=10000:
+
+        if  self.score>=10000:
             self.enemies_to_respawn=6
 
+        print(self.enemies_to_respawn)
         if len(self.enemy_list)==0:
             self.generate_enemies(self.enemies_to_respawn)   
 

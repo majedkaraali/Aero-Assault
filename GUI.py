@@ -161,8 +161,6 @@ class Frame:
 
 
 
-
-
 class Levels_Frame:
     def __init__(self, x, y, width, height, rows, cols,levels):
         self.x = x
