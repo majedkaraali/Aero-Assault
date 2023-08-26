@@ -152,7 +152,9 @@ class Level_Play(GameState):
                 ally.draw(screen)
                 if ally.destroyed:
                     self.allies_list.remove(ally)
-
+                    
+    def generate_enemies(self,wave):
+        self.enemy_list=self.enemies.respawn_wave(wave)
 
     def handle_waves(self):
         if len(self.enemy_list)==0:

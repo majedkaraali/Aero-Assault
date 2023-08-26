@@ -22,8 +22,13 @@ class State():
         n_state=Level_Play(state,level)
         self.state=(n_state)
 
+    
+    def survival_state(self):
+        from states.survival_state import Survival
+        n_state=Survival(state)
+        self.state=(n_state)    
+
     def menu_state(self):
-        
         from states.menu_state import MenuState
         n_state=MenuState(state)
         self.state=(n_state)

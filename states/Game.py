@@ -64,7 +64,7 @@ class GameState():
 
 
     def generate_enemies(self,wave):
-        self.enemy_list=self.enemies.respawn_wave(wave)
+        pass
            
 
     def get_enemies(self):

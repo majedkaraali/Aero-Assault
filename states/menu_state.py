@@ -46,6 +46,10 @@ class MenuState():
                     level.chek_lock(level.number)
                 self.window.levels_frame(levels)
                 self.window.levels_buttoon.holding=False
+
+            if self.window.survival_buttonn.holding:
+                self.state.survival_state()
+                self.window.survival_buttonn.holding=False
             
             if self.window.selected_frame_button:
                 button_text=self.window.selected_frame_button.get_text()

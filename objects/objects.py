@@ -378,7 +378,7 @@ class Player:
     reloading_pods=False
     out_of_missiles=False
     out_of_ammo=False
-    health=100000000
+    health=100
     destroyed=False
     forced=False
     forced_time = 0
@@ -1322,10 +1322,9 @@ class Enemy:
                 self.y + self.get_height() > bullet.y):
                 bullet.hitted=True
                 self.health-=15
+                self.damaged=True
                 if self.health<0:
                     self.destroyed=True
                     return True  
-
-        
 
         return False

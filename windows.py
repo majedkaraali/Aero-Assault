@@ -108,6 +108,13 @@ class game_windows(Screen):
         self.selected_window=description
         description.add_button(self.ok_button)
 
+    def survival_description_frame(self):
+            description=Frame(self.center[0]-357,self.center[1]-195,715,390)
+            description.write('Try to get best score and take down  enemies aircrafts without being bombed, GOOD LUCK')
+            self.ok_button=Button(description.width-65,description.height+100,'Conform',22)
+            self.ok_button.change_images(self.smooth_button,self.smooth_button_hold)
+            self.selected_window=description
+            description.add_button(self.ok_button)
         
     def draw_frames(self, screen):
         if self.selected_window:
