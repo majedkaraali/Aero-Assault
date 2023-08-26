@@ -1163,51 +1163,43 @@ class Enemy:
         pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.get_width()+5, self.get_height()+5))
 
 
+    def get_rect(self):
+        return  self.left_sprite_rect
+    
+    def get_angl(self,rect1, rect2):
+
+        v1_x=(rect1.x)
+        v1_y=(rect1.y)
+        v2_x=(rect2.x)
+        v2_y=(rect2.y)
+
+        dx = v2_x - v1_x
+        dy = v2_y - v1_y
+        rads = atan2(-dy,dx)
+        rads %= 2*pi
+        degs = degrees(rads)
+
+        return degs
+
     def kamikaze_move(self,target,screen):
-        target_x=target.x
-        target_y=target.y
-        x_dis=self.x-target_x
-        x_dis=abs(x_dis)
-        self.vely=1.5
-        y_dis=abs(self.y-target_y)
-        reach_time=y_dis//self.vely
+        xy=self.target.get_last_known_position()
+        x_distance = xy[0] - self.x
+        y_distance = xy[1] - self.y
+        distance = pygame.math.Vector2(x_distance, y_distance)
+        distance.normalize_ip()
+        movement = distance * self.vel
 
-        if reach_time >0:
-            velx=x_dis/reach_time
-        else:
-            velx=2
-
-        if velx>=2.2:
-            velx=2.2
-
-        if self.x<target_x:
-            self.x+=velx
-        else:
-            self.x-=velx
-            
-        self.y+=self.vely
+        self.x += movement.x
+        self.y += movement.y
+       
+        if self.y>=580:
+            self.destroyed=True
 
         self.check_hit_player(target,screen)
             
 
-        
-
-
-    def check_hit_player(self,target,screen):
-        if self.get_rect().colliderect(target.get_rect()):
-            self.destroyed=True
-            self.effect(screen)
-            if target.health -80  <0:
-                target.health=0
-            else:
-                target.health-=80
-
-      
-
-        
 
     def side_move(self):
-
 
         if self.move_dir=='right':
             self.x+=self.vel
@@ -1246,9 +1238,7 @@ class Enemy:
                 self.destroyed=True
             
     
-    def recharge(self):
-       # pass
-        self.bomb_count=self.charg
+
 
 
             
@@ -1264,38 +1254,32 @@ class Enemy:
 
 
 
-    def get_rect(self):
-        return  self.left_sprite_rect
-    
-    def get_angle_between_rects(self,rect1, rect2):
-
-        v1_x=(rect1.x)
-        v1_y=(rect1.y)
-        v2_x=(rect2.x)
-        v2_y=(rect2.y)
-
-        dx = v2_x - v1_x
-        dy = v2_y - v1_y
-        rads = atan2(-dy,dx)
-        rads %= 2*pi
-        degs = degrees(rads)
-
-        return degs
-
-
     def update_enemy(self,screen):
         
 
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
 
+
+        
+
         self.left_sprite_rect.topleft=(self.x,self.y)
         self.right_sprite_rect.topleft=(self.x,self.y)
 
-        if self.move_dir=="left":
-            screen.blit(self.left_sprite,self.left_sprite_rect)
-        else:
-            screen.blit(self.right_sprite,self.right_sprite_rect)
+        if not self.kamikaze:
+            if self.move_dir=="left":
+                screen.blit(self.left_sprite,self.left_sprite_rect)
+            else:
+                screen.blit(self.right_sprite,self.right_sprite_rect)
+
+        if self.kamikaze:
+            angle=self.get_angl(self.get_rect(),self.target.get_rect())
+            rotated_image = pygame.transform.rotate(self.left_sprite,angle+180)
+            rotated_rect = rotated_image.get_rect()
+            rotated_rect.topleft = (self.x, self.y)
+            screen.blit(rotated_image,rotated_rect)
+
+            
 
         if self.locked:
             rect_center=self.track_sprite_rect.topleft=(self.get_centerx()-15,self.y-3)
@@ -1306,6 +1290,20 @@ class Enemy:
             rect_center=self.lock_sprite_rect.topleft=(self.get_centerx()-15,self.y-3)
             screen.blit(self.lock_sprite,rect_center)
 
+
+
+
+ 
+
+
+    def check_hit_player(self,target,screen):
+        if self.get_rect().colliderect(target.get_rect()):
+            self.destroyed=True
+            self.effect(screen)
+            if target.health -80  <0:
+                target.health=0
+            else:
+                target.health-=80
     
     
     def is_taken_damage(self):
@@ -1328,3 +1326,6 @@ class Enemy:
                     return True  
 
         return False
+    
+    def recharge(self):
+        self.bomb_count=self.charg

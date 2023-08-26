@@ -46,13 +46,13 @@ class Generate_enemies:
 
     def random_type(self):
             respawn_chance = random.random()
-            if respawn_chance <= 0.3:  
+            if respawn_chance <= 0.15:  
                 return 'strike_aircraft'
-            elif respawn_chance <= 0.5:  
+            elif respawn_chance <= 0.40:  
                 return 'fighter_aircraft'
-            elif respawn_chance <= 0.8:  
+            elif respawn_chance <= 0.80:  
                 return 'bomber'
-            elif respawn_chance <= 1.0:  
+            elif respawn_chance <= 1.00:  
                 return 'kamikaze_drone'
             else:
                 return None  
