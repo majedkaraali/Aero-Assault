@@ -82,6 +82,18 @@ class Level_Play(GameState):
         wave_text_pos=(10,height-25)
         screen.blit(wave_text,wave_text_pos)
 
+        if self.base:
+            base_hp =str(self.base.actual_health)
+            base_hp_text = font.render("Base Health: "+base_hp, True, ('black'))
+            base_hp_text_pos=(200,height-25)
+            screen.blit(base_hp_text,base_hp_text_pos) 
+
+        if self.allies:
+            ally_cont =str(len(self.allies_list))
+            ally_cont_text = font.render("Allies cont: "+ally_cont, True, ('black'))
+            ally_cont_text_pos=(200,height-25)
+            screen.blit(ally_cont_text,ally_cont_text_pos) 
+
 
     def update_game(self, screen):
         if self.can_play() and not self.conform:
