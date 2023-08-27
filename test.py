@@ -9,8 +9,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Spritesheet Example")
 
 # Create a sprite instance
-spritesheet_path = "spritesheet.png"  # Path to your spritesheet
-sprite = Sprite(spritesheet_path, width=64, height=64, frame_width=32, frame_height=32, draw_limit=5)
+spritesheet_path = "src\img\weapons\smoke.png"  
+sprite = Sprite(200,200,spritesheet_path, width=300, height=76, frame_width=25, frame_height=76, draw_limit=2)
 
 clock = pygame.time.Clock()
 
@@ -22,11 +22,11 @@ while running:
 
     sprite.update()
 
-    screen.fill((0, 0, 0))
-    sprite.draw(screen, screen_width // 2, screen_height // 2)
+    screen.fill('black')
+    sprite.draw(screen)
 
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(30)
 
 pygame.quit()
 sys.exit()
