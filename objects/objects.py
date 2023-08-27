@@ -2,6 +2,7 @@ import pygame
 import random
 from math import atan2, degrees, pi
 import math
+from Sprite import Sprite
 
 debug=False
 
@@ -9,26 +10,22 @@ width,height=(1100,660)
 
 
 class Missile:
-
+    spritesheet_path = "src\img\weapons\smoke2.png"  
     def __init__(self,x,y,target,owner):
         self.x=x
         self.y=y
         self.target=target
         self.owner=owner
-        self.image=pygame.image.load('src/img/weapons/missile4.png')
-        
-        self.smoke1=pygame.image.load('src/img/weapons/s1.png')
-        self.smoke2=pygame.image.load('src/img/weapons/s2.png')
-        self.smoke3=pygame.image.load('src/img/weapons/s3.png')
-        self.smoke5=pygame.image.load('src/img/weapons/s5.png')
-        self.smoke=[self.smoke1,self.smoke2,self.smoke3,self.smoke5]
-        self.smoke_index=0
-        self.index=0
+
+        self.image=pygame.image.load('src/img/weapons/missile4.png').convert_alpha()
+        self.sprite = Sprite(200,200,self.spritesheet_path, width=300, height=238, frame_width=25, frame_height=238, draw_limit=8)
+
+
+
         self.rect=self.image.get_rect()
         self.angle=0
         self.destroyed=False
         self.hitted=False
-        self.smoke_drawn=False
 
 
     max_velocity = 4
@@ -139,41 +136,32 @@ class Missile:
 
         
         if self.hitted:
-          #  self.target.locked=False
             self.destroyed=True
 
 
-    def draw_smoke(self,screen,angle):
-        self.smoke_index+=1
-        if self.index>=len(self.smoke):
-            self.index=0
-        smoke_img=self.smoke[self.index]
-        smoke_rect=smoke_img.get_rect()
-        smoke_rect.topleft=(self.x,self.y)
-        self.index+=1
-        rotimg=pygame.transform.rotate(smoke_img, angle)
-        screen.blit(rotimg,smoke_rect)
+  
 
     def draw_missile(self,screen):
-        
     
-        rect = self.rect.topleft=(self.x,self.y)
        
         if self.target.move_dir=="left":
             angle = self.get_colid_point_angle()
         else:
             angle = self.get_colid_point_angle()
-        
-        if self.smoke_index<=90:
-            self.draw_smoke(screen,angle-90)
-        else:
-            self.smoke_drawn=True
-
 
         rotated_image = pygame.transform.rotate(self.image, angle)
+        reect=rotated_image.get_rect()
+        reect.center=(self.x,self.y)
+        corner_pos=reect.center
+    
 
+        
+        self.sprite.set_vars(corner_pos[0],corner_pos[1],angle)      
+        self.sprite.update()
+        self.sprite.draw(screen)
+        
+        screen.blit(rotated_image,reect)
 
-        screen.blit(rotated_image,rect)
         if debug:
             pygame.draw.rect(screen, ('red'), (self.colid_point_x(), self.target.y, 15, 15)) # THis is colid point
 

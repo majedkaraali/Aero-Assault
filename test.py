@@ -10,7 +10,7 @@ pygame.display.set_caption("Spritesheet Example")
 
 # Create a sprite instance
 spritesheet_path = "src\img\weapons\smoke.png"  
-sprite = Sprite(200,200,spritesheet_path, width=300, height=76, frame_width=25, frame_height=76, draw_limit=2)
+sprite = Sprite(200,200,spritesheet_path, width=300, height=76, frame_width=25, frame_height=76)
 
 clock = pygame.time.Clock()
 
