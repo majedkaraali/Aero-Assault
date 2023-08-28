@@ -30,9 +30,10 @@ class Sprite:
         self.midright=(0,0)
 
 
-
+    def change_spritesheet(self,spritesheet):
+        self.spritesheet=spritesheet
     
-
+  
     def get_rect(self):
         return self.image.get_rect()
     
@@ -72,6 +73,7 @@ class Sprite:
             self.first_image=self.image
 
     def draw(self, screen):
+
         rotated_image=pygame.transform.rotate(self.image,self.angle)
         image_rect = rotated_image.get_rect()
         image_rect.center=(self.x,self.y)
@@ -81,4 +83,14 @@ class Sprite:
         if not self.end_draw:
             screen.blit(rotated_image,image_rect)
 
-            
+    def draw_topleft(self, screen):
+
+        rotated_image=pygame.transform.rotate(self.image,self.angle)
+        image_rect = rotated_image.get_rect()
+        image_rect.topleft=(self.x,self.y)
+         
+    
+        
+        if not self.end_draw:
+            screen.blit(rotated_image,image_rect)
+          

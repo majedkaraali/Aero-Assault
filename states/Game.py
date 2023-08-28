@@ -36,7 +36,7 @@ class GameState():
         self.wave=0
         self.score=0
         self.explodes=[]
-        self.player=objects.Player(540,height-107,'Unnamed')
+        self.player=objects.Player(540,height-120,'Unnamed')
         self.enemies=Generate_enemies(self.player)
 
         self.enemy_list=[]

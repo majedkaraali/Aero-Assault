@@ -387,8 +387,10 @@ class Player:
         self.barrel_position=(self.x+20,self.y+29)
         self.barrel_top_right=0
         self.sprite=Sprite(self.x,self.y,self.sprite_sheet,536,68,134,68)
+        self.sprite_left=Sprite(self.x,self.y,self.sprite_sheet_left,536,68,134,68)
         self.sprite.update()
         self.idle=self.sprite.first_image
+        self.rect=self.idle.get_rect()
 
     magazine_size=240
     reloading=False
@@ -404,15 +406,10 @@ class Player:
     forced=False
     forced_time = 0
     sprite_sheet=('src/img/vehicles/gepard_sheet.png')
-    
-    right_sprite=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
-    rect=right_sprite.get_rect()
-    left_sprite=pygame.transform.flip(right_sprite, True, False)
+    sprite_sheet_left=('src/img/vehicles/gepard_sheet-left.png')
     barrel1=pygame.image.load('src/img/vehicles/vhc_barrel.png')
     barrel2=barrel1
     barrel_width,barrel_height=barrel1.get_size()
-    
-    
 
     last_known_position=(0,0)
     last_known_position_update_delay=800
@@ -457,9 +454,10 @@ class Player:
         return  self.rect
     
     def get_width(self):
-        return self.left_sprite.get_width()
+        return self.idle.get_width()
+    
     def get_height(self):
-        return self.left_sprite.get_height()
+        return self.idle.get_height()
 
     def get_centerx(self):
         center_x=self.x+(self.get_width()//2)
@@ -496,7 +494,7 @@ class Player:
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        angle_radians = math.atan2(mouse_y - (self.y + 28), mouse_x - (self.x + 52))
+        angle_radians = math.atan2(mouse_y - (self.y + 31), mouse_x - (self.x + 60))
         angle = math.degrees(angle_radians)
         angle=-angle
 
@@ -514,11 +512,11 @@ class Player:
         barrel1 = pygame.transform.rotate(self.barrel1, angle)
 
         rotated_rect = barrel1.get_rect()
-        rotated_rect.center = (self.x+49, self.y+22)
+        rotated_rect.center = (self.x+55, self.y+27)
         
 
         rotated_rect2 = barrel2.get_rect()
-        rotated_rect2.center = (self.x+52, self.y+28)
+        rotated_rect2.center = (self.x+60, self.y+31)
 
         
         if angle>=90:
@@ -535,9 +533,7 @@ class Player:
         # rectt.center=(self.x+52, self.y+28)
         # rectt = pygame.transform.rotate(rectt, -angle)
 
-
         # pygame.draw.rect(screen,'lightgray',rectt)
-
 
         # tplftt=pygame.Rect(self.barrel_top_right[0],self.barrel_top_right[1],15,15)
     #    pygame.draw.rect(screen,'red',tplftt)
@@ -545,21 +541,31 @@ class Player:
         screen.blit(barrel1, rotated_rect)
 
 
-        self.sprite.set_vars(self.x,self.y,0)
-        self.sprite.update()
-     #   self.sprite.draw(screen)
-        # if self.moving_dir=='left':
-        #     screen.blit(self.left_sprite, self.rect)
-        # else:
-        #     screen.blit(self.right_sprite, self.rect)
-        # 
-        #   
-        rectt=self.idle.get_rect()
-        rectt.center=(self.x,self.y)
-        screen.blit(self.idle,rectt)
-        screen.blit(barrel2, rotated_rect2)
         
 
+       
+
+        if self.moving:
+            if self.moving_dir=='left':
+                self.sprite_left.set_vars(self.x,self.y,0)
+                self.sprite_left.update()
+                self.sprite_left.draw_topleft(screen)
+                self.idle=self.sprite_left.first_image
+
+            elif self.moving_dir=='right':
+                self.sprite.set_vars(self.x,self.y,0)
+                self.sprite.update()
+                self.sprite.draw_topleft(screen)
+                self.idle=self.sprite.first_image
+
+        else:
+            rectt=self.idle.get_rect()
+            rectt.topleft=(self.x,self.y)
+            screen.blit(self.idle,rectt)
+
+
+        screen.blit(barrel2, rotated_rect2)
+        
 
 
         self.radar()
@@ -890,7 +896,7 @@ class Bomb:
 
         if debug:
             pygame.draw.rect(screen,('black'),self.get_rect())
-            pygame.draw.rect(screen,('red'),(xy[0],xy[1],10,10))
+#            pygame.draw.rect(screen,('red'),(xy[0],xy[1],10,10))
 
         
     def get_angle(self):
