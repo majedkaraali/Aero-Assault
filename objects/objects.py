@@ -156,7 +156,7 @@ class Missile:
     
 
         
-        self.sprite.set_vars(corner_pos[0],corner_pos[1],angle)      
+        self.sprite.set_vars(corner_pos[0],corner_pos[1],angle-90)      
         self.sprite.update()
         self.sprite.draw(screen)
         
@@ -214,7 +214,6 @@ class Item:
         return self.y >=height-70
 
 
-
     def move_item(self):
         self.drop_rect.topleft=(self.x,self.y)
         self.y+=self.vely
@@ -223,6 +222,7 @@ class Item:
         return  rect
 
     def draw(self,screen):
+    
         screen.blit(self.drop_image,self.drop_rect)
 
 
@@ -248,6 +248,8 @@ class Bullet:
         self.effect4=pygame.image.load('src\\img\weapons\\4.png')
         self.effect5=pygame.image.load('src\\img\weapons\\5.png')
         self.effect6=pygame.image.load('src\\img\weapons\\6.png')
+        self.sprite = Sprite(200,200,self.spritesheet_path, width=85, height=5, frame_width=17, frame_height=5, draw_limit=10)
+
         self.current_efct=0
         self.efct_nmbr=0
         self.effects=[[self.effect1,self.effect3,self.effect3],[self.effect4,self.effect5,self.effect6]]
@@ -257,7 +259,7 @@ class Bullet:
         self.efct_pos=(self.x,self.y)
         self.efct_pos_taken=False
      
-
+    spritesheet_path = "src/img/weapons/bullet_sheet.png"  
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
     
@@ -329,9 +331,11 @@ class Bullet:
                 
                 self.draw_effect(screen)
 
-
+        self.sprite.set_vars(self.x,self.y,self.angle)
+        self.sprite.update()
+        self.sprite.draw(screen)
         
-        screen.blit(rotated_image, rotated_rect)
+      #  screen.blit(rotated_image, rotated_rect)
 
         
 
@@ -382,7 +386,9 @@ class Player:
         self.moving_dir='right'
         self.barrel_position=(self.x+20,self.y+29)
         self.barrel_top_right=0
-
+        self.sprite=Sprite(self.x,self.y,self.sprite_sheet,536,68,134,68)
+        self.sprite.update()
+        self.idle=self.sprite.first_image
 
     magazine_size=240
     reloading=False
@@ -397,10 +403,12 @@ class Player:
     destroyed=False
     forced=False
     forced_time = 0
+    sprite_sheet=('src/img/vehicles/gepard_sheet.png')
+    
     right_sprite=pygame.image.load('src/img/vehicles/spaa-gepard3.png')
     rect=right_sprite.get_rect()
     left_sprite=pygame.transform.flip(right_sprite, True, False)
-    barrel1=pygame.image.load('src/img/vehicles/barrel2.png')
+    barrel1=pygame.image.load('src/img/vehicles/vhc_barrel.png')
     barrel2=barrel1
     barrel_width,barrel_height=barrel1.get_size()
     
@@ -537,12 +545,18 @@ class Player:
         screen.blit(barrel1, rotated_rect)
 
 
-      
-        if self.moving_dir=='left':
-            screen.blit(self.left_sprite, self.rect)
-        else:
-            screen.blit(self.right_sprite, self.rect)  
-
+        self.sprite.set_vars(self.x,self.y,0)
+        self.sprite.update()
+     #   self.sprite.draw(screen)
+        # if self.moving_dir=='left':
+        #     screen.blit(self.left_sprite, self.rect)
+        # else:
+        #     screen.blit(self.right_sprite, self.rect)
+        # 
+        #   
+        rectt=self.idle.get_rect()
+        rectt.center=(self.x,self.y)
+        screen.blit(self.idle,rectt)
         screen.blit(barrel2, rotated_rect2)
         
 
@@ -845,6 +859,14 @@ class Bomb:
     def get_rect(self):
         return  self.rect
     
+
+    def get_centerx(self):
+        return self.x
+        
+    def get_center_y(self):
+        return self.y
+
+
     def draw(self,screen):
        
         if not self.guided:
@@ -898,9 +920,6 @@ class Bomb:
             self.dum_move()
 
 
-    
-
-
 
 
     def guide_move(self):
@@ -919,15 +938,6 @@ class Bomb:
         #     self.y+=0.1
        
 
-
-   
-      
-   
-
-            
-
-
-
            
 
     def dum_move(self):
@@ -941,10 +951,6 @@ class Bomb:
             if self.get_rect().colliderect(obj.get_rect()):
                 self.exploded=True
                 obj.bombed(self.dmage)
-      
-        
- 
-        
 
         
     def status(self,screen):
@@ -956,8 +962,8 @@ class Bomb:
             self.effect(screen)
 
     def effect(self,screen):
-        
-        pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
+        pass
+      #  pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
 
 
 
@@ -1084,19 +1090,21 @@ class Enemy:
         self.down=False
         self.turning_opposite_direction=True
         self.turn_opposite_direction_times=0
+        
 
+    explode_sprite_sheet= 'src/img/weapons/Explosion.png'
     lock_sprite=pygame.image.load('src/img/weapons/lock.png')
     lock_sprite_rect=lock_sprite.get_rect()
     track_sprite=pygame.image.load('src/img/weapons/track.png')
     track_sprite_rect=track_sprite.get_rect()
     lock_sprite_width=lock_sprite.get_width()
-
+    
 
         
     
 
     def get_center_y(self):
-        return self.left_sprite.get_height()//2
+        return self.y+self.left_sprite.get_height()//2
 
     def get_centerx(self):
         center_x=self.x+(self.get_width()//2)
@@ -1176,7 +1184,6 @@ class Enemy:
         self.x=x
 
     def effect(self,screen):
-        
         pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.get_width()+5, self.get_height()+5))
 
 
@@ -1272,6 +1279,8 @@ class Enemy:
 
 
     def update_enemy(self,screen):
+
+       
         
 
         if debug:
@@ -1306,7 +1315,6 @@ class Enemy:
         elif self.tracked:
             rect_center=self.lock_sprite_rect.topleft=(self.get_centerx()-15,self.y-3)
             screen.blit(self.lock_sprite,rect_center)
-
 
 
 

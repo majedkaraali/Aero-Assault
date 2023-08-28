@@ -3,7 +3,7 @@ import pygame
 from objects import objects
 from windows import game_windows
 from EnemyMaker import Generate_enemies
-
+from Sprite import Sprite
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
@@ -35,7 +35,7 @@ class GameState():
 
         self.wave=0
         self.score=0
-
+        self.explodes=[]
         self.player=objects.Player(540,height-107,'Unnamed')
         self.enemies=Generate_enemies(self.player)
 
@@ -141,6 +141,9 @@ class GameState():
                     self.bombs.append(bomb)
 
             if enemy.destroyed:
+                explode_sprite_sheet= 'src/img/weapons/Explosion.png'
+                explode_sprite=Sprite(enemy.get_centerx(),enemy.get_center_y(),explode_sprite_sheet,1152,96,96,96,1,0)
+                self.explodes.append(explode_sprite)
                 self.enemies_to_remove.append(enemy)
                 drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
                 self.player.drops.append(drop)
@@ -151,13 +154,20 @@ class GameState():
 
     def handle_bombs(self,screen):
 
+        for exp in self.explodes:
+            exp.update()
+            exp.draw(screen)
+
         for bomb in self.bombs:
             bomb.move()
             bomb.draw(screen)
             bomb.is_hit_object(self.ground_vhls)
             bomb.status(screen)
-
+            
             if bomb.exploded==True:
+                explode_sprite_sheet= 'src/img/weapons/BombExplosion.png'
+                explode_sprite=Sprite(bomb.get_centerx(),bomb.get_center_y(),explode_sprite_sheet,156,36,30,36,1,0)
+                self.explodes.append(explode_sprite)
                 self.bombs.remove(bomb)
 
     def clean_enemies(self):

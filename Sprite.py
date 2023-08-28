@@ -13,10 +13,12 @@ class Sprite:
         self.current_frame = 0
         self.image = pygame.Surface((frame_width, frame_height), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
-        self.x=x
-        self.y=y
+        self.x=int(x)
+        self.y=int(y)
         self.end_draw=False
         self.angle=angle
+        self.first_image=None
+        self.first_image_taken=False
 
         self.topleft=(0,0)
         self.topright=(0,0)
@@ -45,9 +47,9 @@ class Sprite:
         self.midbottom=midb
 
     def set_vars(self,x,y,angle):
-        self.x=x
-        self.y=y
-        self.angle=angle-90
+        self.x=int(x)
+        self.y=int(y)
+        self.angle=angle
 
     def update(self):
         self.current_frame += 1
@@ -66,6 +68,8 @@ class Sprite:
                 self.frame_height
             )
         )
+        if not self.first_image_taken:
+            self.first_image=self.image
 
     def draw(self, screen):
         rotated_image=pygame.transform.rotate(self.image,self.angle)
