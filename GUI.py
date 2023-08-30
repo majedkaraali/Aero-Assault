@@ -87,12 +87,25 @@ class Frame:
         self.image = pygame.image.load('src/img/GUI/LabelFrame.png').convert_alpha()
         self.buttons = []
         self.text = ""
-        self.selected_button=None
+        self.selected_button=None 
+        self.default_lines=[]
+
        
         self.font = pygame.font.Font(font_path, font_size)
 
     def write(self, text):
         self.text = text
+
+    def add_line(self,text,x,y):
+        line = {'text': text, 'position_x': x, 'position_y': y}
+        self.default_lines.append(line)
+
+    def write_more(self, text):
+        self.text +=text
+
+    def empty_line(self):
+        self.text += ''
+
 
     def get_rect(self):
       #  print(self.image)
@@ -135,12 +148,29 @@ class Frame:
         return rendered_lines, text_rects
     def confing(self,image):
         self.image=image
+
+
+    
+    def place_litile_text(self, screen,text,x,y):
+
+        button_text = self.font.render(text, True, (255, 255, 255))
+        button_text_rect = button_text.get_rect()
+        
+        button_text_rect.center = (x,y)
+        screen.blit(button_text,button_text_rect)
+
     def draw(self, screen):
         rendered_lines, text_rects = self.render_text()
         screen.blit(self.image, self.get_rect())
 
         for line, text_rect in zip(rendered_lines, text_rects):
             screen.blit(line, text_rect)
+
+        for line in self.default_lines:
+            line_txt=self.font.render(line['text'],True,(255, 255, 255))
+            line_rect=line_txt.get_rect()
+            line_rect.center=(line['position_x'],line['position_y'])
+            screen.blit(line_txt,line_rect)
 
     def draw_buttons(self,screen):
         self.selected_button=None
@@ -160,6 +190,14 @@ class Frame:
 
 
 
+     
+       
+            
+
+
+
+
+        
 
 class Levels_Frame:
     def __init__(self, x, y, width, height, rows, cols,levels):

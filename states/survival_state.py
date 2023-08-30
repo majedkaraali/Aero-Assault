@@ -167,6 +167,9 @@ class Survival(GameState):
                     if windo.main_menu_button.holding:
                         self.state.menu_state()
 
+                    if windo.retry.holding:
+                        self.state.survival_state()
+
 
                 
             
@@ -191,7 +194,7 @@ class Survival(GameState):
 
 
     def handle_lose(self,screen):
-        windo.lose_window()
+        windo.survival_lose_window(screen,self.score)
         windo.draw(screen)
         windo.draw_frames(screen)
 

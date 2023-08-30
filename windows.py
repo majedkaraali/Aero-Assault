@@ -22,6 +22,7 @@ class game_windows(Screen):
     def __init__(self) -> None:
         super().__init__()
         self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png').convert_alpha()
+        self.smooth_frame=pygame.image.load('src/img/GUI/smooth_frame.png').convert_alpha()
         self.buttons=[]
         self.center=(width//2,height//2)
         self.resume_button=Button(self.center[0],self.center[1]-50,'Resume',18)
@@ -87,7 +88,7 @@ class game_windows(Screen):
 
         self.selected_window=tuturial   
 
-    def lose_window(self):
+    def level_lose_window(self):
         lose_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
         lose_frame.confing(self.pause_image)
         self.retry.change_images(self.smooth_button,self.smooth_button_hold)
@@ -97,6 +98,26 @@ class game_windows(Screen):
         lose_frame.add_button(self.retry)
 
         lose_frame.write("Game Over")
+        self.selected_window=lose_frame    
+
+
+    def survival_lose_window(self,screen,score):
+        topleft=self.center[0]-self.smooth_frame.get_width()//2,self.center[1]-self.smooth_frame.get_height()//2
+        center=self.center[0],self.center[1]
+
+        lose_frame=Frame(topleft[0],topleft[1],self.smooth_frame.get_width(),self.smooth_frame.get_height())
+        lose_frame.confing(self.smooth_frame)
+        self.retry.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+        self.main_menu_button.change_location(self.center[0]-65,self.center[1]+40)
+        lose_frame.add_button(self.main_menu_button)
+        lose_frame.add_button(self.retry)
+        score =str(score)
+
+        lose_frame.add_line("GAME OVER!",center[0],center[1]-100)
+        lose_frame.add_line(f"Score: {score}",center[0],center[1]-50)
+        lose_frame.add_line(f" Height Score: {'984846515'}",center[0],center[1]-20)
+      
         self.selected_window=lose_frame    
 
     def in_game_level_description_frame(self,level):

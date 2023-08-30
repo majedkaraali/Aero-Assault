@@ -250,7 +250,7 @@ class Level_Play(GameState):
 
     def handle_lose(self,screen):
       
-            windo.lose_window()
+            windo.level_lose_window()
             windo.draw(screen)
             windo.draw_frames(screen)
 
