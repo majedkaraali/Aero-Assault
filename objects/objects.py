@@ -248,7 +248,7 @@ class Bullet:
         self.effect4=pygame.image.load('src\\img\weapons\\4.png')
         self.effect5=pygame.image.load('src\\img\weapons\\5.png')
         self.effect6=pygame.image.load('src\\img\weapons\\6.png')
-        self.sprite = Sprite(200,200,self.spritesheet_path, width=85, height=5, frame_width=17, frame_height=5, draw_limit=10)
+        self.sprite = Sprite(200,200,self.spritesheet_path, width=60, height=4, frame_width=20, frame_height=4)
 
         self.current_efct=0
         self.efct_nmbr=0
@@ -259,7 +259,7 @@ class Bullet:
         self.efct_pos=(self.x,self.y)
         self.efct_pos_taken=False
      
-    spritesheet_path = "src/img/weapons/bullet_sheet.png"  
+    spritesheet_path = "src/img/weapons/bullet2.png"  
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
     
