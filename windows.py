@@ -174,7 +174,7 @@ class Test():
         self.holding_play=False
         self.selected_level=False
         
-
+        self.selected_game_mode=None
 
 
     
@@ -222,6 +222,17 @@ class Test():
 
 
 
+
+    def game_mode_description_frame(self,description_text):
+        description=Frame(300,125,715,390)
+        description.write(description_text)
+        self.selected_frame=description
+        level_play_button=Button(description.width-100,description.height+100,'Play',22)
+        back_button=Button(description.width+200,description.height+100,'Back',22)
+        self.level_play_button=level_play_button
+        description.buttons.append(back_button)
+        description.buttons.append(level_play_button)
+
     def survival_frame(self):
         survival_frame=Frame(300,125,715,390)
         survival_frame.write("Try to engage all enemies and get the best score you can.")
@@ -229,9 +240,7 @@ class Test():
         survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play',22)
         self.survival_play_button=survival_play_button
         survival_frame.buttons.append(survival_play_button)
-        
-        
-
+          
 
     def apex_frame(self):
         apex_frame=Frame(300,125,715,390)
