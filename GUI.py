@@ -2,7 +2,9 @@ import pygame
 import os
 
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
-font_size = 22 
+font_size = 23 
+
+
 
 
 class Button():
@@ -92,19 +94,16 @@ class Frame:
 
        
         self.font = pygame.font.Font(font_path, font_size)
+        self.bold_font=pygame.font.Font(font_path, font_size)
+        self.bold_font.set_bold(True)
 
     def write(self, text):
         self.text = text
 
-    def add_line(self,text,x,y):
-        line = {'text': text, 'position_x': x, 'position_y': y}
+    def add_line(self,text,x,y,blod:bool,color,center:bool):
+        line = {'text': text, 'position_x': x, 'position_y': y,'blod': blod, 'color' : color, 'center':center}
         self.default_lines.append(line)
 
-    def write_more(self, text):
-        self.text +=text
-
-    def empty_line(self):
-        self.text += ''
 
 
     def get_rect(self):
@@ -150,14 +149,7 @@ class Frame:
         self.image=image
 
 
-    
-    def place_litile_text(self, screen,text,x,y):
 
-        button_text = self.font.render(text, True, (255, 255, 255))
-        button_text_rect = button_text.get_rect()
-        
-        button_text_rect.center = (x,y)
-        screen.blit(button_text,button_text_rect)
 
     def draw(self, screen):
         rendered_lines, text_rects = self.render_text()
@@ -167,9 +159,16 @@ class Frame:
             screen.blit(line, text_rect)
 
         for line in self.default_lines:
-            line_txt=self.font.render(line['text'],True,(255, 255, 255))
+            if not line['blod']:
+                line_txt=self.font.render(line['text'],True,line['color'])
+            else:
+                line_txt=self.bold_font.render(line['text'],True,line['color'])
             line_rect=line_txt.get_rect()
-            line_rect.center=(line['position_x'],line['position_y'])
+
+            if line['center']:
+                line_rect.center=(line['position_x'],line['position_y'])
+            else:
+                line_rect.topleft=(line['position_x'],line['position_y'])
             screen.blit(line_txt,line_rect)
 
     def draw_buttons(self,screen):

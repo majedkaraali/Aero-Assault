@@ -2,14 +2,15 @@ import pygame
 from GUI import Button,Frame,Levels_Frame
 import json
 
+
 pygame.init()
 width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
 
-font = pygame.font.Font(None, 24)
+from levels import levels
 
 
-def get_hgscr():
+def get_highest_score(): 
 
     try:
         with open('data.json', 'r') as progress_file:
@@ -18,8 +19,24 @@ def get_hgscr():
         pass
 
     highest_score=data['highest_score']
+    
 
     return highest_score
+
+
+
+def get_completed_levels(): 
+
+    try:
+        with open('data.json', 'r') as progress_file:
+            data = json.load(progress_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+
+    completed_levels=data['completed_levels']
+    
+
+    return completed_levels
 
 
 
@@ -141,11 +158,11 @@ class game_windows(Screen):
         lose_frame.add_button(self.retry)
         score =str(score)
 
-        hq=get_hgscr()
+        hq=get_highest_score()
 
-        lose_frame.add_line("GAME OVER!",center[0],center[1]-100)
-        lose_frame.add_line(f"Score: {score}",center[0],center[1]-50)
-        lose_frame.add_line(f" Height Score: {hq}",center[0],center[1]-20)
+        lose_frame.add_line("GAME OVER!",center[0],center[1]-100,True,'white',True)
+        lose_frame.add_line(f"Score: {score}",center[0],center[1]-50,False,'white',True)
+        lose_frame.add_line(f" Height Score: {hq}",center[0],center[1]-20,False,'white',True)
       
         self.selected_window=lose_frame  
 
@@ -289,9 +306,24 @@ class Test():
 
 
     def achvm(self):
+        hq=get_highest_score()
+        completed_levels=len(get_completed_levels())
+        levels_leng=len(levels)
+
+
         frame=Frame(42,142,350,350)
         frame.confing(self.acvm_img)
+        frame.add_line('Achievements',42+self.acvm_img.get_width()//2,165,True,(255,210,100),True)
+        frame.add_line('Completed Levels: ',55,200,False,(255,255,255),False)
+        frame.add_line('Highest score: ',55,250,False,(255,255,255),False)
+        frame.add_line('Apex Challenge:  ',55,300,False,(255,255,255),False)
+
+        frame.add_line(f'  {completed_levels}/{levels_leng}',275,200,False,'#fee300',False)
+        frame.add_line(f'  {hq}',230,250,False,'#fee300',False)
+        frame.add_line('  Wave 0',245,300,False,'#fee300',False)
+
         self.selected_frame=frame
+        
         
 
     def draw(self,screen):
