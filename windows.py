@@ -1,5 +1,7 @@
 import pygame
 from GUI import Button,Frame,Levels_Frame
+import json
+
 pygame.init()
 width,height=1100,660
 gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
@@ -7,6 +9,31 @@ gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
 font = pygame.font.Font(None, 24)
 
 
+def get_hgscr():
+
+    try:
+        with open('data.json', 'r') as progress_file:
+            data = json.load(progress_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+
+    highest_score=data['highest_score']
+
+    return highest_score
+
+
+
+def update_highest_score(new_score):
+    # Read the JSON data from the file
+    with open('data.json', 'r') as file:
+        data = json.load(file)
+
+    # Update the "highest_score" field
+    data["highest_score"] = new_score
+
+    # Write the updated JSON data back to the file
+    with open('data.json', 'w') as file:
+        json.dump(data, file, indent=4)
 
 class Screen():
     def draw(self,screen):
@@ -114,11 +141,18 @@ class game_windows(Screen):
         lose_frame.add_button(self.retry)
         score =str(score)
 
+        hq=get_hgscr()
+
         lose_frame.add_line("GAME OVER!",center[0],center[1]-100)
         lose_frame.add_line(f"Score: {score}",center[0],center[1]-50)
-        lose_frame.add_line(f" Height Score: {'984846515'}",center[0],center[1]-20)
+        lose_frame.add_line(f" Height Score: {hq}",center[0],center[1]-20)
       
-        self.selected_window=lose_frame    
+        self.selected_window=lose_frame  
+
+        if int(hq)<int(score):
+            update_highest_score(int(score))
+           
+
 
     def in_game_level_description_frame(self,level):
         _level=level
@@ -149,7 +183,9 @@ class game_windows(Screen):
 class Test():
     def __init__(self):
         self.name='gamemode'
-        self.image=pygame.image.load('src/img/GUI/background.png').convert_alpha()
+        self.image=pygame.image.load('src/img/GUI/background2.png').convert_alpha()
+        self.smooth_edge_frame=pygame.image.load('src/img/GUI/smooth_frame.png').convert_alpha()
+        self.acvm_img=pygame.transform.scale(self.smooth_edge_frame, (350, 350))
         self.buttons=[]
         self.levels_buttoon=Button(150,150,"Levels",22)
         self.survival_buttonn=Button(150,220,"Survival",22)
@@ -194,6 +230,7 @@ class Test():
 
 
     def game_modes(self):
+        
         self.buttons=self.game_modes_buttons
 
 
@@ -249,6 +286,12 @@ class Test():
         apex_play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play',20)
         self.apex_play_button=apex_play_button
         apex_frame.buttons.append(apex_play_button)
+
+
+    def achvm(self):
+        frame=Frame(42,142,350,350)
+        frame.confing(self.acvm_img)
+        self.selected_frame=frame
         
 
     def draw(self,screen):
@@ -261,6 +304,8 @@ class Test():
         if self.selected_frame:
             self.selected_frame.draw(screen)
             self.selected_frame.draw_buttons(screen)
+
+        
 
 
     def handle_buttons(self):

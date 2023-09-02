@@ -1,7 +1,8 @@
 {
-   "completed_levels": [
-      1,
-      2,
-      3
-   ]
+    "completed_levels": [
+        1,
+        2,
+        3
+    ],
+    "highest_score": 300
 }

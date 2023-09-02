@@ -15,15 +15,19 @@ class MenuState():
         self.buttons=self.window.get_buttons()
         self.state=state
         self.levels_numbers=[]
+        self.window.achvm()
         for level in levels:
             self.levels_numbers.append(level.get_number())
             level.chek_lock(level.number)
  
     def handle_events(self, events):
+
         for event in events:
             self.handle_buttons(event)
             if event.type == pygame.QUIT:
                 self.running = False
+
+
 
              
     def handle_buttons(self,event):
@@ -34,6 +38,7 @@ class MenuState():
             if self.window.play_button.holding:
                 self.window.game_modes()
                 self.window.play_button.holding=False
+                self.window.selected_frame=False
 
 
             if self.window.Exit_button.holding:
@@ -44,6 +49,7 @@ class MenuState():
                 self.window.back_button.holding=False
                 self.window.selected_frame=False
                 self.window.selected_level=None
+                self.window.achvm()
 
             if self.window.levels_buttoon.holding:
                 self.window.selected_game_mode='levels'
@@ -88,6 +94,8 @@ class MenuState():
                 if button_text=='Back':
                     self.window.levels_frame(levels)
 
+                
+
 
                
                     
@@ -98,6 +106,7 @@ class MenuState():
      
 
     def draw(self,screen):
+        
         self.window.draw(screen)
         self.window.draw_frames(screen)
         self.window.handle_buttons()
