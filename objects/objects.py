@@ -8,6 +8,7 @@ debug=False
 
 width,height=(1100,660)
 
+firing_sound = pygame.mixer.Sound("shoot.wav")
 
 class Missile:
     spritesheet_path = "src\img\weapons\smoke2.png"  
@@ -242,23 +243,13 @@ class Bullet:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.shoot_at(mouse_x, mouse_y)
 
-        self.effect1=pygame.image.load('src\\img\weapons\\1.png')
-        self.effect2=pygame.image.load('src\\img\weapons\\2.png')
-        self.effect3=pygame.image.load('src\\img\weapons\\3.png')
-        self.effect4=pygame.image.load('src\\img\weapons\\4.png')
-        self.effect5=pygame.image.load('src\\img\weapons\\5.png')
-        self.effect6=pygame.image.load('src\\img\weapons\\6.png')
+
         self.sprite = Sprite(200,200,self.spritesheet_path, width=60, height=4, frame_width=20, frame_height=4)
 
-        self.current_efct=0
-        self.efct_nmbr=0
-        self.effects=[[self.effect1,self.effect3,self.effect3],[self.effect4,self.effect5,self.effect6]]
+      
 
-        self.random_effect=random.choice(self.effects)
-        self.effect_drawn=False
-        self.efct_pos=(self.x,self.y)
-        self.efct_pos_taken=False
-     
+
+    
     spritesheet_path = "src/img/weapons/bullet2.png"  
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
@@ -285,25 +276,7 @@ class Bullet:
 
 
 
-    def draw_effect(self,screen):
-        
-        
-
-        if self.current_efct>=len(self.effects):
-            self.current_efct=0
     
-        index=self.current_efct
-
-
-        rotated_effect1= pygame.transform.rotate(self.random_effect[index], self.angle)
-       
-        rotated_rect = rotated_effect1.get_rect()
-        rotated_rect.center =self.efct_pos
-        self.current_efct+=1
-        screen.blit(rotated_effect1, rotated_rect)
-        self.efct_nmbr+=1
-        
-
 
 
     def draw_bullet(self,screen):
@@ -318,18 +291,6 @@ class Bullet:
         xy=self.moved_y+self.moved_x
         xy=round(xy)
 
-
-
-        if not self.efct_pos_taken:
-            self.efct_pos=(self.x,self.y)
-            self.efct_pos_taken=True
-
-        if not self.effect_drawn:
-            if self.efct_nmbr>6:
-                self.effect_drawn=True
-            else:
-                
-                self.draw_effect(screen)
 
         self.sprite.set_vars(self.x,self.y,self.angle)
         self.sprite.update()
@@ -382,12 +343,15 @@ class Player:
         self.attacked_targets=[]
         self.enemies_in_radar=[]
         self.tracked=[]
+        self.effects=[]
         self.selected=0
         self.moving_dir='right'
         self.barrel_position=(self.x+20,self.y+29)
         self.barrel_top_right=0
+        self.barrel_top_center=0
         self.sprite=Sprite(self.x,self.y,self.sprite_sheet,536,68,134,68)
         self.sprite_left=Sprite(self.x,self.y,self.sprite_sheet_left,536,68,134,68)
+       
         self.sprite.update()
         self.idle=self.sprite.first_image
         self.rect=self.idle.get_rect()
@@ -405,6 +369,13 @@ class Player:
     destroyed=False
     forced=False
     forced_time = 0
+
+    effect1='src\\img\weapons\\effect_sprite.png'
+    effect2='src\\img\weapons\\effect_sprite2.png'
+    effect3='src\\img\weapons\\effect_sprite3.png'
+
+    
+
     sprite_sheet=('src/img/vehicles/gepard_sheet.png')
     sprite_sheet_left=('src/img/vehicles/gepard_sheet-left.png')
     barrel1=pygame.image.load('src/img/vehicles/vhc_barrel.png')
@@ -505,9 +476,6 @@ class Player:
         self.bullet_angle=angle
 
 
-        # angle_radians2 = math.atan2(mouse_y - (self.y + 22), mouse_x - (self.x + 52))
-        # angle2 = math.degrees(angle_radians2)
-
         barrel2 = pygame.transform.rotate(self.barrel2, angle)
         barrel1 = pygame.transform.rotate(self.barrel1, angle)
 
@@ -527,23 +495,10 @@ class Player:
         if angle>=80 and angle<=100:
             self.barrel_top_right=(rotated_rect2.midtop)
         
-
-
-        # rectt=pygame.Rect(self.x+52, self.y+28,142,60)
-        # rectt.center=(self.x+52, self.y+28)
-        # rectt = pygame.transform.rotate(rectt, -angle)
-
-        # pygame.draw.rect(screen,'lightgray',rectt)
-
-        # tplftt=pygame.Rect(self.barrel_top_right[0],self.barrel_top_right[1],15,15)
-    #    pygame.draw.rect(screen,'red',tplftt)
-
+        self.barrel_top_center=rotated_rect2.center
+     
         screen.blit(barrel1, rotated_rect)
 
-
-        
-
-       
 
         if self.moving:
             if self.moving_dir=='left':
@@ -565,6 +520,13 @@ class Player:
 
 
         screen.blit(barrel2, rotated_rect2)
+
+        for effect in self.effects:
+            effect.update()
+            effect.draw(screen)
+            if effect.end_draw:
+                self.effects.remove(effect)
+       
         
 
 
@@ -703,10 +665,15 @@ class Player:
             self.magazine-=2
             
             bullet = Bullet(self.barrel_top_right[0],self.barrel_top_right[1],self.bullet_angle)
-
-      
-           
             self.bullets.append(bullet)
+
+            effect_sprite_sheet=random.choice([self.effect1,self.effect2,self.effect3])
+
+            effect= Sprite(self.x,self.y,effect_sprite_sheet,750,38,250,38,2,self.bullet_angle)
+
+            effect.set_vars(self.barrel_top_center[0],self.barrel_top_center[1],self.bullet_angle)
+
+            self.effects.append(effect)
 
             # bullet2 = Bullet(self.x+70  // 2, self.y+32)
             # bullet2.shoot_at(target_x, target_y)
@@ -715,6 +682,7 @@ class Player:
 
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
+            firing_sound.play()
             
             
 

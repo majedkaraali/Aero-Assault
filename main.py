@@ -4,6 +4,7 @@ pygame.init()
 pygame.mixer.init()
 
 clock = pygame.time.Clock()
+pygame.mixer.set_num_channels(64)
 
 screen_width = 1100
 screen_height = 660
