@@ -11,13 +11,18 @@ width,height=(1100,660)
 firing_sound = pygame.mixer.Sound("shoot.wav")
 
 class Missile:
-    spritesheet_path = "src\img\weapons\smoke2.png"  
+    spritesheet_1 = "src\img\weapons\smoke1.png" 
+    spritesheet_2 = "src\img\weapons\smoke2.png"  
+    spritesheet_3 = "src\img\weapons\smoke3.png"  
+    spritesheet_4 = "src\img\weapons\smoke4.png"  
+    spritesheet_5 = "src\img\weapons\smoke5.png" 
+    
     def __init__(self,x,y,target,owner):
         self.x=x
         self.y=y
         self.target=target
         self.owner=owner
-
+        self.spritesheet_path=random.choice([self.spritesheet_1,self.spritesheet_2,self.spritesheet_3,self.spritesheet_4,self.spritesheet_5])
         self.image=pygame.image.load('src/img/weapons/missile4.png').convert_alpha()
         self.sprite = Sprite(200,200,self.spritesheet_path, width=300, height=238, frame_width=25, frame_height=238, draw_limit=8)
 
@@ -251,14 +256,14 @@ class Bullet:
 
     
     spritesheet_path = "src/img/weapons/bullet4.png"  
-    image=pygame.image.load("src/img/weapons/bullet.png")
-    rect=image.get_rect()
+   # image=pygame.image.load("src/img/weapons/bullet.png")
+   # rect=image.get_rect()
     
        
     def get_width(self):
-        return self.image.get_width()
+        return self.sprite.image.get_width()
     def get_height(self):
-        return self.image.get_height()
+        return self.sprite.image.get_height()
         
 
     def move_bullet(self):
@@ -282,9 +287,9 @@ class Bullet:
     def draw_bullet(self,screen):
         
         
-        rotated_image = pygame.transform.rotate(self.image, self.angle)
-        rotated_rect = rotated_image.get_rect()
-        rotated_rect.topleft = (self.x, self.y)
+        # rotated_image = pygame.transform.rotate(self.image, self.angle)
+        # rotated_rect = rotated_image.get_rect()
+        # rotated_rect.topleft = (self.x, self.y)
         
         self.moved_y=abs(self.moved_y)
         self.moved_x=abs(self.moved_x)

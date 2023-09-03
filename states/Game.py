@@ -4,6 +4,7 @@ from objects import objects
 from windows import game_windows
 from EnemyMaker import Generate_enemies
 from Sprite import Sprite
+import random
 
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
@@ -141,8 +142,11 @@ class GameState():
                     self.bombs.append(bomb)
 
             if enemy.destroyed:
-                explode_sprite_sheet= 'src/img/weapons/Explosion.png'
-                explode_sprite=Sprite(enemy.get_centerx(),enemy.get_center_y(),explode_sprite_sheet,1152,96,96,96,1,0)
+                explode_sprite_sheet1= 'src/img/weapons/Explosion.png'
+                explode_sprite_sheet2= 'src/img/weapons/Explosion2.png'
+                explode_sprite_sheet3= 'src/img/weapons/Explosion3.png'
+                explode_sprite_sheet=random.choice([explode_sprite_sheet1,explode_sprite_sheet2,explode_sprite_sheet3])
+                explode_sprite=Sprite(enemy.get_centerx(),enemy.get_center_y(),explode_sprite_sheet,1536,96,96,96,1,0)
                 self.explodes.append(explode_sprite)
                 self.enemies_to_remove.append(enemy)
                 drop=objects.Item(enemy.get_centerx(),enemy.y,'gift')
