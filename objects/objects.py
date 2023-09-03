@@ -244,13 +244,13 @@ class Bullet:
         self.shoot_at(mouse_x, mouse_y)
 
 
-        self.sprite = Sprite(200,200,self.spritesheet_path, width=60, height=4, frame_width=20, frame_height=4)
-
+        self.sprite = Sprite(200,200,self.spritesheet_path, width=75, height=3, frame_width=25, frame_height=3)
+        
       
 
 
     
-    spritesheet_path = "src/img/weapons/bullet2.png"  
+    spritesheet_path = "src/img/weapons/bullet4.png"  
     image=pygame.image.load("src/img/weapons/bullet.png")
     rect=image.get_rect()
     
