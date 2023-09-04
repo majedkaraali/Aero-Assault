@@ -17,6 +17,9 @@ explosion_distant_001= pygame.mixer.Sound("src/sound/wopn/explosion_distant_001.
 explosion_distant_002= pygame.mixer.Sound("src/sound/wopn/explosion_distant_002.mp3")
 explosion_distant_003= pygame.mixer.Sound("src/sound/wopn/explosion_distant_003.mp3")
 
+explosion_medium=pygame.mixer.Sound("src/sound/wopn/explosion_medium.mp3")
+explosion_large=pygame.mixer.Sound("src/sound/wopn/explosion_large.mp3")
+explosion_small=pygame.mixer.Sound("src/sound/wopn/explosion_small.mp3")
 
 
 explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
@@ -949,13 +952,16 @@ class Bomb:
             if self.get_rect().colliderect(obj.get_rect()):
                 self.exploded=True
                 obj.bombed(self.dmage)
+                sound=random.choice([explosion_medium,explosion_small,explosion_large])
+                sound.play()
+
 
         
     def status(self,screen):
 
         if self.y >= 570:
             self.exploded=True
-            sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003])
+            sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003,explosion_medium,explosion_small,explosion_large])
             sound.play()
 
 
@@ -1015,7 +1021,6 @@ class Ally:
         self.health-=dmage
 
          
-
 
 
 class Base:
