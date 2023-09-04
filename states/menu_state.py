@@ -60,7 +60,7 @@ class MenuState():
             if self.window.survival_buttonn.holding:
                 self.window.selected_game_mode='survival'
                 self.window.survival_buttonn.holding=False
-                self.window.game_mode_description_frame("Survival ")
+                self.window.survival_frame()
 
 
             if self.window.apex_button.holding:

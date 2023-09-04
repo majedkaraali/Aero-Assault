@@ -154,6 +154,7 @@ class Survival(GameState):
         
                     if windo.ok_button.holding:
                         self.conform=False
+                        self.player.last_shot_time=pygame.time.get_ticks()
                         self.play_conformed=True
 
                 if self.pause:
@@ -161,7 +162,9 @@ class Survival(GameState):
                         self.state.menu_state()
 
                     if windo.resume_button.holding:
+                        self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
+                        
 
 
           

@@ -895,8 +895,8 @@ class Bomb:
         self.rect=self.image.get_rect()
         self.agm=pygame.image.load('src/img/weapons/agm2.png')
         self.agm_rect=self.agm.get_rect()
-        self.max_velocity=1.5
-        self.velocity_on_angle=self.max_velocity/90
+        self.max_velocity=1
+    
         self.moved_x=0
         self.target=None
   
@@ -1008,7 +1008,7 @@ class Bomb:
 
         if self.y >= 570:
             self.exploded=True
-            sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003,explosion_medium,explosion_small,explosion_large])
+            sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003,explosion_medium,explosion_small])
             sound.play()
 
 

@@ -218,7 +218,7 @@ class Test():
         self.apex_play_button=None
         self.survival_play_button=None
         self.level_play_button=None
-
+        
         
         
   
@@ -290,11 +290,14 @@ class Test():
     def survival_frame(self):
         survival_frame=Frame(300,125,715,390)
         survival_frame.write("Try to engage all enemies and get the best score you can.")
+       
         self.selected_frame=survival_frame
-        survival_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play',22)
-        self.survival_play_button=survival_play_button
-        survival_frame.buttons.append(survival_play_button)
-          
+        level_play_button=Button(survival_frame.width-100,survival_frame.height+100,'Play',22)
+        back_button=Button(survival_frame.width+200,survival_frame.height+100,'Back',22)
+        self.level_play_button=level_play_button
+        survival_frame.buttons.append(back_button)
+        survival_frame.buttons.append(level_play_button)
+
 
     def apex_frame(self):
         apex_frame=Frame(300,125,715,390)
