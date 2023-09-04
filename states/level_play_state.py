@@ -180,19 +180,22 @@ class Level_Play(GameState):
                     if windo.ok_button.holding:
                         self.conform=False
                         self.play_conformed=True
+                        self.player.last_shot_time=pygame.time.get_ticks()
+               
 
                 if self.pause:
                     if windo.main_menu_button.holding:
                         self.state.menu_state()
 
                     if windo.resume_button.holding:
+                        self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
 
 
                 if self.tutorial:
                     if windo.ok_button.holding:
                         self.tutorial=False
-                        pygame.time.delay(200)
+                        self.player.last_shot_time=pygame.time.get_ticks()
 
 
                 if self.lose:

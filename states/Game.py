@@ -35,6 +35,7 @@ class GameState():
         self.pause=False
         self.reward_screen=False
         self.tutorial=False
+        self.conform=True
 
         self.wave=0
         self.score=0
@@ -213,9 +214,10 @@ class GameState():
 
 
         mouse_buttons = pygame.mouse.get_pressed()
-
-        if mouse_buttons[0]:  
-            if not self.player.forced or self.pause or self.tutorial:
+    
+        if mouse_buttons[0]:
+            
+            if not self.pause and not  self.tutorial and not self.conform:
                 self.player.shoot()
 
 
