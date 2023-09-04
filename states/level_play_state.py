@@ -236,6 +236,7 @@ class Level_Play(GameState):
 
 
     def handle_complete(self,screen):
+        self.player.fade_out_sound()
         if self.level.next_level():
             windo.reward_window()
             windo.draw(screen)
@@ -246,6 +247,7 @@ class Level_Play(GameState):
             windo.draw_frames(screen) 
 
     def handle_reward(self,screen):
+        self.player.fade_out_sound()
         windo.reward_window()
         windo.draw_frames(screen)
 
@@ -260,7 +262,7 @@ class Level_Play(GameState):
         windo.draw_frames(screen)
 
     def handle_lose(self,screen):
-      
+            self.player.fade_out_sound()
             windo.level_lose_window()
             windo.draw(screen)
             windo.draw_frames(screen)

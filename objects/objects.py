@@ -430,6 +430,7 @@ class Player:
     radar_min_height=250
     reload_started=False
     move_sound_started=False
+    barrel_rect=barrel1.get_rect()
     
     def clear(self):
         self.attacked_targets.clear()
@@ -476,6 +477,8 @@ class Player:
             self.move_sound_started=True
             tankidle.play(-1)
 
+    def fade_out_sound(self):
+        tankidle.fadeout(100)
 
     def move_player(self):
 
@@ -510,6 +513,16 @@ class Player:
         if self.moving:
             self.move_sound()
 
+
+    def mouse_collid_player(self):
+        mouse=pygame.mouse.get_pos()
+
+        if self.get_rect().collidepoint(mouse) or self.barrel_rect.collidepoint(mouse):
+
+            return True
+        else:
+            return False
+
     def update_player(self,screen):
         self.rect.topleft = (self.x, self.y)
   
@@ -537,7 +550,9 @@ class Player:
         rotated_rect2 = barrel2.get_rect()
         rotated_rect2.center = (self.x+60, self.y+31)
 
-        
+        self.barrel_rect=rotated_rect2
+        self.barrel_rect.center = (self.x+60, self.y+31)
+
         if angle>=90:
             self.barrel_top_right=(rotated_rect2.topleft)
         else:
@@ -691,11 +706,12 @@ class Player:
         current_time = pygame.time.get_ticks()
         
         if not self.reloading:
-            if current_time - self.last_shot_time >= self.shoot_delay:
-                if self.bullet_angle>=179 or self.bullet_angle<=1:
-                    return False
-                else:
-                    return True
+            if not self.mouse_collid_player():
+                if current_time - self.last_shot_time >= self.shoot_delay:
+                    if self.bullet_angle>=179 or self.bullet_angle<=1:
+                        return False
+                    else:
+                        return True
             
         else:
             

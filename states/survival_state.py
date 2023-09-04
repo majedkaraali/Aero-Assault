@@ -190,6 +190,7 @@ class Survival(GameState):
     
 
     def handle_reward(self,screen):
+        self.player.fade_out_sound()
         windo.reward_window()
         windo.draw_frames(screen)
 
@@ -200,6 +201,7 @@ class Survival(GameState):
 
 
     def handle_lose(self,screen):
+        self.player.fade_out_sound()
         windo.survival_lose_window(screen,self.score)
         windo.draw(screen)
         windo.draw_frames(screen)
