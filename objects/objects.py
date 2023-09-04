@@ -8,7 +8,22 @@ debug=False
 
 width,height=(1100,660)
 
-firing_sound = pygame.mixer.Sound("shoot.wav")
+firing_sound = pygame.mixer.Sound("src/sound/wopn/shoot.wav")
+
+missile_sound3 = pygame.mixer.Sound("src/sound/wopn/missile3.wav")
+missile_sound2 = pygame.mixer.Sound("src/sound/wopn/missile2.wav")
+
+explosion_distant_001= pygame.mixer.Sound("src/sound/wopn/explosion_distant_001.mp3")
+explosion_distant_002= pygame.mixer.Sound("src/sound/wopn/explosion_distant_002.mp3")
+explosion_distant_003= pygame.mixer.Sound("src/sound/wopn/explosion_distant_003.mp3")
+
+
+
+explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
+
+explod1 = pygame.mixer.Sound("src/sound/wopn/Explosion.wav")
+
+
 
 class Missile:
     spritesheet_1 = "src\img\weapons\smoke1.png" 
@@ -49,6 +64,8 @@ class Missile:
                 self.owner.drops.append(drop)
                 self.target.destroyed=True
                 self.destroyed=True
+                explod.play()
+                
                 return True
 
                 
@@ -138,6 +155,7 @@ class Missile:
         self.y-=y_turn
 
         if self.y<=-10:
+                explod1.play()
                 self.destroyed=True
 
         
@@ -789,7 +807,8 @@ class Player:
                 locked.locked=True
                 self.attacked_targets.append(locked)
                 self.pods_reload_start_time=self.last_fire_time
-
+                missile_sound=random.choice([missile_sound2,missile_sound3])
+                missile_sound.play()
 
 
     def move_drops(self,screen,owner):
@@ -936,13 +955,12 @@ class Bomb:
 
         if self.y >= 570:
             self.exploded=True
+            sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003])
+            sound.play()
 
-        if self.exploded:
-            self.effect(screen)
 
-    def effect(self,screen):
-        pass
-      #  pygame.draw.rect(screen, pygame.Color('orange'), (self.x, self.y, self.width+5, self.height+5))
+
+    
 
 
 
@@ -1327,7 +1345,9 @@ class Enemy:
                 self.damaged=True
                 if self.health<0:
                     self.destroyed=True
-                    return True  
+                    explod.play()
+                    return True
+                    
 
         return False
     
