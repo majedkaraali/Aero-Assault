@@ -29,6 +29,9 @@ explod1 = pygame.mixer.Sound("src/sound/wopn/Explosion.wav")
 no_ammmo=pygame.mixer.Sound("src/sound/wopn/no-ammo.wav")
 reloading=pygame.mixer.Sound("src/sound/wopn/reloading2.wav")
 
+pl_shell1=pygame.mixer.Sound("src/sound/wopn/pl_shell1.wav")
+pl_shell2=pygame.mixer.Sound("src/sound/wopn/pl_shell2.wav")
+pl_shell3=pygame.mixer.Sound("src/sound/wopn/pl_shell3.wav")
 
 
 class Missile:
@@ -258,6 +261,7 @@ class Item:
 
 class Bullet:
     speed = 14
+
     def __init__(self, x, y,angle):
         self.x = x
         self.y = y
@@ -271,14 +275,10 @@ class Bullet:
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.shoot_at(mouse_x, mouse_y)
-
-
         self.sprite = Sprite(200,200,self.spritesheet_path, width=75, height=3, frame_width=25, frame_height=3)
         
-      
 
 
-    
     spritesheet_path = "src/img/weapons/bullet4.png"  
    # image=pygame.image.load("src/img/weapons/bullet.png")
    # rect=image.get_rect()
@@ -298,6 +298,8 @@ class Bullet:
         self.moved_y+=abs(self.vel_y)
 
         if self.out_of_range():
+            pl_shell=random.choice([pl_shell1,pl_shell2,pl_shell3])
+            pl_shell.play()
             self.destroyed=True
     
         elif self.hitted:
@@ -309,8 +311,7 @@ class Bullet:
 
 
     def draw_bullet(self,screen):
-        
-        
+    
         # rotated_image = pygame.transform.rotate(self.image, self.angle)
         # rotated_rect = rotated_image.get_rect()
         # rotated_rect.topleft = (self.x, self.y)
@@ -342,21 +343,12 @@ class Bullet:
 
     def out_of_range(self):
 
-
         if abs(self.moved_y)>800:
             return True
-
         else:
             return False
 
-    # def rotate_bullet(self):
-    #     mouse_x, mouse_y = pygame.mouse.get_pos()
-    #     self.angle = math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
-  
-    #     if self.angle<=1 and self.angle>=-90:
-    #         self.angle=1
-    #     elif self.angle >=179 or self.angle <=-90:
-    #          self.angle=179
+ 
  
     
 class Player:
