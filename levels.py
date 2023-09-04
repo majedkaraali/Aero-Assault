@@ -24,7 +24,7 @@ class Level:
         self.background_path='src\\img\\maps\\LunarVein.png' # default path
         self.tutorial=False
         self.tutorial_image=''
-        self.player_loadout=(1680,240,12,4) # default
+        self.player_loadout=(1680,120,12,4) # default
         self.base=False
     
     def chek_lock(self,number):
@@ -82,7 +82,7 @@ class Level_1(Level):
         self.waves.extend([self.wave_1,self.wave_2])
         self.tutorial=True
         self.tutorial_image='src\\img\\tutorials\\tuturial1.png'
-        self.player_loadout=(480,240,0,0)
+        self.player_loadout=(480,120,0,0)
 
 
     

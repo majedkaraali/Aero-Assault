@@ -6,6 +6,8 @@ from EnemyMaker import Generate_enemies
 from Sprite import Sprite
 import random
 
+
+
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
 
@@ -55,13 +57,6 @@ class GameState():
     
     def update_game(self):
         pass
-
-
-
-
-
-
-
 
 
     def generate_enemies(self,wave):
@@ -188,6 +183,7 @@ class GameState():
 
 
     def handle_keys(self):
+      
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_SPACE]:
@@ -200,9 +196,13 @@ class GameState():
                 self.player.next_lock()
 
         elif keys [pygame.K_r]:
-            self.player.reload_start_time=pygame.time.get_ticks()
-            self.player.droped_ammo+=self.player.magazine
-            self.player.magazine=0
+            if not self.player.reloading:
+                self.player.reload_start_time=pygame.time.get_ticks()
+                self.player.droped_ammo+=self.player.magazine
+                self.player.magazine=0
+    
+    
+
 
         elif keys[pygame.K_ESCAPE]:
             if  not self.complete and not self.pause:

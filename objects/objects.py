@@ -26,6 +26,9 @@ explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
 
 explod1 = pygame.mixer.Sound("src/sound/wopn/Explosion.wav")
 
+no_ammmo=pygame.mixer.Sound("src/sound/wopn/no-ammo.wav")
+reloading=pygame.mixer.Sound("src/sound/wopn/reloading2.wav")
+
 
 
 class Missile:
@@ -382,7 +385,7 @@ class Player:
         self.idle=self.sprite.first_image
         self.rect=self.idle.get_rect()
 
-    magazine_size=240
+    magazine_size=120
     reloading=False
     moving=False
     droped_ammo=0
@@ -419,14 +422,14 @@ class Player:
     fire_missie_delay=300
     last_fire_time=0
     caluculate_rewards_deleay=2000
-    reload_delay=3000
+    reload_delay=4500
     pods_reload_delay=4000
     reload_start_time=0
     pods_reload_start_time=0
     radar_range=900
     radar_max_left=0
     radar_min_height=250
-    
+    reload_started=False
     
     
     def clear(self):
@@ -442,7 +445,7 @@ class Player:
         missiles_storage=player_loadout[2]
         ready_to_fire_missiles=player_loadout[3]
         self.ammo=ammo                                              #1680
-        self.magazine=magazine                                      #240
+        self.magazine=magazine                                      #120
         self.missiles_storage=missiles_storage                      #12
         self.ready_to_fire_missiles=ready_to_fire_missiles          #4
     
@@ -464,7 +467,10 @@ class Player:
         center_y=self.y+(self.get_height()//2)
         return center_y
 
-    
+    def reload_sound(self):
+        if not self.reload_started:
+            self.reload_started=True
+            reloading.play()
 
     def move_player(self):
         self.update_last_known_position()
@@ -598,6 +604,7 @@ class Player:
     def reload(self):
         current_time = pygame.time.get_ticks()
         if self.reload_start_time+self.reload_delay<=current_time:
+
             if self.droped_ammo>0:
                 self.ammo+=self.droped_ammo
                 self.droped_ammo=0
@@ -610,7 +617,7 @@ class Player:
                     self.magazine=self.magazine_size
                     self.ammo-=self.magazine_size
 
-   
+            self.reload_started=False
 
 
     def reload_pods(self):
@@ -641,6 +648,7 @@ class Player:
     def chek_magazine(self):
         if  self.ammo>0:
             if self.magazine<=0:
+                self.reload_sound()
                 self.reload()
                 self.reloading=True
             else:
@@ -651,6 +659,7 @@ class Player:
                 self.reloading=True
             else:
                 self.reloading=False
+
             self.out_of_ammo=True
 
 
@@ -666,8 +675,6 @@ class Player:
                 else:
                     return True
             
-        
-        
         else:
             
             return False
@@ -708,6 +715,8 @@ class Player:
 
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
+       
+
             firing_sound.play()
             
             
@@ -963,10 +972,6 @@ class Bomb:
             self.exploded=True
             sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003,explosion_medium,explosion_small,explosion_large])
             sound.play()
-
-
-
-    
 
 
 
