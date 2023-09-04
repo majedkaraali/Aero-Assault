@@ -34,6 +34,8 @@ pl_shell2=pygame.mixer.Sound("src/sound/wopn/pl_shell2.wav")
 pl_shell3=pygame.mixer.Sound("src/sound/wopn/pl_shell3.wav")
 
 
+player_exp=pygame.mixer.Sound("src/sound/wopn/player_exp.wav")
+
 class Missile:
     spritesheet_1 = "src\img\weapons\smoke1.png" 
     spritesheet_2 = "src\img\weapons\smoke2.png"  
@@ -582,15 +584,18 @@ class Player:
     
 
     def is_destroyed(self):
+
+       
+
         if self.health <= 0:
+
             if not self.forced:
                 self.forced = True
-                self.forced_time = pygame.time.get_ticks()  
-            else:
-                current_time = pygame.time.get_ticks()
-                if current_time >= self.forced_time + 2000: 
-                    self.destroyed = True
+                self.forced_time = pygame.time.get_ticks()
 
+            self.destroyed = True
+
+        
            
 
     def reload(self):
@@ -842,7 +847,7 @@ class Bomb:
         self.vely=vely
         self.guided=guided
         self.target=False
-        self.dmage=50
+        self.dmage=25
         self.exploded=False
         self.angle=angle
         self.image=pygame.image.load('src/img/weapons/bomb.png')
@@ -953,7 +958,7 @@ class Bomb:
             if self.get_rect().colliderect(obj.get_rect()):
                 self.exploded=True
                 obj.bombed(self.dmage)
-                sound=random.choice([explosion_medium,explosion_small,explosion_large])
+                sound=player_exp
                 sound.play()
 
 
@@ -1215,7 +1220,7 @@ class Enemy:
         self.x += movement.x
         self.y += movement.y
        
-        if self.y>=580:
+        if self.y>=550:
             self.destroyed=True
 
         self.check_hit_player(target,screen)
@@ -1252,7 +1257,7 @@ class Enemy:
             self.turning_opposite_direction=False
 
 
-        if self.y>=580:
+        if self.y>=550:
             self.destroyed=True
 
 
@@ -1324,8 +1329,11 @@ class Enemy:
         if self.get_rect().colliderect(target.get_rect()):
             self.destroyed=True
             self.effect(screen)
-            if target.health -80  <0:
+            sound=player_exp
+            sound.play()
+            if target.health -80 <=0:
                 target.health=0
+
             else:
                 target.health-=80
     

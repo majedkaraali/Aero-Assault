@@ -241,8 +241,8 @@ class Level_10(Level):
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
-        self.wave_1=[3,0,0,0]
-        self.wave_2=[0,0,0,0]
+        self.wave_1=[0,0,0,4]
+        self.wave_2=[0,0,0,4]
         self.waves.extend([self.wave_1,self.wave_2])
         self.base=True
         self.base_loc=(650,568)      
