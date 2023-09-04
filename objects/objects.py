@@ -36,6 +36,9 @@ pl_shell3=pygame.mixer.Sound("src/sound/wopn/pl_shell3.wav")
 
 player_exp=pygame.mixer.Sound("src/sound/wopn/player_exp.wav")
 
+tankidle=pygame.mixer.Sound("src\\sound\\vehicle\\tank1.wav")
+
+
 class Missile:
     spritesheet_1 = "src\img\weapons\smoke1.png" 
     spritesheet_2 = "src\img\weapons\smoke2.png"  
@@ -378,6 +381,8 @@ class Player:
         self.sprite.update()
         self.idle=self.sprite.first_image
         self.rect=self.idle.get_rect()
+        
+
 
     magazine_size=120
     reloading=False
@@ -424,7 +429,7 @@ class Player:
     radar_max_left=0
     radar_min_height=250
     reload_started=False
-    
+    move_sound_started=False
     
     def clear(self):
         self.attacked_targets.clear()
@@ -466,25 +471,45 @@ class Player:
             self.reload_started=True
             reloading.play()
 
+    def move_sound(self):
+        if not self.move_sound_started:
+            self.move_sound_started=True
+            tankidle.play(-1)
+
+
     def move_player(self):
+
         self.update_last_known_position()
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_a]:
+            
             vel_x = -self.move_speed
             self.moving_dir='left'
-            
             self.moving=True
-        elif keys[pygame.K_d]:
+            
+            
+
+        elif  keys[pygame.K_d]:
             self.moving_dir='right'
             vel_x = self.move_speed
             self.moving=True
+            
+
+
         else:
             vel_x = 0
             self.moving=False
-        
+            self.move_sound_started=False
+            tankidle.fadeout(100)
+
         self.x += vel_x
         self.x = max(0, min(self.x, width - self.get_width()))
+
         
+        if self.moving:
+            self.move_sound()
+
     def update_player(self,screen):
         self.rect.topleft = (self.x, self.y)
   

@@ -3,6 +3,7 @@ import pygame
 from objects import objects
 from windows import game_windows
 from .Game import GameState
+import random 
 
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
@@ -13,6 +14,11 @@ font = pygame.font.Font(font_path, font_size)
 
 width,height=(1100,660)
 windo=game_windows()
+
+ambince1=pygame.mixer.Sound("src\\sound\\ambience\\torn_AK-47.wav")
+ambince2=pygame.mixer.Sound("src\\sound\\ambience\\wind.wav")
+ambince3=pygame.mixer.Sound("src\\sound\\ambience\\torn_MGun1.wav")
+
 
 
 class Level_Play(GameState):
@@ -181,6 +187,8 @@ class Level_Play(GameState):
                         self.conform=False
                         self.play_conformed=True
                         self.player.last_shot_time=pygame.time.get_ticks()
+                        ambince=random.choice([ambince1,ambince2,ambince3])
+                        ambince.play()
                
 
                 if self.pause:

@@ -7,7 +7,6 @@ from Sprite import Sprite
 import random
 
 
-
 crosshair_image = pygame.image.load("src\img\weapons\crosshair.png")
 crosshair_rect = crosshair_image.get_rect()
 
