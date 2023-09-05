@@ -167,7 +167,6 @@ class Survival(GameState):
                         self.state.menu_state()
 
                     if self.windo.resume_button.holding:
-                     
                         button_click.play()
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
