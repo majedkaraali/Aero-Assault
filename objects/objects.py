@@ -9,7 +9,7 @@ debug=False
 width,height=(1100,660)
 
 firing_sound = pygame.mixer.Sound("src/sound/wopn/shoot.wav")
-firing_sound.set_volume(0.4)
+firing_sound.set_volume(0.25)
 
 
 missile_sound3 = pygame.mixer.Sound("src/sound/wopn/missile3.wav")
@@ -25,6 +25,7 @@ explosion_small=pygame.mixer.Sound("src/sound/wopn/explosion_small.mp3")
 
 
 explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
+explod.set_volume(2)
 explod1 = pygame.mixer.Sound("src/sound/wopn/Explosion.wav")
 
 

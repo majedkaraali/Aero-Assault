@@ -4,6 +4,15 @@ from levels import levels
 width,height=1100,660
 
 
+select_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_select2.wav")
+up_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_upmenu1.wav")
+down_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_dnmenu1.wav")
+
+select_sound.set_volume(9999)  
+up_menu_sound.set_volume(9999) 
+down_menu_sound.set_volume(9999)  
+
+
 
 class MenuState():
 
@@ -36,6 +45,7 @@ class MenuState():
                     
 
             if self.window.play_button.holding:
+                select_sound.play()
                 self.window.game_modes()
                 self.window.play_button.holding=False
                 self.window.selected_frame=False
@@ -50,24 +60,25 @@ class MenuState():
                 self.window.selected_frame=False
                 self.window.selected_level=None
                 self.window.achvm()
+                down_menu_sound.play()
 
             if self.window.levels_buttoon.holding:
                 self.window.selected_game_mode='levels'
                 self.window.levels_frame(levels)
                 self.window.levels_buttoon.holding=False
 
-
+                up_menu_sound.play()
             if self.window.survival_buttonn.holding:
                 self.window.selected_game_mode='survival'
                 self.window.survival_buttonn.holding=False
                 self.window.survival_frame()
-
+                up_menu_sound.play()
 
             if self.window.apex_button.holding:
                 self.window.selected_game_mode='apex'
                 self.window.apex_button.holding=False
                 self.window.apex_frame()
-
+                up_menu_sound.play()
 
 
 
@@ -78,14 +89,14 @@ class MenuState():
                 if button_text in self.levels_numbers:
                     self.selected_level=int(button_text)
                     self.window.level_description_frame(button_text,levels)
-
+                    select_sound.play()
 
             
 
 
                 if button_text=='Play':
                     if not self.window.selected_frame_button.locked:
-
+                        select_sound.play()
                         if self.window.selected_game_mode=='levels':
                             self.state.level_state(levels[self.selected_level-1])
                         elif self.window.selected_game_mode=='survival':
@@ -94,7 +105,7 @@ class MenuState():
 
                 if button_text=='Back':
                     self.window.levels_frame(levels)
-
+                    down_menu_sound.play()
                 
 
 
