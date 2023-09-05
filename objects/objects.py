@@ -66,6 +66,8 @@ class Missile:
         self.destroyed=False
         self.hitted=False
 
+    mute=False
+
 
     max_velocity = 4
     mx_x=2
@@ -82,7 +84,8 @@ class Missile:
                 self.owner.drops.append(drop)
                 self.target.destroyed=True
                 self.destroyed=True
-                explod.play()
+                if not self.mute:
+                    explod.play()
                 
                 return True
 
@@ -119,6 +122,12 @@ class Missile:
 
         return degs
 
+
+    def mute_sound(self):
+        self.mute=True
+
+    def unmute_sound(self):
+        self.mute=False
 
     def colid_point_x(self):
         enemy_dir=self.target.move_dir
@@ -173,9 +182,9 @@ class Missile:
         self.y-=y_turn
 
         if self.y<=-10:
-                explod1.play()
                 self.destroyed=True
-
+                if not self.mute:
+                    explod1.play()
         
         if self.hitted:
             self.destroyed=True
@@ -281,11 +290,12 @@ class Bullet:
         self.hitted=False
         self.angle=angle
         self.destroyed=False
-
+        
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.shoot_at(mouse_x, mouse_y)
         self.sprite = Sprite(200,200,self.spritesheet_path, width=75, height=3, frame_width=25, frame_height=3)
-        
+
+    mute=False
 
 
     spritesheet_path = "src/img/weapons/bullet4.png"  
@@ -297,7 +307,12 @@ class Bullet:
         return self.sprite.image.get_width()
     def get_height(self):
         return self.sprite.image.get_height()
-        
+    
+    def mute_sound(self):
+        self.mute=True
+
+    def unmute_sound(self):
+        self.mute=False
 
     def move_bullet(self):
         self.x += self.vel_x
@@ -308,7 +323,8 @@ class Bullet:
 
         if self.out_of_range():
             pl_shell=random.choice([pl_shell1,pl_shell2,pl_shell3])
-            pl_shell.play()
+            if not self.mute:
+                pl_shell.play()
             self.destroyed=True
     
         elif self.hitted:
@@ -435,7 +451,14 @@ class Player:
     reload_started=False
     move_sound_started=False
     barrel_rect=barrel1.get_rect()
-    
+    mute=False
+
+
+    def mute_sound(self):
+        self.mute=True
+    def unmute_sound(self):
+        self.mute=False   
+
     def clear(self):
         self.attacked_targets.clear()
         self.enemies_in_radar.clear()
@@ -474,7 +497,8 @@ class Player:
     def reload_sound(self):
         if not self.reload_started:
             self.reload_started=True
-            reloading.play()
+            if not self.mute:
+                reloading.play()
 
     def move_sound(self):
         if not self.move_sound_started:
@@ -515,7 +539,8 @@ class Player:
 
         
         if self.moving:
-            self.move_sound()
+            if not self.mute:
+                self.move_sound()
 
 
     def mouse_collid_player(self):
@@ -758,19 +783,31 @@ class Player:
             self.last_shot_time = pygame.time.get_ticks()
             self.reload_start_time=self.last_shot_time
        
-
-            firing_sound.play()
+            if not self.mute:
+                firing_sound.play()
             
             
 
     def move_bullets(self):
         for bullet in self.bullets:
+            if  self.mute:
+                bullet.mute_sound()
+            else:
+                if bullet.mute:
+                    bullet.unmute_sound()
+
             bullet.move_bullet()
             if bullet.destroyed:
                 self.bullets.remove(bullet)
 
     def move_missiles(self):
         for mis in self.missiles:
+            if  self.mute:
+                mis.mute_sound()
+            else:
+                if mis.mute:
+                    mis.unmute_sound()
+
             mis.hit_target()
             mis.move_misile()
             if mis.destroyed:
@@ -862,7 +899,8 @@ class Player:
                 self.attacked_targets.append(locked)
                 self.pods_reload_start_time=self.last_fire_time
                 missile_sound=random.choice([missile_sound2,missile_sound3])
-                missile_sound.play()
+                if not self.mute:
+                    missile_sound.play()
 
 
     def move_drops(self,screen,owner):
@@ -883,6 +921,7 @@ class Player:
  
 
 class Bomb:
+    mute=False
     def __init__(self,x,y,velx,vely,guided,angle):
         self.x=x
         self.y=y
@@ -911,6 +950,11 @@ class Bomb:
     def get_rect(self):
         return  self.rect
     
+    def mute_sound(self):
+        self.mute=True
+
+    def unmute_sound(self):
+        self.mute=False
 
     def get_centerx(self):
         return self.x
@@ -1004,7 +1048,8 @@ class Bomb:
                 self.exploded=True
                 obj.bombed(self.dmage)
                 sound=player_exp
-                sound.play()
+                if not self.mute:
+                    sound.play()
 
 
         
@@ -1013,7 +1058,8 @@ class Bomb:
         if self.y >= 570:
             self.exploded=True
             sound=random.choice([explosion_distant_001,explosion_distant_002,explosion_distant_003,explosion_medium,explosion_small])
-            sound.play()
+            if not self.mute:
+                sound.play()
 
 
 
@@ -1147,10 +1193,14 @@ class Enemy:
     track_sprite=pygame.image.load('src/img/weapons/track.png')
     track_sprite_rect=track_sprite.get_rect()
     lock_sprite_width=lock_sprite.get_width()
-    
+    mute=False
 
         
-    
+    def mute_sound(self):
+        self.mute=True
+
+    def unmute_sound(self):
+        self.mute=False
 
     def get_center_y(self):
         return self.y+self.left_sprite.get_height()//2
@@ -1375,7 +1425,8 @@ class Enemy:
             self.destroyed=True
             self.effect(screen)
             sound=player_exp
-            sound.play()
+            if not self.mute:
+                sound.play()
             if target.health -80 <=0:
                 target.health=0
 
@@ -1400,7 +1451,8 @@ class Enemy:
                 self.damaged=True
                 if self.health<0:
                     self.destroyed=True
-                    explod.play()
+                    if not self.mute:
+                        explod.play()
                     return True
                     
 

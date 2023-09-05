@@ -67,6 +67,25 @@ class game_windows(Screen):
         super().__init__()
         self.pause_image=pygame.image.load('src/img/GUI/pause_frame.png').convert_alpha()
         self.smooth_frame=pygame.image.load('src/img/GUI/smooth_frame.png').convert_alpha()
+
+        self.music_on=pygame.image.load('src/img/meta/music_on.png').convert_alpha()
+        self.music_off=pygame.image.load('src/img/meta/music_off.png').convert_alpha()
+
+        self.sound_on=pygame.image.load('src/img/meta/sound_on.png').convert_alpha()
+        self.sound_off=pygame.image.load('src/img/meta/sound_off.png').convert_alpha()
+
+        self.music_on=pygame.transform.scale(self.music_on,(64,64))
+        self.music_off=pygame.transform.scale(self.music_off,(64,64))
+        self.sound_on=pygame.transform.scale(self.sound_on,(64,64))
+        self.sound_off=pygame.transform.scale(self.sound_off,(64,64))
+
+        self.music_btn=Button(0,0,'',0)
+        self.sound_btn=Button(0,0,'',0)
+
+        self.music_turn_on=True
+        self.sound_turn_on=True
+
+
         self.buttons=[]
         self.center=(width//2,height//2)
         self.resume_button=Button(self.center[0],self.center[1]-50,'Resume',18)
@@ -75,26 +94,54 @@ class game_windows(Screen):
         self.next_level=Button(self.center[0]+65,self.center[1]+40,'Next Level',18)
         self.retry=Button(self.center[0]+65,self.center[1]+40,'Retry',18)
         self.ok_button=Button(self.center[0],self.center[1]+217,'OK',18)
-
+        self.back=Button(self.center[0],self.center[1]+217,'back',18)
         self.buttons.extend([self.resume_button,self.options_button,])
         self.smooth_button=pygame.image.load('src/img/GUI/smooth_button.png')
         self.smooth_button_hold=pygame.image.load('src/img/GUI/smooth_button_holding.png')
         self.selected_window=False
-
+        self.options_button_click=False
     
     def puse_window(self):
+        if self.options_button_click==True  :
+            self.puse_options()
+        else:
+            pause_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+            pause_frame.confing(self.pause_image)
+            self.resume_button.change_images(self.smooth_button,self.smooth_button_hold)
+            self.options_button.change_images(self.smooth_button,self.smooth_button_hold)
+            self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
+            self.main_menu_button.change_location(self.center[0],self.center[1]+40)
+            pause_frame.add_button(self.main_menu_button)
+            pause_frame.add_button(self.resume_button)
+            pause_frame.add_button(self.options_button)
+            self.selected_window=pause_frame
 
-        pause_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
-        pause_frame.confing(self.pause_image)
-        self.resume_button.change_images(self.smooth_button,self.smooth_button_hold)
-        self.options_button.change_images(self.smooth_button,self.smooth_button_hold)
-        self.main_menu_button.change_images(self.smooth_button,self.smooth_button_hold)
-        self.main_menu_button.change_location(self.center[0],self.center[1]+40)
-        pause_frame.add_button(self.main_menu_button)
-        pause_frame.add_button(self.resume_button)
-        pause_frame.add_button(self.options_button)
-        self.selected_window=pause_frame
 
+    def puse_options(self):
+        
+        options=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
+        options.confing(self.pause_image)
+
+        if self.music_turn_on:
+            self.music_btn.change_images(self.music_on,self.music_on)
+        else:
+            self.music_btn.change_images(self.music_off,self.music_off)
+
+        if self.sound_turn_on:
+            self.sound_btn.change_images(self.sound_on,self.sound_on)
+        else:
+            self.sound_btn.change_images(self.sound_off,self.sound_off)
+
+        self.music_btn.change_location(self.center[0]-70,self.center[1]-40)
+        self.sound_btn.change_location(self.center[0]+70,self.center[1]-40)
+        self.back.change_images(self.smooth_button,self.smooth_button_hold)
+        self.back.change_location(self.center[0],self.center[1]+40)
+        options.add_button(self.music_btn)
+        options.add_button(self.sound_btn)
+        options.add_button(self.back)
+        self.selected_window=options
+
+    
     def reward_window(self):
         reward_frame=Frame(self.center[0]-self.pause_image.get_width()//2,self.center[1]-self.pause_image.get_height()//2,self.pause_image.get_width(),self.pause_image.get_height())
         reward_frame.confing(self.pause_image)
@@ -341,7 +388,7 @@ class Test():
         
 
     def draw(self,screen):
-    
+        
         screen.blit(self.image, (0,0))
         for button in self.buttons:
             button.place(screen)

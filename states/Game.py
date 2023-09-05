@@ -52,6 +52,9 @@ class GameState():
         
         self.music= music2 # random.choice([mussic1,mussic2]) 
         self.music.play(-1)
+
+        self.play_music_on=True
+        self.play_fx_on=True
         
 
     def handle_events(self, events):
@@ -109,6 +112,30 @@ class GameState():
     def can_play(self):
         return not (self.lose or self.tutorial or self.pause or self.game_over or self.complete ) #or self.play_conformed  )
     
+    def handle_sound(self):
+        if not self.play_fx_on:
+            self.player.mute_sound()
+
+            for enemy in self.enemy_list:
+                enemy.mute_sound()
+
+            for bomb in self.bombs:
+                bomb.mute_sound()
+
+        else:
+            if self.player.mute:
+                self.player.unmute_sound()
+
+            for enemy in self.enemy_list:
+                if enemy.mute:
+                    enemy.unmute_sound()
+
+            for bomb in self.bombs:
+                if bomb.mute:
+                    bomb.unmute_sound()
+
+            
+  
 
     def handle_player(self,screen):
         if not self.player.forced:
