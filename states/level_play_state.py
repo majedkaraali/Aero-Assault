@@ -104,9 +104,9 @@ class Level_Play(GameState):
 
     def update_game(self, screen):
         if self.can_play() and not self.conform:
-            
+            self.handle_sound()
             self.handle_allies(screen)
-            self.handle_base(screen)
+            
             self.handle_player(screen)
             self.handle_bullets(screen)
             self.handle_missiles()
@@ -204,7 +204,38 @@ class Level_Play(GameState):
                         button_click.play()
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
+                    if self.windo.options_button.holding:
+                        self.windo.options_button_click=True
+                        self.windo.options_button.holding=False
+                           
+                                
+                                
+                    if self.windo.back.holding:
+                        self.windo.options_button_click=False
+                        self.windo.back.holding=False
 
+                    if self.windo.music_btn.holding:
+            
+                        self.windo.music_btn.holding=False
+                        if self.play_music_on:
+                            self.windo.music_turn_on=False
+                            self.play_music_on=False
+                            self.music.fadeout(100)
+
+                        elif not self.play_music_on:
+                            self.windo.music_turn_on=True
+                            self.play_music_on=True
+                            self.music.play(-1)
+
+                    if self.windo.sound_btn.holding:
+                        self.windo.sound_btn.holding=False
+                        if self.play_fx_on:
+                            self.windo.sound_turn_on=False
+                            self.play_fx_on=False
+
+                        elif not self.play_fx_on:
+                            self.windo.sound_turn_on=True
+                            self.play_fx_on=True
 
                 if self.tutorial:
                     if self.windo.ok_button.holding:

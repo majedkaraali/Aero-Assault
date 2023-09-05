@@ -1066,7 +1066,7 @@ class Bomb:
 
 class Ally:
     def __init__(self, x, y, frame_width, frame_height):
-        self.spritesheet = pygame.image.load("src/img/HMV3.png")
+        self.spritesheet = pygame.image.load("src/img/vehicles/HMV3.png")
         self.sprite_width=self.spritesheet.get_width()
         self.sprite_height= self.spritesheet.get_height()
         self.x=x
