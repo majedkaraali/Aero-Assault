@@ -66,7 +66,7 @@ class MenuState():
             if self.window.apex_button.holding:
                 self.window.selected_game_mode='apex'
                 self.window.apex_button.holding=False
-                self.window.game_mode_description_frame("Coming soon...")
+                self.window.apex_frame()
 
 
 
@@ -80,15 +80,16 @@ class MenuState():
                     self.window.level_description_frame(button_text,levels)
 
 
-            #    print(self.window.selected_game_mode)
             
 
-                if button_text=='Play':
 
-                    if self.window.selected_game_mode=='levels':
-                        self.state.level_state(levels[self.selected_level-1])
-                    elif self.window.selected_game_mode=='survival':
-                        self.state.survival_state()
+                if button_text=='Play':
+                    if not self.window.selected_frame_button.locked:
+
+                        if self.window.selected_game_mode=='levels':
+                            self.state.level_state(levels[self.selected_level-1])
+                        elif self.window.selected_game_mode=='survival':
+                            self.state.survival_state()
                     
 
                 if button_text=='Back':

@@ -289,14 +289,24 @@ class Test():
 
     def survival_frame(self):
         survival_frame=Frame(300,125,715,390)
-        survival_frame.write("Try to engage all enemies and get the best score you can.")
+        competed_levels=get_completed_levels()
        
+        
         self.selected_frame=survival_frame
-        level_play_button=Button(survival_frame.width-100,survival_frame.height+100,'Play',22)
-        back_button=Button(survival_frame.width+200,survival_frame.height+100,'Back',22)
+        level_play_button=Button(survival_frame.width+25,survival_frame.height+100,'Play',22)
         self.level_play_button=level_play_button
-        survival_frame.buttons.append(back_button)
+
+        if len(competed_levels)<5:
+            survival_frame.write("You must complete 5. levels to unluck this game mode.")
+            level_play_button.lock()
+
+        else:
+            survival_frame.write("Try to engage all enemies and get the best score you can.")
+
         survival_frame.buttons.append(level_play_button)
+            
+
+      
 
 
     def apex_frame(self):
@@ -306,6 +316,7 @@ class Test():
         apex_play_button=Button(apex_frame.width+25,apex_frame.height+100,'Play',20)
         self.apex_play_button=apex_play_button
         apex_frame.buttons.append(apex_play_button)
+        apex_play_button.lock()
 
 
     def achvm(self):

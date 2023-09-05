@@ -14,15 +14,22 @@ class Button():
         self.text = text
         self.image = pygame.image.load('src/img/GUI/button.png').convert_alpha()
         self.holding_image=pygame.image.load('src/img/GUI/button_holding.png').convert_alpha()
+        self.locked_image=pygame.image.load('src/img/GUI/button_locked.png').convert_alpha()
         self.current_image=self.image
         self.holding=False
         self.custum_rect=False
+        self.locked=False
         self.font = pygame.font.Font(font_path, font_size)
 
 
     def get_text(self):
         return self.text
     
+    def lock(self):
+        self.image=self.locked_image
+        self.holding_image=self.locked_image
+        self.locked=True
+
     def conifig_button(self,image,holding_image,custum_rect):
         self.image=image
         self.holding_image=holding_image
@@ -31,9 +38,11 @@ class Button():
     def change_images(self,image,hold_image):
         self.image=image
         self.holding_image=hold_image
+
     def change_location(self,x,y):
         self.x=x
         self.y=y
+
     def scale(self, w, h):
         self.image = pygame.transform.scale(self.image, (w, h))
 
@@ -48,14 +57,19 @@ class Button():
             return rect
 
     def render_text(self,holding):
-     
-        if holding:
+        if not self.locked:
+            
+            if holding:
+                self.current_image=self.holding_image
+                button_text = self.font.render(self.text, True, (255, 255, 255))
+            else:
+                button_text = self.font.render(self.text, True, (0, 0, 0))
+                self.current_image=self.image
+        else:
+
             self.current_image=self.holding_image
             button_text = self.font.render(self.text, True, (255, 255, 255))
-        else:
-            button_text = self.font.render(self.text, True, (0, 0, 0))
-            self.current_image=self.image
-
+          
         button_text_rect = button_text.get_rect()
         button_text_rect.center = self.get_rect().center
         return button_text, button_text_rect  
@@ -80,6 +94,7 @@ class Button():
         else:
             self.holding=False
 
+
 class Frame:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -87,6 +102,7 @@ class Frame:
         self.width = width -100
         self.height = height  -60
         self.image = pygame.image.load('src/img/GUI/LabelFrame.png').convert_alpha()
+       
         self.buttons = []
         self.text = ""
         self.selected_button=None 
@@ -99,6 +115,10 @@ class Frame:
 
     def write(self, text):
         self.text = text
+
+
+ 
+
 
     def add_line(self,text,x,y,blod:bool,color,center:bool):
         line = {'text': text, 'position_x': x, 'position_y': y,'blod': blod, 'color' : color, 'center':center}
