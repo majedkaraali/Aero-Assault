@@ -82,7 +82,7 @@ class Level_1(Level):
         self.waves.extend([self.wave_1,self.wave_2])
         self.tutorial=True
         self.tutorial_image='src\\img\\tutorials\\tuturial1.png'
-        self.player_loadout=(480,120,0,0)
+        self.player_loadout=(480,120,4,0)
 
 
     

@@ -5,7 +5,7 @@ import json
 
 pygame.init()
 width,height=1100,660
-gui=pygame.image.load('src/img/GUI/background.png').convert_alpha()
+gui=pygame.image.load('src/img/GUI/background2.png').convert_alpha()
 
 from levels import levels
 
