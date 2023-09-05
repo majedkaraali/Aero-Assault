@@ -13,14 +13,15 @@ font = pygame.font.Font(font_path, font_size)
         
 
 width,height=(1100,660)
-windo=game_windows()
+
 
 
 class Survival(GameState):
     def __init__(self,state):
         super().__init__()
         self.state=state
-        self.buttons=windo.get_buttons()
+        self.windo=game_windows()
+        self.buttons=self.windo.get_buttons()
         self.base=None
         self.bombs=[]
         self.ground_vhls=[]
@@ -152,16 +153,16 @@ class Survival(GameState):
 
                 if self.conform:
         
-                    if windo.ok_button.holding:
+                    if self.windo.ok_button.holding:
                         self.conform=False
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.play_conformed=True
 
                 if self.pause:
-                    if windo.main_menu_button.holding:
+                    if self.windo.main_menu_button.holding:
                         self.state.menu_state()
 
-                    if windo.resume_button.holding:
+                    if self.windo.resume_button.holding:
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
                         
@@ -173,10 +174,10 @@ class Survival(GameState):
                 if self.lose:
                  
                         
-                    if windo.main_menu_button.holding:
+                    if self.windo.main_menu_button.holding:
                         self.state.menu_state()
 
-                    if windo.retry.holding:
+                    if self.windo.retry.holding:
                         self.state.survival_state()
 
 
@@ -194,22 +195,22 @@ class Survival(GameState):
 
     def handle_reward(self,screen):
         self.player.fade_out_sound()
-        windo.reward_window()
-        windo.draw_frames(screen)
+        self.windo.reward_window()
+        self.windo.draw_frames(screen)
 
     def handle_pause(self,screen):
-        windo.puse_window()
-        windo.draw(screen)
-        windo.draw_frames(screen)
+        self.windo.puse_window()
+        self.windo.draw(screen)
+        self.windo.draw_frames(screen)
 
 
     def handle_lose(self,screen):
         self.player.fade_out_sound()
-        windo.survival_lose_window(screen,self.score)
-        windo.draw(screen)
-        windo.draw_frames(screen)
+        self.windo.survival_lose_window(screen,self.score)
+        self.windo.draw(screen)
+        self.windo.draw_frames(screen)
 
     def handle_conform(self,screen):
-        windo.survival_description_frame()
-        windo.draw(screen)
-        windo.draw_frames(screen)
+        self.windo.survival_description_frame()
+        self.windo.draw(screen)
+        self.windo.draw_frames(screen)

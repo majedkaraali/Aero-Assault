@@ -13,7 +13,7 @@ font = pygame.font.Font(font_path, font_size)
         
 
 width,height=(1100,660)
-windo=game_windows()
+
 
 ambince1=pygame.mixer.Sound("src\\sound\\ambience\\torn_AK-47.wav")
 ambince2=pygame.mixer.Sound("src\\sound\\ambience\\wind.wav")
@@ -25,7 +25,8 @@ class Level_Play(GameState):
     def __init__(self,state,level):
         super().__init__()
         self.state=state
-        self.buttons=windo.get_buttons()
+        self.windo=game_windows()
+        self.buttons=self.windo.get_buttons()
         self.allies=False
         self.level=level
         self.base=None
@@ -183,7 +184,7 @@ class Level_Play(GameState):
 
                 if self.conform:
         
-                    if windo.ok_button.holding:
+                    if self.windo.ok_button.holding:
                         self.conform=False
                         self.play_conformed=True
                         self.player.last_shot_time=pygame.time.get_ticks()
@@ -192,36 +193,36 @@ class Level_Play(GameState):
                
 
                 if self.pause:
-                    if windo.main_menu_button.holding:
+                    if self.windo.main_menu_button.holding:
                         self.state.menu_state()
 
-                    if windo.resume_button.holding:
+                    if self.windo.resume_button.holding:
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
 
 
                 if self.tutorial:
-                    if windo.ok_button.holding:
+                    if self.windo.ok_button.holding:
                         self.tutorial=False
                         self.player.last_shot_time=pygame.time.get_ticks()
 
 
                 if self.lose:
-                    if windo.retry.holding:
+                    if self.windo.retry.holding:
                         retry_lvl=self.level.retry_level()
                         self.state.level_state(retry_lvl)
                         
-                    if windo.main_menu_button.holding:
+                    if self.windo.main_menu_button.holding:
                         self.state.menu_state()
 
 
                 
                 if self.complete:
                     self.level.unluck_level(int(self.level.get_number())+1)
-                    if windo.main_menu_button.holding:
+                    if self.windo.main_menu_button.holding:
                         self.state.menu_state()
 
-                    if windo.next_level.holding:
+                    if self.windo.next_level.holding:
                         if self.level.next_level():
                             next_level=self.level.next_level()
                             self.state.level_state(next_level)
@@ -238,37 +239,37 @@ class Level_Play(GameState):
     def handle_complete(self,screen):
         self.player.fade_out_sound()
         if self.level.next_level():
-            windo.reward_window()
-            windo.draw(screen)
-            windo.draw_frames(screen) 
+            self.windo.reward_window()
+            self.windo.draw(screen)
+            self.windo.draw_frames(screen) 
         else:
-            windo.finish_levels_window()
-            windo.draw(screen)
-            windo.draw_frames(screen) 
+            self.windo.finish_levels_window()
+            self.windo.draw(screen)
+            self.windo.draw_frames(screen) 
 
     def handle_reward(self,screen):
         self.player.fade_out_sound()
-        windo.reward_window()
-        windo.draw_frames(screen)
+        self.windo.reward_window()
+        self.windo.draw_frames(screen)
 
     def handle_pause(self,screen):
-                    windo.puse_window()
-                    windo.draw(screen)
-                    windo.draw_frames(screen)
+                    self.windo.puse_window()
+                    self.windo.draw(screen)
+                    self.windo.draw_frames(screen)
 
     def handle_tutorial(self,screen):
-        windo.tutorial_window(self.tutorial_image_path)
-        windo.draw(screen)
-        windo.draw_frames(screen)
+        self.windo.tutorial_window(self.tutorial_image_path)
+        self.windo.draw(screen)
+        self.windo.draw_frames(screen)
 
     def handle_lose(self,screen):
             self.player.fade_out_sound()
-            windo.level_lose_window()
-            windo.draw(screen)
-            windo.draw_frames(screen)
+            self.windo.level_lose_window()
+            self.windo.draw(screen)
+            self.windo.draw_frames(screen)
 
     def handle_conform(self,screen):
 
-        windo.in_game_level_description_frame(self.level)
-        windo.draw(screen)
-        windo.draw_frames(screen)
+        self.windo.in_game_level_description_frame(self.level)
+        self.windo.draw(screen)
+        self.windo.draw_frames(screen)
