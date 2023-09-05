@@ -9,7 +9,7 @@ statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
-
+button_click=pygame.mixer.Sound("src\\sound\\ui\\btn_click.wav")
         
 
 width,height=(1100,660)
@@ -185,6 +185,7 @@ class Level_Play(GameState):
                 if self.conform:
         
                     if self.windo.ok_button.holding:
+                        button_click.play()
                         self.conform=False
                         self.play_conformed=True
                         self.player.last_shot_time=pygame.time.get_ticks()
@@ -194,25 +195,31 @@ class Level_Play(GameState):
 
                 if self.pause:
                     if self.windo.main_menu_button.holding:
+                        button_click.play()
                         self.state.menu_state()
 
                     if self.windo.resume_button.holding:
+                        button_click.play()
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
 
 
                 if self.tutorial:
                     if self.windo.ok_button.holding:
+                        button_click.play()
                         self.tutorial=False
                         self.player.last_shot_time=pygame.time.get_ticks()
 
 
                 if self.lose:
+
                     if self.windo.retry.holding:
+                        button_click.play()
                         retry_lvl=self.level.retry_level()
                         self.state.level_state(retry_lvl)
                         
                     if self.windo.main_menu_button.holding:
+                        button_click.play()
                         self.state.menu_state()
 
 
@@ -220,9 +227,11 @@ class Level_Play(GameState):
                 if self.complete:
                     self.level.unluck_level(int(self.level.get_number())+1)
                     if self.windo.main_menu_button.holding:
+                        button_click.play()
                         self.state.menu_state()
 
                     if self.windo.next_level.holding:
+                        button_click.play()
                         if self.level.next_level():
                             next_level=self.level.next_level()
                             self.state.level_state(next_level)

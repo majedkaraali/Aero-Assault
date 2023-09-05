@@ -14,6 +14,7 @@ font = pygame.font.Font(font_path, font_size)
 
 width,height=(1100,660)
 
+button_click=pygame.mixer.Sound("src\\sound\\ui\\btn_click.wav")
 
 
 class Survival(GameState):
@@ -154,15 +155,18 @@ class Survival(GameState):
                 if self.conform:
         
                     if self.windo.ok_button.holding:
+                        button_click.play()
                         self.conform=False
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.play_conformed=True
 
                 if self.pause:
                     if self.windo.main_menu_button.holding:
+                        button_click.play()
                         self.state.menu_state()
 
                     if self.windo.resume_button.holding:
+                        button_click.play()
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
                         
@@ -175,9 +179,11 @@ class Survival(GameState):
                  
                         
                     if self.windo.main_menu_button.holding:
+                        button_click.play()
                         self.state.menu_state()
 
                     if self.windo.retry.holding:
+                        button_click.play()
                         self.state.survival_state()
 
 
