@@ -162,10 +162,12 @@ class Survival(GameState):
 
                 if self.pause:
                     if self.windo.main_menu_button.holding:
+                        self.music.fadeout(100)
                         button_click.play()
                         self.state.menu_state()
 
                     if self.windo.resume_button.holding:
+                     
                         button_click.play()
                         self.player.last_shot_time=pygame.time.get_ticks()
                         self.pause=False
@@ -180,11 +182,17 @@ class Survival(GameState):
                         
                     if self.windo.main_menu_button.holding:
                         button_click.play()
+                        self.music.fadeout(100)
+
                         self.state.menu_state()
+
 
                     if self.windo.retry.holding:
                         button_click.play()
+                        self.music.fadeout(100)
+
                         self.state.survival_state()
+                 
 
 
                 

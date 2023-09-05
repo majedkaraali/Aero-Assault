@@ -196,6 +196,8 @@ class Level_Play(GameState):
                 if self.pause:
                     if self.windo.main_menu_button.holding:
                         button_click.play()
+                        self.music.fadeout(100)
+
                         self.state.menu_state()
 
                     if self.windo.resume_button.holding:
@@ -214,11 +216,15 @@ class Level_Play(GameState):
                 if self.lose:
 
                     if self.windo.retry.holding:
+                        self.music.fadeout(100)
+
                         button_click.play()
                         retry_lvl=self.level.retry_level()
                         self.state.level_state(retry_lvl)
                         
                     if self.windo.main_menu_button.holding:
+                        self.music.fadeout(100)
+
                         button_click.play()
                         self.state.menu_state()
 
@@ -227,12 +233,16 @@ class Level_Play(GameState):
                 if self.complete:
                     self.level.unluck_level(int(self.level.get_number())+1)
                     if self.windo.main_menu_button.holding:
+                        self.music.fadeout(100)
+
                         button_click.play()
                         self.state.menu_state()
 
                     if self.windo.next_level.holding:
                         button_click.play()
                         if self.level.next_level():
+                            self.music.fadeout(100)
+
                             next_level=self.level.next_level()
                             self.state.level_state(next_level)
                         

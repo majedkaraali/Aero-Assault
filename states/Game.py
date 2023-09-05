@@ -17,12 +17,17 @@ font = pygame.font.Font(font_path, font_size)
 background_path= os.path.join("src/fonts", "OCRAEXT.ttf") 
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 
+music1=pygame.mixer.Sound("src\sound\media\music01.mp3")
+music2=pygame.mixer.Sound("src\sound\media\music02.mp3")
+music2.set_volume(0.5)
+
 
 width,height=(1100,660)
 
 class GameState():
 
     def __init__(self):
+        
         self.running = False
         self.lose=False
         self.force_reload=False
@@ -45,8 +50,8 @@ class GameState():
         self.enemy_list=[]
         self.enemies_to_remove = []
         
-        
-
+        self.music= music2 # random.choice([mussic1,mussic2]) 
+        self.music.play(-1)
         
 
     def handle_events(self, events):

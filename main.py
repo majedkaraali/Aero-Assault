@@ -18,7 +18,7 @@ intro_rect = intro_image.get_rect()
 
 
 
-intro_duration = 5000  # 5000 millisecon
+intro_duration = 5000  
 
 from states import states
 state=states.state
