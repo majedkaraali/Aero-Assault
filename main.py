@@ -54,6 +54,7 @@ def main():
             pygame.display.update()
             intro_timer += clock.get_time()
 
+
         else:
             current_state.handle_events(events)
             current_state.draw(screen)
