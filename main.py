@@ -25,6 +25,11 @@ state=states.state
 state.menu_state()
 background_color=('black')
 
+
+from objects.objects import *
+from windows import *
+from states.survival_state import *
+
 def main():
     intro_timer = 0
     alpha = 255  
@@ -53,7 +58,7 @@ def main():
             current_state.handle_events(events)
             current_state.draw(screen)
 
-
+        print(clock.get_fps())
         pygame.display.flip()
 
     pygame.quit()

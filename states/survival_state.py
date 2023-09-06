@@ -5,6 +5,7 @@ from windows import game_windows
 from .Game import GameState
 import random
 from Sprite import Sprite
+
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
@@ -261,3 +262,6 @@ class Survival(GameState):
         self.windo.survival_description_frame()
         self.windo.draw(screen)
         self.windo.draw_frames(screen)
+
+
+print('survival loaded')

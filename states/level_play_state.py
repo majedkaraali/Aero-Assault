@@ -23,7 +23,9 @@ ambince3=pygame.mixer.Sound("src\\sound\\ambience\\torn_MGun1.wav")
 
 class Level_Play(GameState):
     def __init__(self,state,level):
+
         super().__init__()
+        
         self.state=state
         self.windo=game_windows()
         self.buttons=self.windo.get_buttons()

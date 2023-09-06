@@ -4,6 +4,7 @@ from math import atan2, degrees, pi
 import math
 from Sprite import Sprite
 
+
 debug=False
 
 width,height=(1100,660)
@@ -44,6 +45,7 @@ tankidle=pygame.mixer.Sound("src\\sound\\vehicle\\tank1.wav")
 
 
 class Missile:
+    print('MS LOAD')
     spritesheet_1 = "src\img\weapons\smoke1.png" 
     spritesheet_2 = "src\img\weapons\smoke2.png"  
     spritesheet_3 = "src\img\weapons\smoke3.png"  
@@ -217,7 +219,7 @@ class Missile:
             pygame.draw.rect(screen, ('red'), (self.colid_point_x(), self.target.y, 15, 15)) # THis is colid point
 
 class Item:
-    
+    print('item LOAD')
     
     def __init__(self,x,y,tag):
         self.x=x
@@ -279,7 +281,7 @@ class Item:
 
 class Bullet:
     speed = 14
-
+    print('blt LOAD')
     def __init__(self, x, y,angle):
         self.x = x
         self.y = y
@@ -377,7 +379,7 @@ class Bullet:
  
     
 class Player:
-
+    print('player LOAD')
     def __init__(self,x,y,name) :
         self.x=x
         self.y=y
@@ -921,6 +923,7 @@ class Player:
  
 
 class Bomb:
+    print('bomb LOAD')
     mute=False
     def __init__(self,x,y,velx,vely,guided,angle):
         self.x=x
@@ -1157,6 +1160,7 @@ class Base:
 
 
 class Enemy:
+    print('enemy LOAD')
     def __init__(self,x,y,vel,move_dir,bomb_count,guided_bomb,shooting_range,tag,health,target,sprite):
         self.x=x
         self.y=y
