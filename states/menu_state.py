@@ -4,9 +4,9 @@ from levels import levels
 width,height=1100,660
 
 
-select_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_select2.wav")
-up_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_upmenu1.wav")
-down_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\launch_dnmenu1.wav")
+select_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click.mp3")
+up_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click_up.mp3")
+down_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click_down.mp3")
 
 select_sound.set_volume(999)  
 up_menu_sound.set_volume(999) 

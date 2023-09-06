@@ -47,8 +47,7 @@ image_cache = {}
 
 
 
-for key, path in sound_paths.items():
-    sound_cache[key] = pygame.mixer.Sound(path)
+
 
 
 

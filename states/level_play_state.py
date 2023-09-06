@@ -9,7 +9,7 @@ statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha
 font_path = os.path.join("src/fonts", "OCRAEXT.ttf")
 font_size = 19 
 font = pygame.font.Font(font_path, font_size)
-button_click=pygame.mixer.Sound("src\\sound\\ui\\btn_click.wav")
+button_click=pygame.mixer.Sound("src\\sound\\ui\\button_click.mp3")
         
 
 width,height=(1100,660)

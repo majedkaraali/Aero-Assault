@@ -18,8 +18,7 @@ background_path= os.path.join("src/fonts", "OCRAEXT.ttf")
 statics_image=pygame.image.load('src/img/backgrounds/statics.png').convert_alpha()
 
 music1=pygame.mixer.Sound("src\sound\media\music01.mp3")
-music2=pygame.mixer.Sound("src\sound\media\music02.mp3")
-music2.set_volume(0.5)
+music1.set_volume(0.35)
 
 
 width,height=(1100,660)
@@ -50,7 +49,7 @@ class GameState():
         self.enemy_list=[]
         self.enemies_to_remove = []
         
-        self.music= music2 # random.choice([mussic1,mussic2]) 
+        self.music= music1 # random.choice([mussic1,mussic2]) 
         self.music.play(-1)
 
         self.play_music_on=True
@@ -172,7 +171,7 @@ class GameState():
                 explode_sprite_sheet1= 'src/img/weapons/Explosion.png'
                 explode_sprite_sheet2= 'src/img/weapons/Explosion2.png'
                 explode_sprite_sheet3= 'src/img/weapons/Explosion3.png'
-                explode_sprite_sheet=random.choice([explode_sprite_sheet1,explode_sprite_sheet2,explode_sprite_sheet3])
+                explode_sprite_sheet=random.choice([explode_sprite_sheet1,explode_sprite_sheet2])
                 explode_sprite=Sprite(enemy.get_centerx(),enemy.get_center_y(),explode_sprite_sheet,1536,96,96,96,1,0)
                 self.explodes.append(explode_sprite)
                 self.enemies_to_remove.append(enemy)

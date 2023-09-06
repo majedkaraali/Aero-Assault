@@ -15,7 +15,7 @@ font = pygame.font.Font(font_path, font_size)
 
 width,height=(1100,660)
 
-button_click=pygame.mixer.Sound("src\\sound\\ui\\btn_click.wav")
+button_click=pygame.mixer.Sound("src\\sound\\ui\\button_click.mp3")
 
 
 class Survival(GameState):

@@ -27,7 +27,8 @@ explosion_small=pygame.mixer.Sound("src/sound/wopn/explosion_small.mp3")
 
 explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
 explod.set_volume(2)
-explod1 = pygame.mixer.Sound("src/sound/wopn/Explosion.wav")
+
+missile_exploesion = pygame.mixer.Sound("src/sound/wopn/missile_exploesion.wav")
 
 
 
@@ -186,7 +187,7 @@ class Missile:
         if self.y<=-10:
                 self.destroyed=True
                 if not self.mute:
-                    explod1.play()
+                    missile_exploesion.play()
         
         if self.hitted:
             self.destroyed=True
