@@ -30,7 +30,6 @@ Have fun.
 # Credits
 
 ## Art & Design
-
 ### Aircrafts & Vehicles
 
 - Aircraft images by [berkleytoreno](https://www.deviantart.com/berkleytoreno) (a_7, su_25, su_27, mq1_predator)
