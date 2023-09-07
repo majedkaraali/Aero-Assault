@@ -8,14 +8,22 @@ select_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click.mp3")
 up_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click_up.mp3")
 down_menu_sound=pygame.mixer.Sound("src\\sound\\ui\\button_click_down.mp3")
 
+credits_image=pygame.image.load('src\\img\\meta\\credits.png').convert_alpha()
+
 select_sound.set_volume(999)  
 up_menu_sound.set_volume(999) 
-down_menu_sound.set_volume(999)  
+down_menu_sound.set_volume(999)
+
+
+
+
+
 
 
 
 class MenuState():
-
+    credits_height=credits_image.get_height()
+    cretdits_height_point=0
     def __init__(self,state):
         self.main_menu_window=Test()
         self.running=state.running
@@ -25,6 +33,7 @@ class MenuState():
         self.state=state
         self.levels_numbers=[]
         self.window.achvm()
+        self.show_credits=False
         for level in levels:
             self.levels_numbers.append(level.get_number())
             level.chek_lock(level.number)
@@ -49,6 +58,9 @@ class MenuState():
                 self.window.game_modes()
                 self.window.play_button.holding=False
                 self.window.selected_frame=False
+
+            if self.window.Credits_button.holding:
+                self.show_credits=True
 
 
             if self.window.Exit_button.holding:
@@ -111,14 +123,22 @@ class MenuState():
 
                
                     
-                        
+    def credits_show(self,screen):
+    
+        if abs(self.cretdits_height_point)<self.credits_height:
+            self.cretdits_height_point-=1.5
+        else:
+            self.show_credits=False
+        screen.blit(credits_image,(0,self.cretdits_height_point))                       
 
                 
 
      
 
     def draw(self,screen):
-        
-        self.window.draw(screen)
-        self.window.draw_frames(screen)
-        self.window.handle_buttons()
+        if self.show_credits:
+            self.credits_show(screen)
+        else:
+            self.window.draw(screen)
+            self.window.draw_frames(screen)
+            self.window.handle_buttons()

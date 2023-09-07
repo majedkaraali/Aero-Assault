@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Aero Assault")
 
 
-intro_image = pygame.image.load("src/img/meta/intro_image.png")
+intro_image = pygame.image.load("src/img/meta/intro_image.png").convert_alpha()
 intro_rect = intro_image.get_rect()
 
 
@@ -59,7 +59,7 @@ def main():
             current_state.handle_events(events)
             current_state.draw(screen)
 
-     #   print(clock.get_fps())
+        print(clock.get_fps())
         pygame.display.flip()
 
     pygame.quit()
