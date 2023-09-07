@@ -120,7 +120,12 @@ class MenuState():
                     down_menu_sound.play()
                 
 
-
+        if event.type==pygame.KEYDOWN:
+            keys = pygame.key.get_pressed() 
+            if keys[pygame.K_ESCAPE]:
+                if self.show_credits:
+                    self.show_credits=False
+                    self.cretdits_height_point=0
                
                     
     def credits_show(self,screen):
@@ -129,6 +134,7 @@ class MenuState():
             self.cretdits_height_point-=1.5
         else:
             self.show_credits=False
+            self.cretdits_height_point=0
         screen.blit(credits_image,(0,self.cretdits_height_point))                       
 
                 
