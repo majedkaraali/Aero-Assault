@@ -28,7 +28,7 @@ Have fun.
 
 
 # Credits
-.
+All Source in the game can be found here in the links.
 ## Art & Design
 
 ### Aircrafts & Vehicles
