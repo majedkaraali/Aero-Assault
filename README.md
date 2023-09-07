@@ -43,8 +43,8 @@ All Source in the game can be found here in the links.
 - agm_65_maverick by [bagera3005](https://www.deviantart.com/bagera3005)
 - Gun shoot effects Designed by upklyak / Freepik ([source](https://www.freepik.com/free-vector/realistic-set-gun-shots-with-fire-smoke_9750025.htm#query=gun%20flash&position=0&from_view=keyword&track=ais))
 - Rocket smoke tail Image by upklyak / Freepik ([source](https://www.freepik.com/free-vector/rocket-smoke-speed-fire-trail-cloud-vector-isolated-effect-3d-realistic-plane-jet-launch-contrail-flame-spray-shuttle-spaceship-takeoff-explosionin-sky-aircraft-condensation-track-texture_60900820.htm#page=3&query=bullet%20sprite&position=5&from_view=search&track=ais#page=3&query=b&from_query=undefined&position=0&from_view=search&track=ais))
-- Base Designed by vectorpocket / Freepik ([source](https://www.freepik.com/free-vector/prison-jail-building-fenced-with-guard-observation-posts-high-fence-with-strained-barbed-wire-searchlights-projectors-watchtowers-cartoon-vector-illustration-isolated_4997269.htm#query=2d%20army%20tower&position=2&from_view=search&track=ais))
-- Aircraft explosions by JROB774, Cuzco ([source](https://opengameart.org/users/jrob774))
+- Base Designed by vectorpocket / Freepik ([source](https://www.freepik.com/free-vector/prison-jail-building-fenced-with-guard-observation-posts-high-fence-with-strained-barbed-wire-searchlights-projectors-watchtowers-cartoon-vector-illustration-isolated_4997269.htm#query=2d%20army%20tower&position=2&from_view=search&track=ais)) 
+- Aircraft explosions by  ([JROB774](https://opengameart.org/users/jrob774)) , ([Cuzco](https://opengameart.org/users/Cuzco))
 - Bomb explosion Designed by Freepik
 
 ### UI & UX
