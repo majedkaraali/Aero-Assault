@@ -11,6 +11,22 @@ run main.py to launch the game.
 Have fun.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Credits
 
 ## Art & Design
