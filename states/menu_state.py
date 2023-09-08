@@ -1,5 +1,5 @@
 import pygame
-from windows import Test
+from windows import menu_windows
 from levels import levels
 width,height=1100,660
 
@@ -25,7 +25,7 @@ class MenuState():
     credits_height=credits_image.get_height()
     cretdits_height_point=0
     def __init__(self,state):
-        self.main_menu_window=Test()
+        self.main_menu_window=menu_windows()
         self.running=state.running
         self.window=self.main_menu_window
         self.window.main_menu()
@@ -62,6 +62,11 @@ class MenuState():
             if self.window.Credits_button.holding:
                 self.show_credits=True
 
+            if self.window.options_button.holding:
+                self.window.play_button.holding=False
+                self.window.selected_frame=False
+             
+                self.window.option_view()
 
             if self.window.Exit_button.holding:
                     self.state.running=False

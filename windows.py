@@ -244,7 +244,7 @@ class game_windows(Screen):
     def draw(self, screen):
         pass
 
-class Test():
+class menu_windows():
     def __init__(self):
         self.name='gamemode'
         self.image=pygame.image.load('src/img/GUI/background2.png').convert_alpha()
@@ -254,12 +254,22 @@ class Test():
         self.levels_buttoon=Button(150,150,"Levels",22)
         self.survival_buttonn=Button(150,220,"Survival",22)
         self.apex_button=Button(150,290,"Apex Challenge",22)
-        self.back_button=Button(150,400,"Return",22)
+        self.back_button=Button(150,550,"Return",22)
 
         self.play_button=Button(width//2,180,"Play",22)
         self.options_button=Button(width//2,260,"Options",22)
         self.Credits_button=Button(width//2,340,"Credits",22)
         self.Exit_button=Button(width//2,420,"Exit",22)
+
+        self.Controls=Button(150,150,"Controls",22)
+        self.Audio=Button(150,220,"Audio",22)
+      #  self.Vedio=Button(150,290,"Vedio",22)
+        self.Reset=Button(150,290,"Reset Data",22)
+
+
+
+        self.options_buttons=[self.Reset,self.Audio,self.Controls,self.Reset,self.back_button]
+
         self.game_modes_buttons=[self.levels_buttoon, self.survival_buttonn, self.apex_button,self.back_button]
         self.menu_buttons=[self.play_button, self.options_button, self.Credits_button,self.Exit_button]
         self.apex_play_button=None
@@ -291,7 +301,8 @@ class Test():
         
         
 
-
+    def option_view(self):
+        self.buttons=self.options_buttons
 
     def game_modes(self):
         
@@ -429,4 +440,4 @@ class Test():
 
 
 
-print(' Windows LOaded ')
+print(' Windows Loaded ')
