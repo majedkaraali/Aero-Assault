@@ -22,7 +22,7 @@ ambince3=pygame.mixer.Sound("src\\sound\\ambience\\torn_MGun1.wav")
 
 
 class Level_Play(GameState):
-    def __init__(self,state,level):
+    def __init__(self,state,level,music_on,sound_on):
 
         super().__init__()
         
@@ -43,7 +43,8 @@ class Level_Play(GameState):
         self.player.loadout(level.player_loadout)
         self.ground_vhls.append(self.player)
 
-
+        self.play_music_on=music_on
+        self.play_fx_on=sound_on
 
 
         pygame.mouse.set_visible(False)

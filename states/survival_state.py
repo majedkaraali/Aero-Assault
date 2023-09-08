@@ -19,7 +19,7 @@ button_click=pygame.mixer.Sound("src\\sound\\ui\\button_click.mp3")
 
 
 class Survival(GameState):
-    def __init__(self,state):
+    def __init__(self,state,music_on,sound_on):
         super().__init__()
         self.state=state
         self.windo=game_windows()
@@ -35,7 +35,8 @@ class Survival(GameState):
         self.score=0
         self.player.loadout([1680,240,12,4])
 
-
+        self.play_music_on=music_on
+        self.play_fx_on=sound_on
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
 

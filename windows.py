@@ -416,8 +416,12 @@ class menu_windows():
 
 
     def audio_view(self):
+        print(3)
         frame=Frame(300,125,715,390)
         self.center=(width//2,height//2)
+
+        print(self.music_turn_on)
+
         if self.music_turn_on:
             self.music_btn.change_images(self.music_on,self.music_on)
         else:
@@ -428,13 +432,15 @@ class menu_windows():
         else:
             self.sound_btn.change_images(self.sound_off,self.sound_off)
 
-        self.music_btn.change_location(self.center[0]-70,self.center[1]-40)
-        self.sound_btn.change_location(self.center[0]+70,self.center[1]-40)
+        self.music_btn.change_location(700,180)
+        self.sound_btn.change_location(700,250)
+
+        frame.add_line('Music',380,180,False,'yellow',False)
+        frame.add_line('Sound',380,250,False,'yellow',False)
  
         frame.add_button(self.music_btn)
         frame.add_button(self.sound_btn)
-        frame.add_button(self.back)
-        self.selected_window=frame
+        self.selected_frame=frame
 
 
 

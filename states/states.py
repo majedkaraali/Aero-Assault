@@ -19,15 +19,15 @@ class State():
 
         self.state=(n_state)
 
-    def level_state(self,level):
+    def level_state(self,level,music_on,sound_on):
         from states.level_play_state import Level_Play
-        n_state=Level_Play(state,level)
+        n_state=Level_Play(state,level,music_on,sound_on)
         self.state=(n_state)
 
     
-    def survival_state(self):
+    def survival_state(self,music_on,sound_on):
         from states.survival_state import Survival
-        n_state=Survival(state)
+        n_state=Survival(state,music_on,sound_on)
         self.state=(n_state)    
 
     def menu_state(self):

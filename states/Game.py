@@ -52,9 +52,7 @@ class GameState():
         self.music= music1 # random.choice([mussic1,mussic2]) 
         self.music.play(-1)
 
-        self.play_music_on=True
-        self.play_fx_on=True
-        
+      
 
     def handle_events(self, events):
         pass
