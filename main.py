@@ -26,9 +26,7 @@ state.menu_state()
 background_color=('black')
 
 
-from objects.objects import *
-from windows import *
-from states.survival_state import *
+
 
 def main():
     intro_timer = 0

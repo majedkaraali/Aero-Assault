@@ -379,7 +379,13 @@ class menu_windows():
 
     def controls_view(self):
         frame=Frame(300,125,715,390)
-        frame.add_line('Left',380,180,False,'black',True)
+        frame.add_line('Left',380,180,False,'black',False)
+        frame.add_line('Right',380,230,False,'black',False)
+        frame.add_line('Shoot',380,280,False,'black',False)
+        frame.add_line('Frie Missile',380,330,False,'black',False)
+        frame.add_line('Next lock',380,380,False,'black',False)
+        frame.add_line('Reload',380,430,False,'black',False)
+    #    frame.add_line('Pause',380,480,False,'black',False)
         self.selected_frame=frame
 
 
