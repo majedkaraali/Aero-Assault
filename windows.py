@@ -267,6 +267,24 @@ class menu_windows():
         self.Reset=Button(150,290,"Reset Data",22)
 
 
+        self.music_on=pygame.image.load('src/img/meta/music_on.png').convert_alpha()
+        self.music_off=pygame.image.load('src/img/meta/music_off.png').convert_alpha()
+
+        self.sound_on=pygame.image.load('src/img/meta/sound_on.png').convert_alpha()
+        self.sound_off=pygame.image.load('src/img/meta/sound_off.png').convert_alpha()
+
+        self.music_on=pygame.transform.scale(self.music_on,(64,64))
+        self.music_off=pygame.transform.scale(self.music_off,(64,64))
+        self.sound_on=pygame.transform.scale(self.sound_on,(64,64))
+        self.sound_off=pygame.transform.scale(self.sound_off,(64,64))
+
+        self.music_btn=Button(0,0,'',0)
+        self.sound_btn=Button(0,0,'',0)
+
+        self.music_turn_on=True
+        self.sound_turn_on=True
+
+
 
         self.options_buttons=[self.Reset,self.Audio,self.Controls,self.Reset,self.back_button]
 
@@ -395,6 +413,30 @@ class menu_windows():
         frame.add_line('R',730,430,False,'yellow',False)
 
         self.selected_frame=frame
+
+
+    def audio_view(self):
+        frame=Frame(300,125,715,390)
+        self.center=(width//2,height//2)
+        if self.music_turn_on:
+            self.music_btn.change_images(self.music_on,self.music_on)
+        else:
+            self.music_btn.change_images(self.music_off,self.music_off)
+
+        if self.sound_turn_on:
+            self.sound_btn.change_images(self.sound_on,self.sound_on)
+        else:
+            self.sound_btn.change_images(self.sound_off,self.sound_off)
+
+        self.music_btn.change_location(self.center[0]-70,self.center[1]-40)
+        self.sound_btn.change_location(self.center[0]+70,self.center[1]-40)
+ 
+        frame.add_button(self.music_btn)
+        frame.add_button(self.sound_btn)
+        frame.add_button(self.back)
+        self.selected_window=frame
+
+
 
 
     def achvm(self):
