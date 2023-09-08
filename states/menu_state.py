@@ -65,6 +65,7 @@ class MenuState():
             if self.window.options_button.holding:
                 self.window.play_button.holding=False
                 self.window.selected_frame=False
+                self.window.controls_view()
              
                 self.window.option_view()
 

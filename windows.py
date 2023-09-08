@@ -377,6 +377,12 @@ class menu_windows():
         apex_play_button.lock()
 
 
+    def controls_view(self):
+        frame=Frame(300,125,715,390)
+        frame.add_line('Left',380,180,False,'black',True)
+        self.selected_frame=frame
+
+
     def achvm(self):
         hq=get_highest_score()
         completed_levels=len(get_completed_levels())
