@@ -386,6 +386,14 @@ class menu_windows():
         frame.add_line('Next lock',380,380,False,'black',False)
         frame.add_line('Reload',380,430,False,'black',False)
     #    frame.add_line('Pause',380,480,False,'black',False)
+
+        frame.add_line('A',730,180,False,'yellow',False)
+        frame.add_line('D',730,230,False,'yellow',False)
+        frame.add_line('LMB',730,280,False,'yellow',False)
+        frame.add_line('F',730,330,False,'yellow',False)
+        frame.add_line('TAB',730,380,False,'yellow',False)
+        frame.add_line('R',730,430,False,'yellow',False)
+
         self.selected_frame=frame
 
 
