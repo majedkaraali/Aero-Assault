@@ -1,11 +1,15 @@
 from objects.objects import *
 from windows import *
 from states.survival_state import *
+
 class State():
+
     def __init__(self):
         self.state=None
         self.running=True
-
+        
+        self.sound_play=True
+        self.music_play=True
 
 
     def get_state(self):
@@ -19,15 +23,15 @@ class State():
 
         self.state=(n_state)
 
-    def level_state(self,level,music_on,sound_on):
+    def level_state(self,level,):
         from states.level_play_state import Level_Play
-        n_state=Level_Play(state,level,music_on,sound_on)
+        n_state=Level_Play(state,level,self.music_play,self.sound_play)
         self.state=(n_state)
 
     
-    def survival_state(self,music_on,sound_on):
+    def survival_state(self,):
         from states.survival_state import Survival
-        n_state=Survival(state,music_on,sound_on)
+        n_state=Survival(state,self.music_play,self.sound_play)
         self.state=(n_state)    
 
     def menu_state(self):

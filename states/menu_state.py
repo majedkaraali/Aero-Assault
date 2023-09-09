@@ -34,8 +34,12 @@ class MenuState():
         self.levels_numbers=[]
         self.window.achvm()
         self.show_credits=False
-        self.play_music_on=True
-        self.play_fx_on=True
+
+        self.play_music_on=self.state.music_play
+        self.play_fx_on=self.state.sound_play
+        self.window.music_turn_on= self.play_music_on
+        self.window.sound_turn_on= self.play_fx_on
+        
         for level in levels:
             self.levels_numbers.append(level.get_number())
             level.chek_lock(level.number)
@@ -71,6 +75,7 @@ class MenuState():
                 self.window.option_view()
 
             if self.window.Audio.holding:
+                print(self.play_fx_on,self.play_music_on)
                 up_menu_sound.play()
                 self.window.audio_view()
                 self.window.Audio.holding=False
@@ -152,12 +157,15 @@ class MenuState():
 
 
                 if button_text=='Play':
+                    self.state.sound_play=self.play_music_on
+                    self.state.music_play=self.play_music_on
                     if not self.window.selected_frame_button.locked:
+                        
                         select_sound.play()
                         if self.window.selected_game_mode=='levels':
-                            self.state.level_state(levels[self.selected_level-1],self.play_music_on,self.play_fx_on)
+                            self.state.level_state(levels[self.selected_level-1])
                         elif self.window.selected_game_mode=='survival':
-                            self.state.survival_state(self.play_music_on,self.play_fx_on)
+                            self.state.survival_state()
                     
 
                 if button_text=='Back':
