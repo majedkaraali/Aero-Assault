@@ -67,6 +67,8 @@ class MenuState():
                 self.window.selected_frame=False
 
             if self.window.Credits_button.holding:
+                self.window.Credits_button.holding=False
+                select_sound.play()
                 self.show_credits=True
 
             if self.window.options_button.holding:
@@ -87,12 +89,15 @@ class MenuState():
                 self.window.Controls.holding=False
                 
             if self.window.Reset.holding:
+                select_sound.play()
                 self.window.reset_data_view()
+                self.window.Reset.holding=False
 
             if self.window.reset.holding:
-          
+                up_menu_sound.play()
                 self.window.reset_data()
                 self.levels_numbers=[]
+                self.window.reset.holding=False
 
                 for level in levels:
                     self.levels_numbers.append(level.get_number())

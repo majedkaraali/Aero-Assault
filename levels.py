@@ -232,7 +232,7 @@ class Level_8(Level):
         self.name="Level 8"
         self.number=8
         self.chek_lock(self.number)
-        self.description=f"{self.name}: {'Protect  allies from enemy bombs until they get in safe zone.'}"
+        self.description=f"{self.name}: {'Protect  allies from enemy bombs,defeat all incoming enemy waves'}"
         self.background_path='src\\img\\maps\\Crossroads.png'
         self.waves=[]
         self.wave_1=[4,0,0,0]
@@ -254,7 +254,16 @@ class Level_9(Level):
         self.waves=[]
         self.wave_1=[2,0,0,0]
         self.wave_2=[2,0,0,0]
-        self.waves.extend([self.wave_1,self.wave_2])    
+        self.wave_3=[0,1,1,0]
+        self.wave_4=[2,1,2,0]
+        self.wave_5=[4,0,0,0]
+        self.wave_6=[0,0,0,4]
+        self.wave_7=[2,2,0,2]
+        self.wave_8=[0,2,3,0]
+        self.wave_9=[0,0,5,0]
+        self.wave_10=[6,0,0,0]
+        self.waves.extend([self.wave_1,self.wave_2,self.wave_3,self.wave_4,self.wave_5,self.wave_6,self.wave_7,self.wave_8,self.wave_9,self.wave_10])
+
 
 class Level_10(Level):
     def __init__(self):
@@ -265,9 +274,18 @@ class Level_10(Level):
         self.chek_lock(self.number)
         self.background_path='src\\img\\maps\\CelestialRuins.png'
         self.waves=[]
-        self.wave_1=[0,0,0,4]
-        self.wave_2=[0,0,0,4]
-        self.waves.extend([self.wave_1,self.wave_2])
+        self.wave_1=[0,2,2,0]
+        self.wave_2=[0,2,2,0]
+        self.wave_3=[6,0,1,0]
+        self.wave_4=[2,1,2,0]
+        self.wave_5=[3,4,0,0]
+        self.wave_6=[5,0,0,4]
+        self.wave_7=[2,2,2,2]
+        self.wave_8=[1,2,3,0]
+        self.wave_9=[4,0,4,0]
+        self.wave_10=[4,2,0,2]
+        self.waves.extend([self.wave_1,self.wave_2,self.wave_3,self.wave_4,self.wave_5,self.wave_6,self.wave_7,self.wave_8,self.wave_9,self.wave_10])
+
         self.base=True
         self.base_loc=(650,568)      
         self.base_hp=300
