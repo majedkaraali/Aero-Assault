@@ -41,16 +41,25 @@ def get_completed_levels():
 
 
 def update_highest_score(new_score):
-    # Read the JSON data from the file
     with open('data.json', 'r') as file:
         data = json.load(file)
 
-    # Update the "highest_score" field
     data["highest_score"] = new_score
 
-    # Write the updated JSON data back to the file
     with open('data.json', 'w') as file:
         json.dump(data, file, indent=4)
+
+
+
+def reset_game_data():
+    game_data = {
+        "completed_levels": [1,],
+        "highest_score": 0
+    }
+
+    with open('data.json', 'w') as file:
+        json.dump(game_data, file, indent=4)
+
 
 class Screen():
     def draw(self,screen):
@@ -278,6 +287,8 @@ class menu_windows():
         self.sound_on=pygame.transform.scale(self.sound_on,(64,64))
         self.sound_off=pygame.transform.scale(self.sound_off,(64,64))
 
+        self.reset=Button(0,0,'Conform',20)
+
         self.music_btn=Button(0,0,'',0)
         self.sound_btn=Button(0,0,'',0)
 
@@ -443,6 +454,23 @@ class menu_windows():
 
 
 
+    def reset_data_view(self):
+        frame=Frame(300,125,715,390)
+        frame.write("Are you sure you want to reset  game data and progress to default")
+        self.selected_frame=frame
+        self.reset=Button(frame.width+25,frame.height+100,'Conform',20)
+        frame.buttons.append(self.reset)
+   
+
+    def data_reseted_view(self):
+        frame=Frame(300,125,715,390)
+        frame.write("Game data has been reset successfully")
+        self.selected_frame=frame
+    
+
+    def reset_data(self):
+        reset_game_data()
+
 
     def achvm(self):
         hq=get_highest_score()
@@ -463,6 +491,7 @@ class menu_windows():
 
         self.selected_frame=frame
         
+
         
 
     def draw(self,screen):

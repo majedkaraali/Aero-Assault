@@ -1,16 +1,41 @@
 import json
 
 
-completed_levels = []
-try:
-    with open('data.json', 'r') as progress_file:
-        data = json.load(progress_file)
-except (FileNotFoundError, json.JSONDecodeError):
-    pass
-
-completed_levels=data['completed_levels']
 
 
+def get_data():
+    try:
+        with open('data.json', 'r') as progress_file:
+            data = json.load(progress_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+
+    return data
+
+def update_completed_levels(level_number):
+    try:
+        with open('data.json', 'r') as file:
+            game_data = json.load(file)
+    except FileNotFoundError:
+        pass
+
+    game_data["completed_levels"].append(level_number)
+
+    with open('data.json', 'w') as file:
+        json.dump(game_data, file, indent=4)
+
+def get_completed_levels(): 
+
+    try:
+        with open('data.json', 'r') as progress_file:
+            data = json.load(progress_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+
+    completed_levels=data['completed_levels']
+    
+
+    return completed_levels
 
 class Level:
 
@@ -26,9 +51,10 @@ class Level:
         self.tutorial_image=''
         self.player_loadout=(1680,120,12,4) # default
         self.base=False
+        
     
     def chek_lock(self,number):
-        if number not in completed_levels:
+        if number not in get_completed_levels():
             self.locked=True
         else:
             self.locked=False
@@ -55,10 +81,8 @@ class Level:
     
     def unluck_level(self,level_number):
         completed_level_number = level_number
-        if completed_level_number not in completed_levels and completed_level_number<=len(levels):
-            completed_levels.append(completed_level_number)
-            with open('data.json', 'w') as progress_file:
-                json.dump(data, progress_file,indent=completed_level_number)
+        if completed_level_number not in get_completed_levels() and completed_level_number<=len(levels):
+            update_completed_levels(completed_level_number)
 
 
     def make_wave(self,wave_number):

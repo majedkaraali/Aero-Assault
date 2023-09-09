@@ -39,6 +39,7 @@ class MenuState():
         self.play_fx_on=self.state.sound_play
         self.window.music_turn_on= self.play_music_on
         self.window.sound_turn_on= self.play_fx_on
+
         
         for level in levels:
             self.levels_numbers.append(level.get_number())
@@ -85,7 +86,22 @@ class MenuState():
                 self.window.controls_view()
                 self.window.Controls.holding=False
                 
+            if self.window.Reset.holding:
+                self.window.reset_data_view()
 
+            if self.window.reset.holding:
+          
+                self.window.reset_data()
+                self.levels_numbers=[]
+
+                for level in levels:
+                    self.levels_numbers.append(level.get_number())
+                    level.chek_lock(level.number)
+
+                self.window.data_reseted_view()
+          
+
+     
 
 
             if self.window.music_btn.holding:
@@ -126,6 +142,7 @@ class MenuState():
 
             if self.window.levels_buttoon.holding:
                 self.window.selected_game_mode='levels'
+
                 self.window.levels_frame(levels)
                 self.window.levels_buttoon.holding=False
 
