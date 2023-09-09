@@ -16,7 +16,7 @@ class Generate_enemies:
             x=self.random_distance(move_dircton)
             vel=2
             sprites=loader.random_fighter()
-            enemy=objects.Enemy(x,y,vel,move_dircton,2,0,50,'fighter',80,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,2,False,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
           #  print(enemy)
             
@@ -25,14 +25,14 @@ class Generate_enemies:
             x=self.random_distance(move_dircton)   
             sprites=loader.random_strike()
             vel=2
-            enemy=objects.Enemy(x,y,vel,move_dircton,4,1,400,'strike',100,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,1,True,400,'strike',100,self.target,sprites)
             self.enemy_list.append(enemy)
 
     def respawn_bomber(self,move_dircton,y):
             vel=2
             x=self.random_distance(move_dircton)
             sprites=loader.random_bomber()
-            enemy=objects.Enemy(x,y,vel,move_dircton,6,0,200,'bomber',130,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,6,False,200,'bomber',130,self.target,sprites)
             self.enemy_list.append(enemy)
 
 
@@ -40,7 +40,8 @@ class Generate_enemies:
             vel=2
             x=self.random_distance(move_dircton)
             sprites=loader.random_drone()
-            enemy=objects.Enemy(x,y,vel,move_dircton,0,0,400,'kamikaze',30,self.target,sprites)
+            enemy=objects.Enemy(x,y,vel,move_dircton,0,False,400,'kamikaze',30,self.target,sprites)
+          
             self.enemy_list.append(enemy)
 
 

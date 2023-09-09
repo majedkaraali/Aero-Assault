@@ -17,7 +17,6 @@ intro_image = pygame.image.load("src/img/meta/intro_image.png").convert_alpha()
 intro_rect = intro_image.get_rect()
 
 
-
 intro_duration = 5000  
 
 from states import states

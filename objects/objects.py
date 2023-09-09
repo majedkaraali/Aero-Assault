@@ -942,7 +942,7 @@ class Bomb:
         self.rect=self.image.get_rect()
         self.agm=pygame.image.load('src/img/weapons/agm2.png')
         self.agm_rect=self.agm.get_rect()
-        self.max_velocity=1
+        self.max_velocity=1.75
     
         self.moved_x=0
         self.target=None
@@ -1234,11 +1234,9 @@ class Enemy:
             distance_y=abs(self.y)-abs(target.y)
             target_x=target.get_centerx()
 
-            guided=False
-            if self.tag=='strike':
-                guided=True
+      
             if self.y >300:
-                guided=False
+                self.guided_bomb=False
              
                 self.shooting_range=70
             target_attak_range=list(range(int(target_x-self.shooting_range),int(target_x+self.shooting_range)))
@@ -1259,7 +1257,7 @@ class Enemy:
                     if self.tag=='kamikaze':
                         self.kamikaze=True
                     if self.can_bomb():
-                        if not guided:
+                        if not self.guided_bomb:
                             if self.bomb_count>0:
                                 if self.move_dir=='right':
                                     bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,False,136)
@@ -1271,16 +1269,18 @@ class Enemy:
 
 
                         else:
-                            if self.guided_bomb>0:
-                                if self.move_dir=='right':
-                                    bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,0)
-                                else:
-                                    bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,0)
-                                    
-                                bomb.set_target(target)
-                                self.bombs.append(bomb)
-                                self.last_bomb_time = pygame.time.get_ticks()
-                                self.guided_bomb-=1
+                            if self.guided_bomb:
+                                if self.bomb_count>0:
+                                    if self.move_dir=='right':
+                                        bomb=Bomb(self.get_centerx(),self.y,x_vel,y_vel,True,0)
+                                    else:
+                                        bomb=Bomb(self.get_centerx(),self.y,-x_vel,y_vel,True,0)
+                                        
+                                    bomb.set_target(target)
+                                    self.bombs.append(bomb)
+                                    self.last_bomb_time = pygame.time.get_ticks()
+                                    self.bomb_count-=1
+
         
 
 
@@ -1379,7 +1379,7 @@ class Enemy:
                 self.kamikaze_move(self.target,screen)
  
     
-
+        
 
 
     def update_enemy(self,screen):
@@ -1454,8 +1454,14 @@ class Enemy:
                 bullet.hitted=True
                 self.health-=15
                 self.damaged=True
-                if self.health<0:
+
+                if self.health<=0:
+                    if self.guided_bomb:
+                        print('fffffffffffff')
+                        for bomb in self.bombs:
+                            bomb.exploded=True
                     self.destroyed=True
+
                     if not self.mute:
                         explod.play()
                     return True
