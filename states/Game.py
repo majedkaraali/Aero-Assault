@@ -49,8 +49,9 @@ class GameState():
         self.enemy_list=[]
         self.enemies_to_remove = []
         
-        self.music= music1 # random.choice([mussic1,mussic2]) 
-        self.music.play(-1)
+        self.music= music1 # random.choice([mussic1,mussic2])
+        
+        
 
       
 
@@ -112,7 +113,7 @@ class GameState():
     def handle_sound(self):
         if not self.play_fx_on:
             self.player.mute_sound()
-
+      
             for enemy in self.enemy_list:
                 enemy.mute_sound()
 

@@ -37,8 +37,17 @@ class Survival(GameState):
 
         self.play_music_on=music_on
         self.play_fx_on=sound_on
+
+        self.windo.music_turn_on=music_on
+        self.windo.sound_turn_on=sound_on
+
+        if self.play_music_on:
+            self.music.play(-1)
+
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
+
+
 
 
 

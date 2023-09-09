@@ -65,24 +65,23 @@ class MenuState():
                 self.show_credits=True
 
             if self.window.options_button.holding:
+                select_sound.play()
                 self.window.options_button.holding=False
                 self.window.selected_frame=False
-                
-             
                 self.window.option_view()
 
             if self.window.Audio.holding:
+                up_menu_sound.play()
                 self.window.audio_view()
                 self.window.Audio.holding=False
 
             if self.window.Controls.holding:
+                up_menu_sound.play()
                 self.window.controls_view()
                 self.window.Controls.holding=False
 
 
             if self.window.music_btn.holding:
-                  #  print('ggg')
-                    print(self.window.music_turn_on)
                     self.window.music_btn.holding=False
                     if self.play_music_on:
                         self.window.music_turn_on=False
@@ -153,7 +152,6 @@ class MenuState():
                     if not self.window.selected_frame_button.locked:
                         select_sound.play()
                         if self.window.selected_game_mode=='levels':
-                            print('VVVVVVASDASDA',self.play_fx_on,self.play_music_on)
                             self.state.level_state(levels[self.selected_level-1],self.play_music_on,self.play_fx_on)
                         elif self.window.selected_game_mode=='survival':
                             self.state.survival_state(self.play_music_on,self.play_fx_on)
