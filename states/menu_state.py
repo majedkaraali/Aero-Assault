@@ -79,9 +79,12 @@ class MenuState():
                 up_menu_sound.play()
                 self.window.controls_view()
                 self.window.Controls.holding=False
+                
+
 
 
             if self.window.music_btn.holding:
+                    
                     self.window.music_btn.holding=False
                     if self.play_music_on:
                         self.window.music_turn_on=False
@@ -90,9 +93,9 @@ class MenuState():
                     elif not self.play_music_on:
                         self.window.music_turn_on=True
                         self.play_music_on=True
+                    self.window.audio_view()
 
             if self.window.sound_btn.holding:
-                    
                     self.window.sound_btn.holding=False
                     if self.play_fx_on:
                         self.window.sound_turn_on=False
@@ -101,7 +104,7 @@ class MenuState():
                     elif not self.play_fx_on:
                         self.window.sound_turn_on=True
                         self.play_fx_on=True
-
+                    self.window.audio_view()
 
 
             

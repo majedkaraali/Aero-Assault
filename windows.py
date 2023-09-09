@@ -416,11 +416,10 @@ class menu_windows():
 
 
     def audio_view(self):
-        print(3)
+      
         frame=Frame(300,125,715,390)
         self.center=(width//2,height//2)
 
-        print(self.music_turn_on)
 
         if self.music_turn_on:
             self.music_btn.change_images(self.music_on,self.music_on)

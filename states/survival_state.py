@@ -145,7 +145,7 @@ class Survival(GameState):
                 explode_sprite_sheet1= 'src/img/weapons/Explosion.png'
                 explode_sprite_sheet2= 'src/img/weapons/Explosion2.png'
                 explode_sprite_sheet3= 'src/img/weapons/Explosion3.png'
-                explode_sprite_sheet=random.choice([explode_sprite_sheet1,explode_sprite_sheet2,explode_sprite_sheet3])
+                explode_sprite_sheet=random.choice([explode_sprite_sheet1,explode_sprite_sheet2])
                 explode_sprite=Sprite(enemy.get_centerx(),enemy.get_center_y(),explode_sprite_sheet,1536,96,96,96,1,0)
                 self.explodes.append(explode_sprite)
 
