@@ -18,22 +18,48 @@ intro_rect = intro_image.get_rect()
 
 
 intro_duration = 5000  
-
-from states import states
-state=states.state
-state.menu_state()
+intro_running=True
+intro_comblete=False
+intro_timer = 0
+alpha = 255  
 background_color=('black')
 
+while intro_running:
+    screen.fill(background_color)  
+    clock.tick(60)
 
+    events = pygame.event.get()
+        
+        
+    for event in events:
+            if event.type == pygame.QUIT:
+                intro_running = False
 
+    if intro_timer < intro_duration:
+            print(intro_timer)
+            screen.blit(intro_image, intro_rect)
+            alpha -= 1
+            intro_image.set_alpha(alpha)
+            pygame.display.update()
+            intro_timer += clock.get_time()
+            pygame.display.flip()
 
-def main():
-    intro_timer = 0
-    alpha = 255  
+    else:
+        intro_running=False
+        intro_comblete=True
+          
+
+if  intro_comblete:
+    from states import states
+    from objects.objects import *
+    from windows import *
+    from states.survival_state import *
+    state=states.state
+    state.menu_state()
+    
 
     while state.running:
         current_state=state
-        screen.fill(background_color)  
         clock.tick(60)
         events = pygame.event.get()
         
@@ -44,22 +70,13 @@ def main():
 
         
 
-        if intro_timer < intro_duration:
-            screen.blit(intro_image, intro_rect)
-            alpha -= 1
-            intro_image.set_alpha(alpha)
-            pygame.display.update()
-            intro_timer += clock.get_time()
+        
+        current_state.handle_events(events)
+        current_state.draw(screen)
 
-
-        else:
-            current_state.handle_events(events)
-            current_state.draw(screen)
-
-      #  print(clock.get_fps())
+        #  print(clock.get_fps())
         pygame.display.flip()
 
     pygame.quit()
-    
-if __name__=='__main__':
-    main()
+
+
