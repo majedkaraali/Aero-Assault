@@ -36,7 +36,6 @@ while intro_running:
                 intro_running = False
 
     if intro_timer < intro_duration:
-            print(intro_timer)
             screen.blit(intro_image, intro_rect)
             alpha -= 1
             intro_image.set_alpha(alpha)
