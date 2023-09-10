@@ -1,4 +1,6 @@
 # Aero Assault Game
+![aaa copy](https://github.com/majedkaraali/Aero-Assault/assets/47135751/cd90197c-fa78-49b4-b7d4-56c7a9900514)
+
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/majedkaraali/Aero-Assault)
 
 
@@ -10,6 +12,7 @@ made with python - pygame
 beta verson coming soon..
 
 To run the game make sure you have already installed python and pygame library ,
+
 
 run main.py to launch the game.
 Have fun.
