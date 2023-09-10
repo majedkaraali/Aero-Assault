@@ -78,7 +78,6 @@ class MenuState():
                 self.window.option_view()
 
             if self.window.Audio.holding:
-                print(self.play_fx_on,self.play_music_on)
                 up_menu_sound.play()
                 self.window.audio_view()
                 self.window.Audio.holding=False

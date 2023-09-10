@@ -1459,7 +1459,6 @@ class Enemy:
 
                 if self.health<=0:
                     if self.guided_bomb:
-                        print('fffffffffffff')
                         for bomb in self.bombs:
                             bomb.exploded=True
                     self.destroyed=True

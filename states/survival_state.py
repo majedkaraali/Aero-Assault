@@ -274,4 +274,4 @@ class Survival(GameState):
         self.windo.draw_frames(screen)
 
 
-print('survival loaded')
+print('Survival gameplay loaded')

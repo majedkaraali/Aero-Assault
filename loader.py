@@ -64,7 +64,7 @@ load_images(drone_list)
 
 
 
-print('Loaded')
+
 
 
 
@@ -80,7 +80,6 @@ def get_random_plane_image(plane_list):
     
     plane_name = random.choice(plane_list)
     image = pygame.image.load(f'src/img/aircrafts/{plane_name}.png').convert_alpha()
-    print('image loaded')
     return image
 
 def random_bomber():
@@ -104,3 +103,4 @@ def random_drone():
 
 
 
+print('image/sound Loader Ready')
