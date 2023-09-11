@@ -15,14 +15,14 @@ pygame.display.set_caption("Aero Assault")
 
 intro_image = pygame.image.load("src/img/meta/intro_image.png").convert_alpha()
 intro_rect = intro_image.get_rect()
-
+background_color=('black')
 
 intro_duration = 5000  
 intro_running=True
 intro_comblete=False
 intro_timer = 0
 alpha = 255  
-background_color=('black')
+
 
 while intro_running:
     screen.fill(background_color)  
