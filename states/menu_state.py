@@ -78,12 +78,12 @@ class MenuState():
                 self.window.option_view()
 
             if self.window.Audio.holding:
-                up_menu_sound.play()
+                select_sound.play()
                 self.window.audio_view()
                 self.window.Audio.holding=False
 
             if self.window.Controls.holding:
-                up_menu_sound.play()
+                select_sound.play()
                 self.window.controls_view()
                 self.window.Controls.holding=False
                 
@@ -93,7 +93,7 @@ class MenuState():
                 self.window.Reset.holding=False
 
             if self.window.reset.holding:
-                up_menu_sound.play()
+                select_sound.play()
                 self.window.reset_data()
                 self.levels_numbers=[]
                 self.window.reset.holding=False
@@ -150,18 +150,18 @@ class MenuState():
                 self.window.levels_frame(levels)
                 self.window.levels_buttoon.holding=False
 
-                up_menu_sound.play()
+                select_sound.play()
             if self.window.survival_buttonn.holding:
                 self.window.selected_game_mode='survival'
                 self.window.survival_buttonn.holding=False
                 self.window.survival_frame()
-                up_menu_sound.play()
+                select_sound.play()
 
             if self.window.apex_button.holding:
                 self.window.selected_game_mode='apex'
                 self.window.apex_button.holding=False
                 self.window.apex_frame()
-                up_menu_sound.play()
+                select_sound.play()
 
 
 
@@ -182,7 +182,7 @@ class MenuState():
                     self.state.music_play=self.play_music_on
                     if not self.window.selected_frame_button.locked:
                         
-                        select_sound.play()
+                        up_menu_sound.play()
                         if self.window.selected_game_mode=='levels':
                             self.state.level_state(levels[self.selected_level-1])
                         elif self.window.selected_game_mode=='survival':

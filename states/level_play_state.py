@@ -16,7 +16,7 @@ width,height=(1100,660)
 
 
 ambince1=pygame.mixer.Sound("src\\sound\\ambience\\torn_AK-47.wav")
-ambince2=pygame.mixer.Sound("src\\sound\\ambience\\wind.wav")
+#ambince2=pygame.mixer.Sound("src\\sound\\ambience\\wind.wav")
 ambince3=pygame.mixer.Sound("src\\sound\\ambience\\torn_MGun1.wav")
 
 
@@ -197,7 +197,7 @@ class Level_Play(GameState):
                         self.conform=False
                         self.play_conformed=True
                         self.player.last_shot_time=pygame.time.get_ticks()
-                        ambince=random.choice([ambince1,ambince2,ambince3])
+                        ambince=random.choice([ambince1,ambince3])
                         ambince.play()
                
 
