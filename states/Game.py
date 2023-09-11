@@ -2,7 +2,7 @@ import os
 import pygame 
 from objects import objects
 from windows import game_windows
-from EnemyMaker import Generate_enemies
+from tools.EnemyMaker import Generate_enemies
 from Sprite import Sprite
 import random
 

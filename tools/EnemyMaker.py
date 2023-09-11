@@ -1,6 +1,6 @@
 import random
 from objects import objects
-import loader
+from tools import loader
 
 width,height=(1100,660)
 
