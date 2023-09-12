@@ -1,10 +1,10 @@
 
-![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/majedkaraali/Aero-Assault)
+
 
 
 
 ![banner](https://github.com/majedkaraali/Aero-Assault/assets/47135751/6f7e05ad-d396-4cdc-bfb0-96ee79d53068)
-
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/majedkaraali/Aero-Assault)
 
 # Aero Assault: 2D Action Game
 
