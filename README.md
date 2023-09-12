@@ -6,6 +6,30 @@
 
 ![banner](https://github.com/majedkaraali/Aero-Assault/assets/47135751/6f7e05ad-d396-4cdc-bfb0-96ee79d53068)
 
+
+# Aero Assault: 2D Action Game
+
+Prepare for high-octane aerial combat in **Aero Assault**, the ultimate 2D action game where you become the last line of defense against an onslaught of enemy aircraft!
+
+## Key Features:
+
+- 🚀 **Control the Sky's Fate:** Take command of a state-of-the-art self-propelled anti-aircraft weapon.
+- 🔥 **Intense Aerial Battles:** Engage in heart-pounding dogfights with a variety of enemy aircraft.
+- 🌍 **Diverse Environments:** Battle across stunning 2D landscapes with unique challenges.
+- 🎯 **Precision Aim:** Lock onto targets and upgrade your weapon for accuracy and firepower.
+
+## Game Modes:
+
+- 🔓 **Levels:** Embark on an epic journey through challenging missions.
+- ⏳ **Survival:** Test your endurance in an endless onslaught of enemy waves.
+- 🕹️ **Endless Upgrades:** Enhance your anti-aircraft weapon and prove your skills in the skies.
+
+## Download Now:
+
+- [Download]([#](https://majedkaraali.itch.io/aero-assault))
+
+
+
 a self-propelled anti-aircraft weapon.
 made with python - pygame 
 
