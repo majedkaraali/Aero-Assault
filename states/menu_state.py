@@ -93,7 +93,7 @@ class MenuState():
                 self.window.Reset.holding=False
 
             if self.window.reset.holding:
-                select_sound.play()
+                up_menu_sound.play()
                 self.window.reset_data()
                 self.levels_numbers=[]
                 self.window.reset.holding=False

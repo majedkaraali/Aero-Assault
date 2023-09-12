@@ -9,6 +9,9 @@ pygame.mixer.set_num_channels(64)
 screen_width = 1100
 screen_height = 660
 
+icon = pygame.image.load('icon.png')  
+icon = pygame.transform.scale(icon, (32, 32))  
+pygame.display.set_icon(icon) 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Aero Assault")
 
