@@ -23,20 +23,13 @@ Prepare for high-octane aerial combat in **Aero Assault**, the ultimate 2D actio
 - ⏳ **Survival:** Test your endurance in an endless onslaught of enemy waves.
 - 🕹️ **Endless Upgrades:** Enhance your anti-aircraft weapon and prove your skills in the skies.
 
+
+
 ## Download Now:
 
-- [Download]([#](https://majedkaraali.itch.io/aero-assault))
-
-
-
-a self-propelled anti-aircraft weapon.
-made with python - pygame 
-
-beta verson coming soon..
+- [Download on itch.io](https://majedkaraali.itch.io/aero-assault)
 
 To run the game make sure you have already installed python and pygame library ,
-
-
 run main.py to launch the game.
 Have fun.
 
