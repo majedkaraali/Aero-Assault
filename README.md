@@ -1,4 +1,3 @@
-# Aero Assault Game
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/majedkaraali/Aero-Assault)
 
