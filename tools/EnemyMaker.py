@@ -18,7 +18,6 @@ class Generate_enemies:
             sprites=loader.random_fighter()
             enemy=objects.Enemy(x,y,vel,move_dircton,2,False,50,'fighter',80,self.target,sprites)
             self.enemy_list.append(enemy)
-          #  print(enemy)
             
         
     def respawn_strike(self,move_dircton,y):

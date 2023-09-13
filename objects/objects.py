@@ -85,6 +85,9 @@ class Missile:
             if rect.colliderect(self.target.get_rect()):
                 drop=Item(self.target.get_centerx(),self.target.y,'gift')
                 self.owner.drops.append(drop)
+                if self.target.guided_bomb:
+                        for bomb in self.target.bombs:
+                            bomb.exploded=True
                 self.target.destroyed=True
                 self.destroyed=True
                 if not self.mute:
