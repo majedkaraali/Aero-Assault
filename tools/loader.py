@@ -40,8 +40,6 @@ sound_paths = {
 
 
 
-
-
 sound_cache = {}
 image_cache = {}
 
@@ -102,5 +100,4 @@ def random_drone():
 
 
 
-
-print('image/sound Loader Ready')
+print('Image/Sound Loader Ready')
