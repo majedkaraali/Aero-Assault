@@ -5,7 +5,6 @@ class State():
     def __init__(self):
         self.state=None
         self.running=True
-        
         self.sound_play=True
         self.music_play=True
 
