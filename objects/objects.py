@@ -26,7 +26,7 @@ explosion_small=pygame.mixer.Sound("src/sound/wopn/explosion_small.mp3")
 
 
 explod = pygame.mixer.Sound("src/sound/wopn/Explosion3.wav")
-explod.set_volume(3)
+explod.set_volume(2)
 
 missile_exploesion = pygame.mixer.Sound("src/sound/wopn/missile_exploesion.wav")
 
@@ -381,6 +381,9 @@ class Bullet:
 
  
  
+
+
+
     
 class Player:
     print('Player obj Loaded')
