@@ -102,4 +102,4 @@ def random_drone():
 
 
 
-print('Image/Sound Loader Ready')
+#print('Image/Sound Loader Ready')
