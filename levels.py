@@ -1,8 +1,5 @@
 import json
 
-
-
-
 def get_data():
     try:
         with open('data.json', 'r') as progress_file:
