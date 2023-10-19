@@ -77,6 +77,8 @@ class Generate_enemies:
          return move_dircton
         
 
+
+
     def all_time_enemies(self,num_of_enemies):
             while len(self.enemy_list)<num_of_enemies:
                 enemy_type = self.random_type()

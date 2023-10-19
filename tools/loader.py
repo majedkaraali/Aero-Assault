@@ -7,6 +7,8 @@ import os
 pygame.init()
 pygame.mixer.init()
 
+
+
 bomber_list=['tu22','tu95']
 strike_list=['su25','su25_2','su25_3','a7','a7_2','mig21']
 fighter_list=['f16','su27','su27_2','j20','j20_2']
