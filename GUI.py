@@ -171,6 +171,9 @@ class Frame:
 
 
 
+
+
+
     def draw(self, screen):
         rendered_lines, text_rects = self.render_text()
         screen.blit(self.image, self.get_rect())
