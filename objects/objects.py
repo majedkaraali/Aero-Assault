@@ -1039,12 +1039,9 @@ class Bomb:
         self.x += movement.x
         self.y += movement.y
 
-        # self.moved_x+=abs(movement.x)
-        # if self.moved_x>=700:
-        #     self.y+=0.1
-       
 
-           
+       
+    
 
     def dum_move(self):
         self.y+=self.vely
