@@ -27,7 +27,7 @@ Prepare for high-octane aerial combat in **Aero Assault**, the ultimate 2D actio
 
 ## Download Now:
 
-[Aero Assault by MajedKaraali](https://majedkaraali.itch.io/aero-assault)
+[![Download](URL)](https://majedkaraali.itch.io/aero-assault)
 
 
 To run the game make sure you have already installed python and pygame library ,
