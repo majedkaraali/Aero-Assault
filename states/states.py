@@ -1,4 +1,8 @@
+"""
 
+A State class  creates and handle states for the game
+
+"""
 
 class State():
 
