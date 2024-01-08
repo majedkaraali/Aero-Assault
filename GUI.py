@@ -1,3 +1,8 @@
+"""
+this classes are for the GUI (BUTTON , FRAME , Levels_FRAME)
+
+"""
+
 import pygame
 import os
 
@@ -209,17 +214,7 @@ class Frame:
 
     def get_buttons(self):
         return self.buttons
-
-
-
-     
        
-            
-
-
-
-
-        
 
 class Levels_Frame:
     def __init__(self, x, y, width, height, rows, cols,levels):
