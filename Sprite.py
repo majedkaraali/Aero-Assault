@@ -1,5 +1,4 @@
 import pygame
-import os
 
 class Sprite:
     def __init__(self, x, y ,spritesheet_path, width, height, frame_width, frame_height, draw_limit=-1,angle=0):
