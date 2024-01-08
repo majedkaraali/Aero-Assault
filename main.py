@@ -1,12 +1,20 @@
+"""
+This is the main file which is the start point of the game 
+Required libares are (pygame,math,random)
+
+Author : Majed Karaali
+"""
+
+
+
 import pygame
+
+# Setting default values
 
 pygame.init()
 pygame.mixer.init()
-
 clock = pygame.time.Clock()
 pygame.mixer.set_num_channels(64)
-
-
 
 
 screen_width = 1100
@@ -29,6 +37,10 @@ intro_comblete=False
 intro_timer = 0
 alpha = 255  
 
+
+
+
+# Intro loop
 
 while intro_running:
     screen.fill(background_color)  
@@ -55,14 +67,20 @@ while intro_running:
           
 
 if  intro_comblete:
+    # Importing models,models and states
     from states import states
     from objects.objects import *
     from windows import *
     from states.survival_state import *
+   
+
+    # Setting state to MENU STATE
     state=states.state
     state.menu_state()
     
 
+
+    #  Game main loop Start
     while state.running:
         current_state=state
         clock.tick(60)
@@ -74,15 +92,13 @@ if  intro_comblete:
                 state.running = False
 
         
-
-        
         current_state.handle_events(events)
         current_state.draw(screen)
 
-        #  print(clock.get_fps())
+        #  print(clock.get_fps())       Uncomment this if you want to debug FPS
         pygame.display.flip()
 
     pygame.quit()
 
-#
+
 
