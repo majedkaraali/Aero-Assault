@@ -4,7 +4,6 @@ from math import atan2, degrees, pi
 import math
 from Sprite import Sprite
 
-
 debug=False
 
 width,height=(1100,660)
@@ -378,13 +377,6 @@ class Bullet:
             return True
         else:
             return False
-
- 
- 
-
-
-
-    
 class Player:
     print('Player obj Loaded')
     def __init__(self,x,y,name) :
