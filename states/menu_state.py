@@ -207,9 +207,6 @@ class MenuState():
         screen.blit(credits_image,(0,self.cretdits_height_point))                       
 
                 
-
-     
-
     def draw(self,screen):
         if self.show_credits:
             self.credits_show(screen)
