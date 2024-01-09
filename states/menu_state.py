@@ -16,11 +16,6 @@ down_menu_sound.set_volume(999)
 
 
 
-
-
-
-
-
 class MenuState():
     credits_height=credits_image.get_height()
     cretdits_height_point=0
