@@ -8,7 +8,6 @@ pygame.init()
 pygame.mixer.init()
 
 
-
 bomber_list=['tu22','tu95']
 strike_list=['su25','su25_2','su25_3','a7','a7_2','mig21']
 fighter_list=['f16','su27','su27_2','j20','j20_2']
@@ -41,16 +40,8 @@ sound_paths = {
 }
 
 
-
-
-
 sound_cache = {}
 image_cache = {}
-
-
-
-
-
 
 
 def load_images(aircraft_list):
@@ -63,11 +54,6 @@ load_images(bomber_list)
 load_images(strike_list)
 load_images(fighter_list)
 load_images(drone_list)
-
-
-
-
-
 
 
 def load_image(image_path):
@@ -99,9 +85,6 @@ def random_fighter():
 def random_drone():
     random_drone_image = get_random_plane_image(drone_list)
     return random_drone_image
-
-
-
 
 
 #print('Image/Sound Loader Ready')
