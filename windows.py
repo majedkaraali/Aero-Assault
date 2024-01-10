@@ -491,7 +491,6 @@ class menu_windows():
 
         self.selected_frame=frame
         
-
         
 
     def draw(self,screen):
@@ -514,26 +513,11 @@ class menu_windows():
         if self.selected_frame:
            self.selected_frame_button=self.selected_frame.selected_button
            
-                    
-
-      
-    
         
     def clear_selection(self):
         self.selected_frame=False
 
     
-
-
-
-
-
-    
-    
-  
- 
-    
-
 
 
 print(' Windows Loaded ')
