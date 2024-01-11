@@ -33,7 +33,7 @@ background_color=('black')
 
 intro_duration = 5000  
 intro_running=True
-intro_comblete=False
+intro_complete=False
 intro_timer = 0
 alpha = 255  
 
@@ -63,10 +63,10 @@ while intro_running:
 
     else:
         intro_running=False
-        intro_comblete=True
+        intro_complete=True
           
 
-if  intro_comblete:
+if  intro_complete:
     # Importing models,models and states
     from states import states
     from objects.objects import *
