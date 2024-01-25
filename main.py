@@ -3,6 +3,7 @@ This is the main file which is the start point of the game
 Required libares are (pygame,math,random)
 
 Author : Majed Karaali
+
 """
 
 
