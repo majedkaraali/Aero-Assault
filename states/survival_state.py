@@ -46,11 +46,6 @@ class Survival(GameState):
 
         pygame.mouse.set_visible(False)
         pygame.mouse.set_pos((1000, 500))
-
-
-
-
-
     
 
     def draw(self,screen):
