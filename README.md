@@ -106,4 +106,4 @@ Physics and Simulation
 Artificial Intelligence (AI)
 Audio Programming
 
-By Majed Karaai
+By Majed Karaali
